@@ -127,16 +127,16 @@ export class BotRoutes {
           case "9lo":
             await this.showAllMatches(chatId);
             break;
-
+          case "admin_show_matches":
+            await this.showAllMatches(chatId);
+            break;
           case "admin_delete_match":
             userSessions.set(chatId, {
               state: "awaiting_delete_match_name",
               data: {},
             });
-            this.bot.sendMessage(
-              chatId,
-              "Enter the exact match name to delete:"
-            );
+
+            this.bot.sendMessage(chatId, "Enter the exact match ID to delete:");
             break;
 
           case "admin_give_match":
@@ -333,7 +333,7 @@ export class BotRoutes {
 
           case "awaiting_delete_match_name":
             try {
-              const deleteResult = await MatchController.deleteMatch(text!);
+              const deleteResult = await MatchController.deleteMatch(+text!);
               userSessions.delete(chatId);
               this.bot.sendMessage(chatId, deleteResult.message);
               this.showAdminMenu(chatId);
@@ -537,29 +537,39 @@ export class BotRoutes {
     }
   }
 
+  private escapeMarkdownV2(text: string): string {
+    return text.replace(/[_*[\]()~`>#+-=|{}.!\\]/g, "\\$&");
+  }
+
   private async showGameMatches(chatId: number, gameName: string) {
     try {
       const result = await MatchController.getTodayMatchesByGame(gameName);
       const matches = result.data;
-      console.log("gameNamegameNamegameNamegameNamegameNamegameName", gameName);
-      console.log("gameNamegameNamegameNamegameNamegameNamegameName", matches);
-      let message = `🏆 **Today's Matches - ${gameName}**\n\n`;
+
+      let message = `🏆 *Today's Matches \\- ${this.escapeMarkdownV2(
+        gameName
+      )}*\n\n`;
+
       if (Array.isArray(matches)) {
         if (matches.length === 0) {
-          message += "No matches scheduled for today in this game.";
+          message += "No matches scheduled for today in this game\\.";
         } else {
           matches.forEach((match: any) => {
-            message += `${match.serial}. ${match.time} - ${match.name} (Rs.${match.buy})\n`;
+            const escapedTime = this.escapeMarkdownV2(match.time);
+            const escapedName = this.escapeMarkdownV2(match.name);
+            const escapedPrice = this.escapeMarkdownV2(match.buy.toString());
+
+            message += `${match.serial}\\. ${escapedTime} \\- ${escapedName} \\(Rs\\.${escapedPrice}\\)\n`;
           });
         }
       }
 
-      this.bot.sendMessage(chatId, message, { parse_mode: "Markdown" });
+      this.bot.sendMessage(chatId, message, { parse_mode: "MarkdownV2" });
     } catch (error) {
+      console.error("showGameMatches error:", error);
       this.bot.sendMessage(chatId, `Failed to load matches for ${gameName}.`);
     }
   }
-
   private async showAllMatches(chatId: number) {
     try {
       const result = await MatchController.getAllMatches();

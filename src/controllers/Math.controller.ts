@@ -66,20 +66,27 @@ export class MatchController {
 
   static async getTodayMatchesByGame(gameName: string) {
     try {
+      const cleanedGameName = gameName.replace(/^selection_/, "").trim();
+
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
+      const utcToday = new Date(
+        Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
+      );
+      const utcTomorrow = new Date(utcToday);
+      utcTomorrow.setUTCDate(utcTomorrow.getUTCDate() + 1);
+
+      console.log("UTC Today:", utcToday.toISOString());
+      console.log("UTC Tomorrow:", utcTomorrow.toISOString());
 
       const matches = await prisma.match.findMany({
         where: {
           gameName: {
-            equals: gameName,
+            equals: cleanedGameName,
             mode: "insensitive",
           },
           date: {
-            gte: today,
-            lt: tomorrow,
+            gte: utcToday,
+            lt: utcTomorrow,
           },
         },
         orderBy: {
@@ -97,7 +104,7 @@ export class MatchController {
 
       return new ApiResponse(
         200,
-        `Today's matches for ${gameName}`,
+        `Today's matches for ${cleanedGameName}`,
         matchTable
       );
     } catch (error) {
@@ -151,23 +158,24 @@ export class MatchController {
   }
 
   // FIXED: Updated to use matchName instead of name
-  static async deleteMatch(matchName: string) {
+  static async deleteMatch(matchId: number) {
     try {
-      // Find the match by exact name
+      console.log(
+        "dflkjflskfdflkjflskfdflkjflskfdflkjflskfdflkjflskf",
+        matchId
+      );
       const matchToDelete = await prisma.match.findFirst({
         where: {
-          matchName: {
-            equals: matchName,
-            mode: "insensitive", // Case insensitive search
+          id: {
+            equals: matchId,
           },
         },
       });
 
       if (!matchToDelete) {
-        throw new ApiError(404, `Match with name "${matchName}" not found`);
+        throw new ApiError(404, `Match with name "${matchToDelete}" not found`);
       }
 
-      // Check if there are any purchases associated with this match
       const purchaseCount = await prisma.purchase.count({
         where: {
           matchId: matchToDelete.id,
@@ -177,7 +185,7 @@ export class MatchController {
       if (purchaseCount > 0) {
         throw new ApiError(
           400,
-          `Cannot delete match "${matchName}" as it has ${purchaseCount} associated purchases`
+          `Cannot delete match "${matchToDelete?.matchName}" as it has ${purchaseCount} associated purchases`
         );
       }
 
@@ -190,7 +198,7 @@ export class MatchController {
 
       return new ApiResponse(
         200,
-        `Match "${matchName}" deleted successfully`,
+        `Match "${matchToDelete?.matchName}" deleted successfully`,
         null
       );
     } catch (error: any) {
