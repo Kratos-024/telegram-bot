@@ -13,7 +13,8 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Match" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
+    "gameName" TEXT NOT NULL,
+    "matchName" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "time" TEXT NOT NULL,
     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -99,33 +99,32 @@ export class BotRoutes {
             }
             break;
 
-          case "buy_match":
+          case "buy_token":
             this.bot.sendMessage(
               chatId,
-              `Contact admin to buy matches: @${
+              `Contact admin to buy tokens: @${
                 process.env.ADMIN_USERNAME || "admin"
               }`
             );
             break;
 
           case "today_match":
-            await this.showTodayMatches(chatId);
+            await this.showGameCategories(chatId, "user_game_selection");
             break;
 
           case "withdraw":
             await this.showWithdraw(chatId);
             break;
 
-          // Admin callbacks
           case "admin_add_match":
             userSessions.set(chatId, {
-              state: "awaiting_match_name",
+              state: "awaiting_game_name",
               data: {},
             });
-            this.bot.sendMessage(chatId, "Enter match name (Price=X format):");
+            this.bot.sendMessage(chatId, "Enter game name:");
             break;
 
-          case "admin_show_matches":
+          case "9lo":
             await this.showAllMatches(chatId);
             break;
 
@@ -140,7 +139,6 @@ export class BotRoutes {
             );
             break;
 
-          // NEW: Admin give match to user
           case "admin_give_match":
             userSessions.set(chatId, {
               state: "awaiting_user_email_for_match",
@@ -149,7 +147,6 @@ export class BotRoutes {
             this.bot.sendMessage(chatId, "Enter user email to give match:");
             break;
 
-          // NEW: Admin manage user balance
           case "admin_user_balance":
             userSessions.set(chatId, {
               state: "awaiting_user_email_for_balance",
@@ -159,6 +156,27 @@ export class BotRoutes {
               chatId,
               "Enter user email to check/update balance:"
             );
+            break;
+
+          default:
+            if (data?.startsWith("user_game_")) {
+              const gameName = data.replace("user_game_", "");
+              await this.showGameMatches(chatId, gameName);
+            } else if (data?.startsWith("admin_game_")) {
+              const gameName = data.replace("admin_game_", "");
+              const session = userSessions.get(chatId);
+              if (
+                session &&
+                session.state === "awaiting_game_selection_for_match"
+              ) {
+                session.data.selectedGame = gameName;
+                session.state = "awaiting_match_id_to_give";
+                this.bot.sendMessage(
+                  chatId,
+                  `Selected game: ${gameName}\nEnter match ID to give to user:`
+                );
+              }
+            }
             break;
         }
       } catch (error) {
@@ -250,11 +268,30 @@ export class BotRoutes {
             }
             break;
 
+          // NEW: Handle game name input
+          case "awaiting_game_name":
+            session.data.gameName = text;
+            session.state = "awaiting_match_name";
+            this.bot.sendMessage(chatId, "Enter match name:");
+            break;
+
+          // UPDATED: Handle match name input
           case "awaiting_match_name":
-            const match = text!.split("(Price=");
-            const name = match[0].trim();
-            const price = parseFloat(match[1]?.replace(")", "") || "0");
-            session.data.name = name;
+            session.data.matchName = text;
+            session.state = "awaiting_match_price";
+            this.bot.sendMessage(chatId, "Enter match price:");
+            break;
+
+          // NEW: Handle price input
+          case "awaiting_match_price":
+            const price = parseFloat(text!);
+            if (isNaN(price)) {
+              this.bot.sendMessage(
+                chatId,
+                "Please enter a valid price (number)"
+              );
+              return;
+            }
             session.data.price = price;
             session.state = "awaiting_match_time";
             this.bot.sendMessage(
@@ -276,7 +313,8 @@ export class BotRoutes {
               }
 
               await MatchController.addMatch(
-                session.data.name,
+                session.data.gameName,
+                session.data.matchName,
                 session.data.price,
                 text!
               );
@@ -309,14 +347,12 @@ export class BotRoutes {
             }
             break;
 
-          // NEW: Handle user email for giving match
           case "awaiting_user_email_for_match":
             session.data.userEmail = text;
-            session.state = "awaiting_match_id_to_give";
-            this.bot.sendMessage(chatId, "Enter match ID to give to user:");
+            session.state = "awaiting_game_selection_for_match";
+            await this.showGameCategories(chatId, "admin_game");
             break;
 
-          // NEW: Handle match ID to give to user
           case "awaiting_match_id_to_give":
             try {
               const matchId = parseInt(text!);
@@ -330,7 +366,8 @@ export class BotRoutes {
 
               const result = await MatchController.giveMatchToUser(
                 session.data.userEmail,
-                matchId
+                matchId,
+                session.data.selectedGame
               );
               userSessions.delete(chatId);
               this.bot.sendMessage(chatId, result.message);
@@ -345,7 +382,6 @@ export class BotRoutes {
             }
             break;
 
-          // NEW: Handle user email for balance check/update
           case "awaiting_user_email_for_balance":
             try {
               const result = await MatchController.getUserBalance(text!);
@@ -381,7 +417,6 @@ export class BotRoutes {
             }
             break;
 
-          // NEW: Handle new balance amount
           case "awaiting_new_balance":
             try {
               if (text?.toLowerCase() === "cancel") {
@@ -441,7 +476,7 @@ export class BotRoutes {
     const keyboard = {
       inline_keyboard: [
         [{ text: "📄 My Account", callback_data: "my_account" }],
-        [{ text: "🎯 Buy Match", callback_data: "buy_match" }],
+        [{ text: "🎯 Buy Token", callback_data: "buy_token" }],
         [{ text: "🏆 Today Match", callback_data: "today_match" }],
         [{ text: "💸 Withdraw", callback_data: "withdraw" }],
         [{ text: "🔁 Logout", callback_data: "logout" }],
@@ -475,27 +510,77 @@ export class BotRoutes {
     });
   }
 
+  private async showGameCategories(chatId: number, callbackPrefix: string) {
+    try {
+      const result = await MatchController.getGameCategories();
+      const games = result.data;
+
+      if (Array.isArray(games)) {
+        if (games.length === 0) {
+          this.bot.sendMessage(chatId, "No games available.");
+          return;
+        }
+      }
+
+      if (Array.isArray(games)) {
+        const keyboard = {
+          inline_keyboard: games.map((game: string) => [
+            { text: `🎮 ${game}`, callback_data: `${callbackPrefix}_${game}` },
+          ]),
+        };
+        this.bot.sendMessage(chatId, "Select a game:", {
+          reply_markup: keyboard,
+        });
+      }
+    } catch (error) {
+      this.bot.sendMessage(chatId, "Failed to load game categories.");
+    }
+  }
+
+  private async showGameMatches(chatId: number, gameName: string) {
+    try {
+      const result = await MatchController.getTodayMatchesByGame(gameName);
+      const matches = result.data;
+      console.log("gameNamegameNamegameNamegameNamegameNamegameName", gameName);
+      console.log("gameNamegameNamegameNamegameNamegameNamegameName", matches);
+      let message = `🏆 **Today's Matches - ${gameName}**\n\n`;
+      if (Array.isArray(matches)) {
+        if (matches.length === 0) {
+          message += "No matches scheduled for today in this game.";
+        } else {
+          matches.forEach((match: any) => {
+            message += `${match.serial}. ${match.time} - ${match.name} (Rs.${match.buy})\n`;
+          });
+        }
+      }
+
+      this.bot.sendMessage(chatId, message, { parse_mode: "Markdown" });
+    } catch (error) {
+      this.bot.sendMessage(chatId, `Failed to load matches for ${gameName}.`);
+    }
+  }
+
   private async showAllMatches(chatId: number) {
     try {
       const result = await MatchController.getAllMatches();
       const matches = result.data;
 
       let message = `📋 **All Matches**\n\n`;
-      //@ts-ignore
-      if (matches.length === 0) {
-        message += "No matches found.";
-      } else {
-        //@ts-ignore
-        matches.forEach((match: any) => {
-          message += `**ID:** ${match.id} | **Serial:** ${match.serial}\n`;
-          message += `**Name:** ${match.name}\n`;
-          message += `💰 **Price:** Rs.${match.price}\n`;
-          message += `⏰ **Time:** ${match.time}\n`;
-          message += `📅 **Date:** ${match.date}\n\n`;
-        });
+      if (Array.isArray(matches)) {
+        if (matches.length === 0) {
+          message += "No matches found.";
+        } else {
+          matches.forEach((match: any) => {
+            message += `**ID:** ${match.id} | **Serial:** ${match.serial}\n`;
+            message += `**Game:** ${match.gameName}\n`;
+            message += `**Name:** ${match.matchName}\n`;
+            message += `💰 **Price:** Rs.${match.price}\n`;
+            message += `⏰ **Time:** ${match.time}\n`;
+            message += `📅 **Date:** ${match.date}\n\n`;
+          });
+        }
       }
 
-      // Split message if it's too long (Telegram has a 4096 character limit)
       if (message.length > 4000) {
         const messageParts = this.splitMessage(message, 4000);
         for (const part of messageParts) {
@@ -534,21 +619,20 @@ export class BotRoutes {
   private async showMyAccount(chatId: number) {
     try {
       const result = await UserController.getMyAccount(chatId.toString());
-      const data = result.data;
-      //@ts-ignore
+      const data = result.data || {
+        email: "",
+        balance: 0,
+        matchHistory: [],
+      };
       let message = `📄 **My Account**\n`;
-      //@ts-ignore
       message += `Email: ${data.email}\n`;
-      //@ts-ignore
       message += `Balance: Rs.${data.balance}\n\n`;
       message += `**Match History:**\n`;
-      //@ts-ignore
       if (data.matchHistory.length === 0) {
         message += "No matches purchased yet.";
       } else {
-        //@ts-ignore
         data.matchHistory.forEach((match: any) => {
-          message += `${match.serial}. ${match.time} - ${match.name} (Rs.${match.buy})\n`;
+          message += `${match.serial}. ${match.time} - ${match.gameName}: ${match.matchName} (Rs.${match.buy})\n`;
         });
       }
 
@@ -564,14 +648,14 @@ export class BotRoutes {
       const matches = result.data;
 
       let message = `🏆 **Today's Matches**\n\n`;
-      //@ts-ignore
-      if (matches.length === 0) {
-        message += "No matches scheduled for today.";
-      } else {
-        //@ts-ignore
-        matches.forEach((match: any) => {
-          message += `${match.serial}. ${match.time} - ${match.name} (Rs.${match.buy})\n`;
-        });
+      if (Array.isArray(matches)) {
+        if (matches.length === 0) {
+          message += "No matches scheduled for today.";
+        } else {
+          matches.forEach((match: any) => {
+            message += `${match.serial}. ${match.time} - ${match.gameName}: ${match.matchName} (Rs.${match.buy})\n`;
+          });
+        }
       }
 
       this.bot.sendMessage(chatId, message, { parse_mode: "Markdown" });
@@ -585,15 +669,16 @@ export class BotRoutes {
       const result = await WithdrawController.getWithdrawInfo(
         chatId.toString()
       );
-      const data = result.data;
+      const data = result.data || {
+        adminUsername: "",
+        balance: 0,
+      };
 
       const keyboard = {
         inline_keyboard: [
           [
             {
-              //@ts-ignore
               text: `Contact @${data.adminUsername}`,
-              //@ts-ignore
               url: `https://t.me/${data.adminUsername}`,
             },
           ],
@@ -602,7 +687,6 @@ export class BotRoutes {
 
       this.bot.sendMessage(
         chatId,
-        //@ts-ignore
         `💸 **Withdraw**\n\nYour Balance: Rs.${data.balance}\n\nClick below to contact admin for withdrawal:`,
         {
           parse_mode: "Markdown",

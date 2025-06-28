@@ -1,29 +1,36 @@
 import TelegramBot from "node-telegram-bot-api";
 import dotenv from "dotenv";
+import express from "express";
 import { BotRoutes } from "./routes/bot.routes";
 import { MatchNotificationService } from "./services/Match.service";
-import express from "express";
 import cornRouter from "./routes/corn.route";
+
 dotenv.config({ path: ".env" });
 
 const token = process.env.BOT_TOKEN!;
-const bot = new TelegramBot(token, { polling: true });
+const isDev = process.env.NODE_ENV !== "production";
 
-const botRoutes = new BotRoutes(bot);
+const bot = new TelegramBot(token, {
+  polling: isDev,
+});
 
+if (isDev) {
+  console.log("Bot polling started in development mode...");
+}
+
+new BotRoutes(bot);
 const matchNotificationService = new MatchNotificationService(bot);
 matchNotificationService.startMatchNotificationCron();
 
-console.log("Telegram bot is running...");
 console.log("Match notification service started...");
 
-process.on("SIGINT", () => {
+process.once("SIGINT", () => {
   console.log("Shutting down bot...");
   bot.stopPolling();
   process.exit(0);
 });
 
-process.on("SIGTERM", () => {
+process.once("SIGTERM", () => {
   console.log("Shutting down bot...");
   bot.stopPolling();
   process.exit(0);
@@ -31,4 +38,12 @@ process.on("SIGTERM", () => {
 
 const app = express();
 app.use("/api/v1/getResponse", cornRouter);
+
+if (!isDev) {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}
+
 export { bot, matchNotificationService };

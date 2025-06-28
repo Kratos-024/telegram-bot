@@ -40,6 +40,7 @@ export class UserController {
           email,
           password,
           chatId: chatId.toString(),
+          balance: 0, // Initialize with 0 balance
         },
       });
 
@@ -81,6 +82,7 @@ export class UserController {
         console.log(`Deleted existing chat user for login: ${chatId}`);
       }
 
+      // Update user's chatId to current chatId
       await prisma.user.update({
         where: { id: user.id },
         data: { chatId: chatId.toString() },
@@ -117,6 +119,7 @@ export class UserController {
     }
   }
 
+  // FIXED: Updated to properly handle Prisma relations and removed non-existent fields
   static async getMyAccount(chatId: string) {
     try {
       const user = await prisma.user.findUnique({
@@ -126,6 +129,10 @@ export class UserController {
             include: {
               match: true,
             },
+            // Since Purchase model doesn't have createdAt, we'll order by id instead
+            orderBy: {
+              id: "desc",
+            },
           },
         },
       });
@@ -133,21 +140,195 @@ export class UserController {
       if (!user) {
         throw new ApiError(404, "User not found");
       }
-      //@ts-ignore
-      const matchHistory = user.purchases.map((purchase) => ({
-        serial: purchase.id,
+
+      const matchHistory = user.purchases.map((purchase, index) => ({
+        serial: index + 1,
         time: purchase.match.time,
-        name: purchase.match.name,
+        gameName: purchase.match.gameName,
+        matchName: purchase.match.matchName,
         buy: purchase.match.price,
       }));
 
       return new ApiResponse(200, "Account details", {
         email: user.email,
-        balance: user.balance,
+        balance: user.balance || 0,
         matchHistory,
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Get my account error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
       throw new ApiError(500, "Failed to get account details");
+    }
+  }
+
+  // Helper method to check if user is logged in
+  static async isUserLoggedIn(chatId: string): Promise<boolean> {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { chatId },
+      });
+      return !!user;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  // Get user by chatId
+  static async getUserByChatId(chatId: string) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { chatId },
+        select: {
+          id: true,
+          email: true,
+          balance: true,
+          chatId: true,
+        },
+      });
+
+      if (!user) {
+        throw new ApiError(404, "User not found");
+      }
+
+      return new ApiResponse(200, "User found", user);
+    } catch (error: any) {
+      console.error("Get user by chatId error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to get user");
+    }
+  }
+
+  // Update user balance (helper method)
+  static async updateBalance(
+    chatId: string,
+    amount: number,
+    operation: "add" | "subtract" | "set"
+  ) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { chatId },
+      });
+
+      if (!user) {
+        throw new ApiError(404, "User not found");
+      }
+
+      let newBalance: number;
+      switch (operation) {
+        case "add":
+          newBalance = (user.balance || 0) + amount;
+          break;
+        case "subtract":
+          newBalance = (user.balance || 0) - amount;
+          break;
+        case "set":
+          newBalance = amount;
+          break;
+        default:
+          throw new ApiError(400, "Invalid operation");
+      }
+
+      // Ensure balance doesn't go negative
+      if (newBalance < 0) {
+        throw new ApiError(400, "Insufficient balance");
+      }
+
+      const updatedUser = await prisma.user.update({
+        where: { chatId },
+        data: { balance: newBalance },
+        select: {
+          id: true,
+          email: true,
+          balance: true,
+        },
+      });
+
+      return new ApiResponse(200, "Balance updated successfully", updatedUser);
+    } catch (error: any) {
+      console.error("Update balance error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to update balance");
+    }
+  }
+
+  // NEW: Purchase a match
+  static async purchaseMatch(chatId: string, matchId: number) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { chatId },
+      });
+
+      if (!user) {
+        throw new ApiError(404, "User not found");
+      }
+
+      const match = await prisma.match.findUnique({
+        where: { id: matchId },
+      });
+
+      if (!match) {
+        throw new ApiError(404, "Match not found");
+      }
+
+      // Check if user has sufficient balance
+      if (user.balance < match.price) {
+        throw new ApiError(400, "Insufficient balance");
+      }
+
+      // Check if user already purchased this match
+      const existingPurchase = await prisma.purchase.findUnique({
+        where: {
+          userId_matchId: {
+            userId: user.id,
+            matchId: matchId,
+          },
+        },
+      });
+
+      if (existingPurchase) {
+        throw new ApiError(400, "You have already purchased this match");
+      }
+
+      // Start transaction to ensure data consistency
+      const result = await prisma.$transaction(async (tx) => {
+        // Deduct balance
+        await tx.user.update({
+          where: { id: user.id },
+          data: { balance: user.balance - match.price },
+        });
+
+        // Create purchase record
+        const purchase = await tx.purchase.create({
+          data: {
+            userId: user.id,
+            matchId: matchId,
+          },
+        });
+
+        return purchase;
+      });
+
+      return new ApiResponse(200, "Match purchased successfully", {
+        match: {
+          name: match.matchName,
+          gameName: match.gameName,
+          price: match.price,
+          time: match.time,
+        },
+        remainingBalance: user.balance - match.price,
+      });
+    } catch (error: any) {
+      console.error("Purchase match error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to purchase match");
     }
   }
 }

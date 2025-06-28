@@ -131,7 +131,8 @@ exports.Prisma.UserScalarFieldEnum = {
 
 exports.Prisma.MatchScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  gameName: 'gameName',
+  matchName: 'matchName',
   price: 'price',
   time: 'time',
   date: 'date'
@@ -140,7 +141,8 @@ exports.Prisma.MatchScalarFieldEnum = {
 exports.Prisma.PurchaseScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
-  matchId: 'matchId'
+  matchId: 'matchId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {

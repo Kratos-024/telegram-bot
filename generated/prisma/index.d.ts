@@ -2257,7 +2257,8 @@ export namespace Prisma {
 
   export type MatchMinAggregateOutputType = {
     id: number | null
-    name: string | null
+    gameName: string | null
+    matchName: string | null
     price: number | null
     time: string | null
     date: Date | null
@@ -2265,7 +2266,8 @@ export namespace Prisma {
 
   export type MatchMaxAggregateOutputType = {
     id: number | null
-    name: string | null
+    gameName: string | null
+    matchName: string | null
     price: number | null
     time: string | null
     date: Date | null
@@ -2273,7 +2275,8 @@ export namespace Prisma {
 
   export type MatchCountAggregateOutputType = {
     id: number
-    name: number
+    gameName: number
+    matchName: number
     price: number
     time: number
     date: number
@@ -2293,7 +2296,8 @@ export namespace Prisma {
 
   export type MatchMinAggregateInputType = {
     id?: true
-    name?: true
+    gameName?: true
+    matchName?: true
     price?: true
     time?: true
     date?: true
@@ -2301,7 +2305,8 @@ export namespace Prisma {
 
   export type MatchMaxAggregateInputType = {
     id?: true
-    name?: true
+    gameName?: true
+    matchName?: true
     price?: true
     time?: true
     date?: true
@@ -2309,7 +2314,8 @@ export namespace Prisma {
 
   export type MatchCountAggregateInputType = {
     id?: true
-    name?: true
+    gameName?: true
+    matchName?: true
     price?: true
     time?: true
     date?: true
@@ -2404,7 +2410,8 @@ export namespace Prisma {
 
   export type MatchGroupByOutputType = {
     id: number
-    name: string
+    gameName: string
+    matchName: string
     price: number
     time: string
     date: Date
@@ -2431,7 +2438,8 @@ export namespace Prisma {
 
   export type MatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    gameName?: boolean
+    matchName?: boolean
     price?: boolean
     time?: boolean
     date?: boolean
@@ -2441,7 +2449,8 @@ export namespace Prisma {
 
   export type MatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    gameName?: boolean
+    matchName?: boolean
     price?: boolean
     time?: boolean
     date?: boolean
@@ -2449,7 +2458,8 @@ export namespace Prisma {
 
   export type MatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    name?: boolean
+    gameName?: boolean
+    matchName?: boolean
     price?: boolean
     time?: boolean
     date?: boolean
@@ -2457,13 +2467,14 @@ export namespace Prisma {
 
   export type MatchSelectScalar = {
     id?: boolean
-    name?: boolean
+    gameName?: boolean
+    matchName?: boolean
     price?: boolean
     time?: boolean
     date?: boolean
   }
 
-  export type MatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "time" | "date", ExtArgs["result"]["match"]>
+  export type MatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameName" | "matchName" | "price" | "time" | "date", ExtArgs["result"]["match"]>
   export type MatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | Match$purchasesArgs<ExtArgs>
     _count?: boolean | MatchCountOutputTypeDefaultArgs<ExtArgs>
@@ -2478,7 +2489,8 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      name: string
+      gameName: string
+      matchName: string
       price: number
       time: string
       date: Date
@@ -2907,7 +2919,8 @@ export namespace Prisma {
    */
   interface MatchFieldRefs {
     readonly id: FieldRef<"Match", 'Int'>
-    readonly name: FieldRef<"Match", 'String'>
+    readonly gameName: FieldRef<"Match", 'String'>
+    readonly matchName: FieldRef<"Match", 'String'>
     readonly price: FieldRef<"Match", 'Float'>
     readonly time: FieldRef<"Match", 'String'>
     readonly date: FieldRef<"Match", 'DateTime'>
@@ -3369,18 +3382,21 @@ export namespace Prisma {
     id: number | null
     userId: number | null
     matchId: number | null
+    createdAt: Date | null
   }
 
   export type PurchaseMaxAggregateOutputType = {
     id: number | null
     userId: number | null
     matchId: number | null
+    createdAt: Date | null
   }
 
   export type PurchaseCountAggregateOutputType = {
     id: number
     userId: number
     matchId: number
+    createdAt: number
     _all: number
   }
 
@@ -3401,18 +3417,21 @@ export namespace Prisma {
     id?: true
     userId?: true
     matchId?: true
+    createdAt?: true
   }
 
   export type PurchaseMaxAggregateInputType = {
     id?: true
     userId?: true
     matchId?: true
+    createdAt?: true
   }
 
   export type PurchaseCountAggregateInputType = {
     id?: true
     userId?: true
     matchId?: true
+    createdAt?: true
     _all?: true
   }
 
@@ -3506,6 +3525,7 @@ export namespace Prisma {
     id: number
     userId: number
     matchId: number
+    createdAt: Date
     _count: PurchaseCountAggregateOutputType | null
     _avg: PurchaseAvgAggregateOutputType | null
     _sum: PurchaseSumAggregateOutputType | null
@@ -3531,6 +3551,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     matchId?: boolean
+    createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     match?: boolean | MatchDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["purchase"]>
@@ -3539,6 +3560,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     matchId?: boolean
+    createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     match?: boolean | MatchDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["purchase"]>
@@ -3547,6 +3569,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     matchId?: boolean
+    createdAt?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
     match?: boolean | MatchDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["purchase"]>
@@ -3555,9 +3578,10 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     matchId?: boolean
+    createdAt?: boolean
   }
 
-  export type PurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "matchId", ExtArgs["result"]["purchase"]>
+  export type PurchaseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "matchId" | "createdAt", ExtArgs["result"]["purchase"]>
   export type PurchaseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
     match?: boolean | MatchDefaultArgs<ExtArgs>
@@ -3581,6 +3605,7 @@ export namespace Prisma {
       id: number
       userId: number
       matchId: number
+      createdAt: Date
     }, ExtArgs["result"]["purchase"]>
     composites: {}
   }
@@ -4009,6 +4034,7 @@ export namespace Prisma {
     readonly id: FieldRef<"Purchase", 'Int'>
     readonly userId: FieldRef<"Purchase", 'Int'>
     readonly matchId: FieldRef<"Purchase", 'Int'>
+    readonly createdAt: FieldRef<"Purchase", 'DateTime'>
   }
     
 
@@ -4451,7 +4477,8 @@ export namespace Prisma {
 
   export const MatchScalarFieldEnum: {
     id: 'id',
-    name: 'name',
+    gameName: 'gameName',
+    matchName: 'matchName',
     price: 'price',
     time: 'time',
     date: 'date'
@@ -4463,7 +4490,8 @@ export namespace Prisma {
   export const PurchaseScalarFieldEnum: {
     id: 'id',
     userId: 'userId',
-    matchId: 'matchId'
+    matchId: 'matchId',
+    createdAt: 'createdAt'
   };
 
   export type PurchaseScalarFieldEnum = (typeof PurchaseScalarFieldEnum)[keyof typeof PurchaseScalarFieldEnum]
@@ -4616,7 +4644,8 @@ export namespace Prisma {
     OR?: MatchWhereInput[]
     NOT?: MatchWhereInput | MatchWhereInput[]
     id?: IntFilter<"Match"> | number
-    name?: StringFilter<"Match"> | string
+    gameName?: StringFilter<"Match"> | string
+    matchName?: StringFilter<"Match"> | string
     price?: FloatFilter<"Match"> | number
     time?: StringFilter<"Match"> | string
     date?: DateTimeFilter<"Match"> | Date | string
@@ -4625,7 +4654,8 @@ export namespace Prisma {
 
   export type MatchOrderByWithRelationInput = {
     id?: SortOrder
-    name?: SortOrder
+    gameName?: SortOrder
+    matchName?: SortOrder
     price?: SortOrder
     time?: SortOrder
     date?: SortOrder
@@ -4637,7 +4667,8 @@ export namespace Prisma {
     AND?: MatchWhereInput | MatchWhereInput[]
     OR?: MatchWhereInput[]
     NOT?: MatchWhereInput | MatchWhereInput[]
-    name?: StringFilter<"Match"> | string
+    gameName?: StringFilter<"Match"> | string
+    matchName?: StringFilter<"Match"> | string
     price?: FloatFilter<"Match"> | number
     time?: StringFilter<"Match"> | string
     date?: DateTimeFilter<"Match"> | Date | string
@@ -4646,7 +4677,8 @@ export namespace Prisma {
 
   export type MatchOrderByWithAggregationInput = {
     id?: SortOrder
-    name?: SortOrder
+    gameName?: SortOrder
+    matchName?: SortOrder
     price?: SortOrder
     time?: SortOrder
     date?: SortOrder
@@ -4662,7 +4694,8 @@ export namespace Prisma {
     OR?: MatchScalarWhereWithAggregatesInput[]
     NOT?: MatchScalarWhereWithAggregatesInput | MatchScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Match"> | number
-    name?: StringWithAggregatesFilter<"Match"> | string
+    gameName?: StringWithAggregatesFilter<"Match"> | string
+    matchName?: StringWithAggregatesFilter<"Match"> | string
     price?: FloatWithAggregatesFilter<"Match"> | number
     time?: StringWithAggregatesFilter<"Match"> | string
     date?: DateTimeWithAggregatesFilter<"Match"> | Date | string
@@ -4675,6 +4708,7 @@ export namespace Prisma {
     id?: IntFilter<"Purchase"> | number
     userId?: IntFilter<"Purchase"> | number
     matchId?: IntFilter<"Purchase"> | number
+    createdAt?: DateTimeFilter<"Purchase"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     match?: XOR<MatchScalarRelationFilter, MatchWhereInput>
   }
@@ -4683,6 +4717,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     matchId?: SortOrder
+    createdAt?: SortOrder
     user?: UserOrderByWithRelationInput
     match?: MatchOrderByWithRelationInput
   }
@@ -4695,6 +4730,7 @@ export namespace Prisma {
     NOT?: PurchaseWhereInput | PurchaseWhereInput[]
     userId?: IntFilter<"Purchase"> | number
     matchId?: IntFilter<"Purchase"> | number
+    createdAt?: DateTimeFilter<"Purchase"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
     match?: XOR<MatchScalarRelationFilter, MatchWhereInput>
   }, "id" | "userId_matchId">
@@ -4703,6 +4739,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     matchId?: SortOrder
+    createdAt?: SortOrder
     _count?: PurchaseCountOrderByAggregateInput
     _avg?: PurchaseAvgOrderByAggregateInput
     _max?: PurchaseMaxOrderByAggregateInput
@@ -4717,6 +4754,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"Purchase"> | number
     userId?: IntWithAggregatesFilter<"Purchase"> | number
     matchId?: IntWithAggregatesFilter<"Purchase"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Purchase"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -4784,7 +4822,8 @@ export namespace Prisma {
   }
 
   export type MatchCreateInput = {
-    name: string
+    gameName: string
+    matchName: string
     price: number
     time: string
     date?: Date | string
@@ -4793,7 +4832,8 @@ export namespace Prisma {
 
   export type MatchUncheckedCreateInput = {
     id?: number
-    name: string
+    gameName: string
+    matchName: string
     price: number
     time: string
     date?: Date | string
@@ -4801,7 +4841,8 @@ export namespace Prisma {
   }
 
   export type MatchUpdateInput = {
-    name?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4810,7 +4851,8 @@ export namespace Prisma {
 
   export type MatchUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4819,14 +4861,16 @@ export namespace Prisma {
 
   export type MatchCreateManyInput = {
     id?: number
-    name: string
+    gameName: string
+    matchName: string
     price: number
     time: string
     date?: Date | string
   }
 
   export type MatchUpdateManyMutationInput = {
-    name?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -4834,13 +4878,15 @@ export namespace Prisma {
 
   export type MatchUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseCreateInput = {
+    createdAt?: Date | string
     user: UserCreateNestedOneWithoutPurchasesInput
     match: MatchCreateNestedOneWithoutPurchasesInput
   }
@@ -4849,9 +4895,11 @@ export namespace Prisma {
     id?: number
     userId: number
     matchId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPurchasesNestedInput
     match?: MatchUpdateOneRequiredWithoutPurchasesNestedInput
   }
@@ -4860,22 +4908,25 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     matchId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseCreateManyInput = {
     id?: number
     userId: number
     matchId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseUpdateManyMutationInput = {
-
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
     matchId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -5039,7 +5090,8 @@ export namespace Prisma {
 
   export type MatchCountOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    gameName?: SortOrder
+    matchName?: SortOrder
     price?: SortOrder
     time?: SortOrder
     date?: SortOrder
@@ -5052,7 +5104,8 @@ export namespace Prisma {
 
   export type MatchMaxOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    gameName?: SortOrder
+    matchName?: SortOrder
     price?: SortOrder
     time?: SortOrder
     date?: SortOrder
@@ -5060,7 +5113,8 @@ export namespace Prisma {
 
   export type MatchMinOrderByAggregateInput = {
     id?: SortOrder
-    name?: SortOrder
+    gameName?: SortOrder
+    matchName?: SortOrder
     price?: SortOrder
     time?: SortOrder
     date?: SortOrder
@@ -5090,6 +5144,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     matchId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PurchaseAvgOrderByAggregateInput = {
@@ -5102,12 +5157,14 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     matchId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PurchaseMinOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
     matchId?: SortOrder
+    createdAt?: SortOrder
   }
 
   export type PurchaseSumOrderByAggregateInput = {
@@ -5363,12 +5420,14 @@ export namespace Prisma {
   }
 
   export type PurchaseCreateWithoutUserInput = {
+    createdAt?: Date | string
     match: MatchCreateNestedOneWithoutPurchasesInput
   }
 
   export type PurchaseUncheckedCreateWithoutUserInput = {
     id?: number
     matchId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseCreateOrConnectWithoutUserInput = {
@@ -5404,15 +5463,18 @@ export namespace Prisma {
     id?: IntFilter<"Purchase"> | number
     userId?: IntFilter<"Purchase"> | number
     matchId?: IntFilter<"Purchase"> | number
+    createdAt?: DateTimeFilter<"Purchase"> | Date | string
   }
 
   export type PurchaseCreateWithoutMatchInput = {
+    createdAt?: Date | string
     user: UserCreateNestedOneWithoutPurchasesInput
   }
 
   export type PurchaseUncheckedCreateWithoutMatchInput = {
     id?: number
     userId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseCreateOrConnectWithoutMatchInput = {
@@ -5464,7 +5526,8 @@ export namespace Prisma {
   }
 
   export type MatchCreateWithoutPurchasesInput = {
-    name: string
+    gameName: string
+    matchName: string
     price: number
     time: string
     date?: Date | string
@@ -5472,7 +5535,8 @@ export namespace Prisma {
 
   export type MatchUncheckedCreateWithoutPurchasesInput = {
     id?: number
-    name: string
+    gameName: string
+    matchName: string
     price: number
     time: string
     date?: Date | string
@@ -5523,7 +5587,8 @@ export namespace Prisma {
   }
 
   export type MatchUpdateWithoutPurchasesInput = {
-    name?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5531,7 +5596,8 @@ export namespace Prisma {
 
   export type MatchUncheckedUpdateWithoutPurchasesInput = {
     id?: IntFieldUpdateOperationsInput | number
-    name?: StringFieldUpdateOperationsInput | string
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
     price?: FloatFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -5540,39 +5606,47 @@ export namespace Prisma {
   export type PurchaseCreateManyUserInput = {
     id?: number
     matchId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseUpdateWithoutUserInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     match?: MatchUpdateOneRequiredWithoutPurchasesNestedInput
   }
 
   export type PurchaseUncheckedUpdateWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     matchId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseUncheckedUpdateManyWithoutUserInput = {
     id?: IntFieldUpdateOperationsInput | number
     matchId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseCreateManyMatchInput = {
     id?: number
     userId: number
+    createdAt?: Date | string
   }
 
   export type PurchaseUpdateWithoutMatchInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneRequiredWithoutPurchasesNestedInput
   }
 
   export type PurchaseUncheckedUpdateWithoutMatchInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseUncheckedUpdateManyWithoutMatchInput = {
     id?: IntFieldUpdateOperationsInput | number
     userId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

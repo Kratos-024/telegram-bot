@@ -45,9 +45,10 @@ export class MatchNotificationService {
             try {
               const message =
                 `🚨 **MATCH ALERT** 🚨\n\n` +
+                `🎮 **Game:** ${match.gameName}\n` +
                 `⏰ **Time:** ${match.time}\n` +
-                `🎯 **Match:** ${match.name}\n` +
-                `💰 **Price:** ${match.price}\n\n` +
+                `🎯 **Match:** ${match.matchName}\n` +
+                `💰 **Price:** Rs.${match.price}\n\n` +
                 `Your match is starting now! Good luck! 🍀`;
 
               await this.bot.sendMessage(parseInt(user.chatId), message, {
@@ -55,7 +56,7 @@ export class MatchNotificationService {
               });
 
               console.log(
-                `Notification sent to user ${user.email} for match ${match.name}`
+                `Notification sent to user ${user.email} for match ${match.matchName} in game ${match.gameName}`
               );
             } catch (error) {
               console.error(
@@ -86,5 +87,23 @@ export class MatchNotificationService {
   async triggerNotificationCheck() {
     console.log("Manually triggering notification check...");
     await this.checkAndNotifyMatches();
+  }
+
+  // Additional helper method to test with specific time
+  async testNotificationForTime(timeString: string) {
+    console.log(`Testing notification for time: ${timeString}`);
+    try {
+      const now = new Date();
+      const currentTime = `${now.getFullYear()}-${String(
+        now.getMonth() + 1
+      ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}-${String(
+        now.getHours()
+      ).padStart(2, "0")}-${String(now.getMinutes()).padStart(2, "0")}`;
+
+      console.log(`Current time format: ${currentTime}`);
+      await this.checkAndNotifyMatches();
+    } catch (error) {
+      console.error("Error in test notification:", error);
+    }
   }
 }
