@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm install && tsc -b",
     "start": "node dist/index.js",
-    "dev": "npm run build && nodemon dist/index.js",
+    "dev": "npm run build && node dist/index.js",
     "postinstall": "npm run prisma-generate",
     "prisma-migrate": "npx prisma migrate dev --schema=src/db/prisma/schema.prisma",
     "prisma-generate": "npx prisma generate --schema=src/db/prisma/schema.prisma",
