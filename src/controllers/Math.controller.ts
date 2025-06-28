@@ -275,7 +275,7 @@ export class MatchController {
 
       return new ApiResponse(
         200,
-        `User balance updated successfully from $${user.balance} to $${newBalance}`,
+        `User balance updated successfully from Rs.${user.balance} to Rs.${newBalance}`,
         updatedUser
       );
     } catch (error: any) {

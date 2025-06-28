@@ -363,7 +363,7 @@ export class BotRoutes {
                 chatId,
                 `👤 **User Details:**\n` +
                   `Email: ${userData.email}\n` +
-                  `Current Balance: $${userData.balance}\n` +
+                  `Current Balance: Rs.${userData.balance}\n` +
                   `Total Matches: ${userData.totalMatches}\n` +
                   `Account Created: ${new Date(
                     userData.createdAt
@@ -489,7 +489,7 @@ export class BotRoutes {
         matches.forEach((match: any) => {
           message += `**ID:** ${match.id} | **Serial:** ${match.serial}\n`;
           message += `**Name:** ${match.name}\n`;
-          message += `💰 **Price:** $${match.price}\n`;
+          message += `💰 **Price:** Rs.${match.price}\n`;
           message += `⏰ **Time:** ${match.time}\n`;
           message += `📅 **Date:** ${match.date}\n\n`;
         });
@@ -540,7 +540,7 @@ export class BotRoutes {
       //@ts-ignore
       message += `Email: ${data.email}\n`;
       //@ts-ignore
-      message += `Balance: $${data.balance}\n\n`;
+      message += `Balance: Rs.${data.balance}\n\n`;
       message += `**Match History:**\n`;
       //@ts-ignore
       if (data.matchHistory.length === 0) {
@@ -548,7 +548,7 @@ export class BotRoutes {
       } else {
         //@ts-ignore
         data.matchHistory.forEach((match: any) => {
-          message += `${match.serial}. ${match.time} - ${match.name} ($${match.buy})\n`;
+          message += `${match.serial}. ${match.time} - ${match.name} (Rs.${match.buy})\n`;
         });
       }
 
@@ -570,7 +570,7 @@ export class BotRoutes {
       } else {
         //@ts-ignore
         matches.forEach((match: any) => {
-          message += `${match.serial}. ${match.time} - ${match.name} ($${match.buy})\n`;
+          message += `${match.serial}. ${match.time} - ${match.name} (Rs.${match.buy})\n`;
         });
       }
 
@@ -603,7 +603,7 @@ export class BotRoutes {
       this.bot.sendMessage(
         chatId,
         //@ts-ignore
-        `💸 **Withdraw**\n\nYour Balance: $${data.balance}\n\nClick below to contact admin for withdrawal:`,
+        `💸 **Withdraw**\n\nYour Balance: Rs.${data.balance}\n\nClick below to contact admin for withdrawal:`,
         {
           parse_mode: "Markdown",
           reply_markup: keyboard,
