@@ -154,6 +154,10 @@ const config = {
         "fromEnvVar": null,
         "value": "windows",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "debian-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -161,7 +165,7 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": "../../.env",
+    "rootEnvPath": null,
     "schemaEnvPath": "../../.env"
   },
   "relativePath": "../../src/db/prisma",
@@ -171,6 +175,7 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -179,8 +184,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../../../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = \"postgresql://neondb_owner:npg_r9vftg1biqxs@ep-quiet-bush-a8o47gjt-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require\"\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  email     String   @unique\n  password  String\n  balance   Float    @default(0)\n  createdAt DateTime @default(now())\n  chatId    String   @unique\n\n  purchases Purchase[]\n}\n\nmodel Match {\n  id    Int      @id @default(autoincrement())\n  name  String\n  price Float\n  time  String\n  date  DateTime @default(now())\n\n  purchases Purchase[]\n}\n\nmodel Purchase {\n  id      Int   @id @default(autoincrement())\n  userId  Int\n  matchId Int\n  user    User  @relation(fields: [userId], references: [id])\n  match   Match @relation(fields: [matchId], references: [id])\n\n  @@unique([userId, matchId])\n}\n",
-  "inlineSchemaHash": "9f418e837bdaec8511fd4bd05b9b23e1c1ffd0a7f7f6db2a918d36f6ea5c74a4",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"debian-openssl-3.0.x\"]\n\n  output = \"../../../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = \"postgresql://neondb_owner:npg_r9vftg1biqxs@ep-quiet-bush-a8o47gjt-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require\"\n}\n\nmodel User {\n  id        Int      @id @default(autoincrement())\n  email     String   @unique\n  password  String\n  balance   Float    @default(0)\n  createdAt DateTime @default(now())\n  chatId    String   @unique\n\n  purchases Purchase[]\n}\n\nmodel Match {\n  id    Int      @id @default(autoincrement())\n  name  String\n  price Float\n  time  String\n  date  DateTime @default(now())\n\n  purchases Purchase[]\n}\n\nmodel Purchase {\n  id      Int   @id @default(autoincrement())\n  userId  Int\n  matchId Int\n  user    User  @relation(fields: [userId], references: [id])\n  match   Match @relation(fields: [matchId], references: [id])\n\n  @@unique([userId, matchId])\n}\n",
+  "inlineSchemaHash": "5a16f9d2bc113bd06e94e45c45f541993af69cd0fb5ebcc77913f5dd062ee9db",
   "copyEngine": true
 }
 
@@ -221,6 +226,10 @@ Object.assign(exports, Prisma)
 // file annotations for bundling tools to include these files
 path.join(__dirname, "query_engine-windows.dll.node");
 path.join(process.cwd(), "generated/prisma/query_engine-windows.dll.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
+path.join(process.cwd(), "generated/prisma/libquery_engine-debian-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "generated/prisma/schema.prisma")
