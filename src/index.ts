@@ -10,7 +10,6 @@ dotenv.config({ path: ".env" });
 
 const token = process.env.BOT_TOKEN!;
 const isDev = process.env.NODE_ENV !== "production";
-const serverUrl = process.env.SERVER_URL || "";
 
 const bot = new TelegramBot(token, {
   polling: isDev,
@@ -21,7 +20,7 @@ app.use(express.json());
 
 if (!isDev) {
   const webhookPath = `/bot${token}`;
-  const fullWebhookUrl = `${serverUrl}${webhookPath}`;
+  const fullWebhookUrl = `https://telegram-bot-vrs6.onrender.com/${webhookPath}`;
 
   bot.setWebHook(fullWebhookUrl);
   console.log("Webhook set to:", fullWebhookUrl);
