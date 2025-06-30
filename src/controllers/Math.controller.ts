@@ -6,8 +6,13 @@ export class MatchController {
   static async addMatch(
     gameName: string,
     matchName: string,
-    price: number,
-    time: string
+    perKillPoint: number,
+    firstPrize: number,
+    secondPrize: number,
+    thirdPrize: number,
+    entryFees: number,
+    time: string,
+    totalSeats: number = 100
   ) {
     try {
       const [year, month, day, hour, minute] = time.split("-").map(Number);
@@ -17,7 +22,13 @@ export class MatchController {
         data: {
           gameName,
           matchName,
-          price,
+          price: entryFees, // Keep price as entryFees for compatibility
+          perKillPoint,
+          firstPrize,
+          secondPrize,
+          thirdPrize,
+          entryFees,
+          totalSeats,
           time,
           date: matchDate,
         },
@@ -30,7 +41,6 @@ export class MatchController {
     }
   }
 
-  // FIXED: Updated to return matches grouped by game
   static async getTodayMatches() {
     try {
       const today = new Date();
@@ -45,6 +55,9 @@ export class MatchController {
             lt: tomorrow,
           },
         },
+        include: {
+          matchEntries: true,
+        },
         orderBy: [{ gameName: "asc" }, { time: "asc" }],
       });
 
@@ -54,7 +67,14 @@ export class MatchController {
         time: match.time,
         gameName: match.gameName,
         name: match.matchName,
-        buy: match.price,
+        entryFees: match.entryFees,
+        perKillPoint: match.perKillPoint,
+        firstPrize: match.firstPrize,
+        secondPrize: match.secondPrize,
+        thirdPrize: match.thirdPrize,
+        totalSeats: match.totalSeats,
+        occupiedSeats: match.matchEntries.length,
+        availableSeats: match.totalSeats - match.matchEntries.length,
       }));
 
       return new ApiResponse(200, "Today's matches", matchTable);
@@ -75,9 +95,6 @@ export class MatchController {
       const utcTomorrow = new Date(utcToday);
       utcTomorrow.setUTCDate(utcTomorrow.getUTCDate() + 1);
 
-      console.log("UTC Today:", utcToday.toISOString());
-      console.log("UTC Tomorrow:", utcTomorrow.toISOString());
-
       const matches = await prisma.match.findMany({
         where: {
           gameName: {
@@ -89,6 +106,9 @@ export class MatchController {
             lt: utcTomorrow,
           },
         },
+        include: {
+          matchEntries: true,
+        },
         orderBy: {
           time: "asc",
         },
@@ -99,7 +119,14 @@ export class MatchController {
         serial: index + 1,
         time: match.time,
         name: match.matchName,
-        buy: match.price,
+        entryFees: match.entryFees,
+        perKillPoint: match.perKillPoint,
+        firstPrize: match.firstPrize,
+        secondPrize: match.secondPrize,
+        thirdPrize: match.thirdPrize,
+        totalSeats: match.totalSeats,
+        occupiedSeats: match.matchEntries.length,
+        availableSeats: match.totalSeats - match.matchEntries.length,
       }));
 
       return new ApiResponse(
@@ -131,10 +158,12 @@ export class MatchController {
     }
   }
 
-  // FIXED: Updated to match new schema with gameName and matchName
   static async getAllMatches() {
     try {
       const matches = await prisma.match.findMany({
+        include: {
+          matchEntries: true,
+        },
         orderBy: {
           date: "desc",
         },
@@ -145,7 +174,13 @@ export class MatchController {
         serial: index + 1,
         gameName: match.gameName,
         matchName: match.matchName,
-        price: match.price,
+        entryFees: match.entryFees,
+        perKillPoint: match.perKillPoint,
+        firstPrize: match.firstPrize,
+        secondPrize: match.secondPrize,
+        thirdPrize: match.thirdPrize,
+        totalSeats: match.totalSeats,
+        occupiedSeats: match.matchEntries.length,
         time: match.time,
         date: match.date.toDateString(),
       }));
@@ -157,39 +192,34 @@ export class MatchController {
     }
   }
 
-  // FIXED: Updated to use matchName instead of name
   static async deleteMatch(matchId: number) {
     try {
-      console.log(
-        "dflkjflskfdflkjflskfdflkjflskfdflkjflskfdflkjflskf",
-        matchId
-      );
       const matchToDelete = await prisma.match.findFirst({
         where: {
           id: {
             equals: matchId,
           },
         },
-      });
-
-      if (!matchToDelete) {
-        throw new ApiError(404, `Match with name "${matchToDelete}" not found`);
-      }
-
-      const purchaseCount = await prisma.purchase.count({
-        where: {
-          matchId: matchToDelete.id,
+        include: {
+          matchEntries: true,
+          purchases: true,
         },
       });
 
-      if (purchaseCount > 0) {
+      if (!matchToDelete) {
+        throw new ApiError(404, `Match with ID "${matchId}" not found`);
+      }
+
+      const totalEntries =
+        matchToDelete.matchEntries.length + matchToDelete.purchases.length;
+
+      if (totalEntries > 0) {
         throw new ApiError(
           400,
-          `Cannot delete match "${matchToDelete?.matchName}" as it has ${purchaseCount} associated purchases`
+          `Cannot delete match "${matchToDelete?.matchName}" as it has ${totalEntries} associated entries/purchases`
         );
       }
 
-      // Delete the match
       await prisma.match.delete({
         where: {
           id: matchToDelete.id,
@@ -210,7 +240,6 @@ export class MatchController {
     }
   }
 
-  // FIXED: Updated to use matchName and gameName
   static async getMatchHistory(userId: number) {
     try {
       const purchases = await prisma.purchase.findMany({
@@ -219,96 +248,40 @@ export class MatchController {
         orderBy: { createdAt: "desc" },
       });
 
-      const history = purchases.map((purchase, index) => ({
-        serial: index + 1,
-        time: purchase.match.time,
-        gameName: purchase.match.gameName,
-        matchName: purchase.match.matchName,
-        buy: purchase.match.price,
-      }));
+      const entries = await prisma.matchEntry.findMany({
+        where: { userId },
+        include: { match: true },
+        orderBy: { createdAt: "desc" },
+      });
+
+      const history = [
+        ...purchases.map((purchase, index) => ({
+          serial: index + 1,
+          time: purchase.match.time,
+          gameName: purchase.match.gameName,
+          matchName: purchase.match.matchName,
+          type: "Purchase",
+          amount: purchase.match.price,
+        })),
+        ...entries.map((entry, index) => ({
+          serial: purchases.length + index + 1,
+          time: entry.match.time,
+          gameName: entry.match.gameName,
+          matchName: entry.match.matchName,
+          type: "Entry",
+          amount: entry.amountPaid,
+        })),
+      ];
+
+      // Sort by creation time (newest first)
+      history.sort(
+        (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
+      );
 
       return new ApiResponse(200, "Match history", history);
     } catch (error) {
       console.error("Get match history error:", error);
       throw new ApiError(500, "Failed to get match history");
-    }
-  }
-
-  // FIXED: Updated to include gameName parameter as used in BotRoutes
-  static async giveMatchToUser(
-    userEmail: string,
-    matchId: number,
-    gameName: string
-  ) {
-    try {
-      // Find user by email
-      const user = await prisma.user.findUnique({
-        where: { email: userEmail },
-      });
-
-      if (!user) {
-        throw new ApiError(404, `User with email "${userEmail}" not found`);
-      }
-
-      // Find match by ID and optionally verify game name
-      const match = await prisma.match.findFirst({
-        where: {
-          id: matchId,
-          gameName: {
-            equals: gameName,
-            mode: "insensitive",
-          },
-        },
-      });
-
-      if (!match) {
-        throw new ApiError(
-          404,
-          `Match with ID "${matchId}" not found in game "${gameName}"`
-        );
-      }
-
-      // Check if user already has this match
-      const existingPurchase = await prisma.purchase.findUnique({
-        where: {
-          userId_matchId: {
-            userId: user.id,
-            matchId: matchId,
-          },
-        },
-      });
-
-      if (existingPurchase) {
-        throw new ApiError(400, `User already has this match`);
-      }
-
-      // Create purchase record
-      await prisma.purchase.create({
-        data: {
-          userId: user.id,
-          matchId: matchId,
-        },
-      });
-
-      return new ApiResponse(
-        200,
-        `Match "${match.matchName}" from game "${match.gameName}" given to user "${userEmail}" successfully`,
-        {
-          user: { email: user.email, id: user.id },
-          match: {
-            name: match.matchName,
-            gameName: match.gameName,
-            time: match.time,
-            price: match.price,
-          },
-        }
-      );
-    } catch (error: any) {
-      console.error("Give match to user error:", error.message);
-      if (error instanceof ApiError) {
-        throw error;
-      }
-      throw new ApiError(500, "Failed to give match to user");
     }
   }
 
@@ -326,6 +299,11 @@ export class MatchController {
               match: true,
             },
           },
+          matchEntries: {
+            include: {
+              match: true,
+            },
+          },
         },
       });
 
@@ -333,12 +311,14 @@ export class MatchController {
         throw new ApiError(404, `User with email "${userEmail}" not found`);
       }
 
+      const totalMatches = user.purchases.length + user.matchEntries.length;
+
       return new ApiResponse(200, "User balance retrieved successfully", {
         id: user.id,
         email: user.email,
         balance: user.balance,
         createdAt: user.createdAt,
-        totalMatches: user.purchases.length,
+        totalMatches,
       });
     } catch (error: any) {
       console.error("Get user balance error:", error.message);
@@ -383,7 +363,6 @@ export class MatchController {
     }
   }
 
-  // FIXED: Updated to use matchName
   static async getMatchesForNotification() {
     try {
       const now = new Date();
@@ -403,6 +382,11 @@ export class MatchController {
               user: true,
             },
           },
+          matchEntries: {
+            include: {
+              user: true,
+            },
+          },
         },
       });
 
@@ -410,6 +394,137 @@ export class MatchController {
     } catch (error) {
       console.error("Get matches for notification error:", error);
       throw new ApiError(500, "Failed to get matches for notification");
+    }
+  }
+
+  // NEW: Enter match functionality
+  static async enterMatch(chatId: string, matchId: number, amountPaid: number) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { chatId },
+      });
+
+      if (!user) {
+        throw new ApiError(404, "User not found");
+      }
+
+      const match = await prisma.match.findUnique({
+        where: { id: matchId },
+        include: {
+          matchEntries: true,
+        },
+      });
+
+      if (!match) {
+        throw new ApiError(404, "Match not found");
+      }
+
+      // Check if seats are available
+      if (match.matchEntries.length >= match.totalSeats) {
+        throw new ApiError(400, "Match is full! No seats available.");
+      }
+
+      // Check if user has sufficient balance
+      if (user.balance < amountPaid) {
+        throw new ApiError(400, "Insufficient balance");
+      }
+
+      // Check if user already entered this match
+      const existingEntry = await prisma.matchEntry.findUnique({
+        where: {
+          userId_matchId: {
+            userId: user.id,
+            matchId: matchId,
+          },
+        },
+      });
+
+      if (existingEntry) {
+        throw new ApiError(400, "You have already entered this match");
+      }
+
+      // Start transaction to ensure data consistency
+      const result = await prisma.$transaction(async (tx) => {
+        // Deduct balance
+        await tx.user.update({
+          where: { id: user.id },
+          data: { balance: user.balance - amountPaid },
+        });
+
+        // Create match entry record
+        const entry = await tx.matchEntry.create({
+          data: {
+            userId: user.id,
+            matchId: matchId,
+            amountPaid: amountPaid,
+          },
+        });
+
+        return entry;
+      });
+
+      const remainingSeats = match.totalSeats - match.matchEntries.length - 1;
+
+      return new ApiResponse(200, "Successfully entered the match!", {
+        match: {
+          name: match.matchName,
+          gameName: match.gameName,
+          time: match.time,
+          firstPrize: match.firstPrize,
+          secondPrize: match.secondPrize,
+          thirdPrize: match.thirdPrize,
+          perKillPoint: match.perKillPoint,
+        },
+        amountPaid,
+        remainingBalance: user.balance - amountPaid,
+        remainingSeats,
+      });
+    } catch (error: any) {
+      console.error("Enter match error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to enter match");
+    }
+  }
+
+  // NEW: Get match details for entry
+  static async getMatchForEntry(matchId: number) {
+    try {
+      const match = await prisma.match.findUnique({
+        where: { id: matchId },
+        include: {
+          matchEntries: true,
+        },
+      });
+
+      if (!match) {
+        throw new ApiError(404, "Match not found");
+      }
+
+      const availableSeats = match.totalSeats - match.matchEntries.length;
+
+      return new ApiResponse(200, "Match details", {
+        id: match.id,
+        name: match.matchName,
+        gameName: match.gameName,
+        time: match.time,
+        entryFees: match.entryFees,
+        firstPrize: match.firstPrize,
+        secondPrize: match.secondPrize,
+        thirdPrize: match.thirdPrize,
+        perKillPoint: match.perKillPoint,
+        totalSeats: match.totalSeats,
+        occupiedSeats: match.matchEntries.length,
+        availableSeats,
+        isFull: availableSeats <= 0,
+      });
+    } catch (error: any) {
+      console.error("Get match for entry error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to get match details");
     }
   }
 }

@@ -134,6 +134,12 @@ exports.Prisma.MatchScalarFieldEnum = {
   gameName: 'gameName',
   matchName: 'matchName',
   price: 'price',
+  perKillPoint: 'perKillPoint',
+  firstPrize: 'firstPrize',
+  secondPrize: 'secondPrize',
+  thirdPrize: 'thirdPrize',
+  entryFees: 'entryFees',
+  totalSeats: 'totalSeats',
   time: 'time',
   date: 'date'
 };
@@ -142,6 +148,14 @@ exports.Prisma.PurchaseScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   matchId: 'matchId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.MatchEntryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  matchId: 'matchId',
+  amountPaid: 'amountPaid',
   createdAt: 'createdAt'
 };
 
@@ -159,7 +173,8 @@ exports.Prisma.QueryMode = {
 exports.Prisma.ModelName = {
   User: 'User',
   Match: 'Match',
-  Purchase: 'Purchase'
+  Purchase: 'Purchase',
+  MatchEntry: 'MatchEntry'
 };
 
 /**

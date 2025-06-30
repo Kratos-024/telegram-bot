@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://neondb_owner:npg_rXklmxn6JY8s@ep-broad-moon-a8vlzcvn-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require"
+  url      = "postgresql://neondb_owner:npg_CjhgmH7Kual5@ep-odd-cherry-a8o3hzu2-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require"
 }
 
 model User {
@@ -17,18 +17,26 @@ model User {
   createdAt DateTime @default(now())
   chatId    String   @unique
 
-  purchases Purchase[]
+  purchases    Purchase[]
+  matchEntries MatchEntry[]
 }
 
 model Match {
-  id        Int      @id @default(autoincrement())
-  gameName  String
-  matchName String
-  price     Float
-  time      String
-  date      DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  gameName     String
+  matchName    String
+  price        Float // This will be the entry fees
+  perKillPoint Float    @default(0)
+  firstPrize   Float    @default(0)
+  secondPrize  Float    @default(0)
+  thirdPrize   Float    @default(0)
+  entryFees    Float // Entry fees for joining the match
+  totalSeats   Int      @default(100) // Maximum players allowed
+  time         String
+  date         DateTime @default(now())
 
-  purchases Purchase[]
+  purchases    Purchase[]
+  matchEntries MatchEntry[]
 }
 
 model Purchase {
@@ -38,6 +46,19 @@ model Purchase {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   match     Match    @relation(fields: [matchId], references: [id])
+
+  @@unique([userId, matchId])
+}
+
+model MatchEntry {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  matchId    Int
+  amountPaid Float
+  createdAt  DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  match Match @relation(fields: [matchId], references: [id])
 
   @@unique([userId, matchId])
 }

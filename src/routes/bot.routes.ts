@@ -112,6 +112,14 @@ export class BotRoutes {
             await this.showGameCategories(chatId, "user_game_selection");
             break;
 
+          case "enter_match":
+            userSessions.set(chatId, {
+              state: "awaiting_match_id",
+              data: {},
+            });
+            this.bot.sendMessage(chatId, "Enter match ID to join:");
+            break;
+
           case "withdraw":
             await this.showWithdraw(chatId);
             break;
@@ -124,27 +132,16 @@ export class BotRoutes {
             this.bot.sendMessage(chatId, "Enter game name:");
             break;
 
-          case "9lo":
-            await this.showAllMatches(chatId);
-            break;
           case "admin_show_matches":
             await this.showAllMatches(chatId);
             break;
+
           case "admin_delete_match":
             userSessions.set(chatId, {
               state: "awaiting_delete_match_name",
               data: {},
             });
-
             this.bot.sendMessage(chatId, "Enter the exact match ID to delete:");
-            break;
-
-          case "admin_give_match":
-            userSessions.set(chatId, {
-              state: "awaiting_user_email_for_match",
-              data: {},
-            });
-            this.bot.sendMessage(chatId, "Enter user email to give match:");
             break;
 
           case "admin_user_balance":
@@ -162,20 +159,6 @@ export class BotRoutes {
             if (data?.startsWith("user_game_")) {
               const gameName = data.replace("user_game_", "");
               await this.showGameMatches(chatId, gameName);
-            } else if (data?.startsWith("admin_game_")) {
-              const gameName = data.replace("admin_game_", "");
-              const session = userSessions.get(chatId);
-              if (
-                session &&
-                session.state === "awaiting_game_selection_for_match"
-              ) {
-                session.data.selectedGame = gameName;
-                session.state = "awaiting_match_id_to_give";
-                this.bot.sendMessage(
-                  chatId,
-                  `Selected game: ${gameName}\nEnter match ID to give to user:`
-                );
-              }
             }
             break;
         }
@@ -268,31 +251,85 @@ export class BotRoutes {
             }
             break;
 
-          // NEW: Handle game name input
+          // Admin Add Match Flow
           case "awaiting_game_name":
             session.data.gameName = text;
             session.state = "awaiting_match_name";
             this.bot.sendMessage(chatId, "Enter match name:");
             break;
 
-          // UPDATED: Handle match name input
           case "awaiting_match_name":
             session.data.matchName = text;
-            session.state = "awaiting_match_price";
-            this.bot.sendMessage(chatId, "Enter match price:");
+            session.state = "awaiting_per_kill_point";
+            this.bot.sendMessage(chatId, "Enter per kill point:");
             break;
 
-          // NEW: Handle price input
-          case "awaiting_match_price":
-            const price = parseFloat(text!);
-            if (isNaN(price)) {
+          case "awaiting_per_kill_point":
+            const perKillPoint = parseFloat(text!);
+            if (isNaN(perKillPoint)) {
               this.bot.sendMessage(
                 chatId,
-                "Please enter a valid price (number)"
+                "Please enter a valid per kill point (number)"
               );
               return;
             }
-            session.data.price = price;
+            session.data.perKillPoint = perKillPoint;
+            session.state = "awaiting_first_prize";
+            this.bot.sendMessage(chatId, "Enter first prize amount:");
+            break;
+
+          case "awaiting_first_prize":
+            const firstPrize = parseFloat(text!);
+            if (isNaN(firstPrize)) {
+              this.bot.sendMessage(
+                chatId,
+                "Please enter a valid first prize amount (number)"
+              );
+              return;
+            }
+            session.data.firstPrize = firstPrize;
+            session.state = "awaiting_second_prize";
+            this.bot.sendMessage(chatId, "Enter second prize amount:");
+            break;
+
+          case "awaiting_second_prize":
+            const secondPrize = parseFloat(text!);
+            if (isNaN(secondPrize)) {
+              this.bot.sendMessage(
+                chatId,
+                "Please enter a valid second prize amount (number)"
+              );
+              return;
+            }
+            session.data.secondPrize = secondPrize;
+            session.state = "awaiting_third_prize";
+            this.bot.sendMessage(chatId, "Enter third prize amount:");
+            break;
+
+          case "awaiting_third_prize":
+            const thirdPrize = parseFloat(text!);
+            if (isNaN(thirdPrize)) {
+              this.bot.sendMessage(
+                chatId,
+                "Please enter a valid third prize amount (number)"
+              );
+              return;
+            }
+            session.data.thirdPrize = thirdPrize;
+            session.state = "awaiting_entry_fees";
+            this.bot.sendMessage(chatId, "Enter entry fees:");
+            break;
+
+          case "awaiting_entry_fees":
+            const entryFees = parseFloat(text!);
+            if (isNaN(entryFees)) {
+              this.bot.sendMessage(
+                chatId,
+                "Please enter a valid entry fees amount (number)"
+              );
+              return;
+            }
+            session.data.entryFees = entryFees;
             session.state = "awaiting_match_time";
             this.bot.sendMessage(
               chatId,
@@ -302,7 +339,6 @@ export class BotRoutes {
 
           case "awaiting_match_time":
             try {
-              // Validate time format
               const timeRegex = /^\d{4}-\d{2}-\d{2}-\d{2}-\d{2}$/;
               if (!timeRegex.test(text!)) {
                 this.bot.sendMessage(
@@ -315,7 +351,11 @@ export class BotRoutes {
               await MatchController.addMatch(
                 session.data.gameName,
                 session.data.matchName,
-                session.data.price,
+                session.data.perKillPoint,
+                session.data.firstPrize,
+                session.data.secondPrize,
+                session.data.thirdPrize,
+                session.data.entryFees,
                 text!
               );
               userSessions.delete(chatId);
@@ -347,13 +387,8 @@ export class BotRoutes {
             }
             break;
 
-          case "awaiting_user_email_for_match":
-            session.data.userEmail = text;
-            session.state = "awaiting_game_selection_for_match";
-            await this.showGameCategories(chatId, "admin_game");
-            break;
-
-          case "awaiting_match_id_to_give":
+          // User Enter Match Flow
+          case "awaiting_match_id":
             try {
               const matchId = parseInt(text!);
               if (isNaN(matchId)) {
@@ -364,21 +399,82 @@ export class BotRoutes {
                 return;
               }
 
-              const result = await MatchController.giveMatchToUser(
-                session.data.userEmail,
-                matchId,
-                session.data.selectedGame
+              const matchDetails = await MatchController.getMatchForEntry(
+                matchId
               );
+              const match = matchDetails.data;
+
+              if (match?.isFull) {
+                this.bot.sendMessage(
+                  chatId,
+                  "❌ Match is full! No seats available."
+                );
+                userSessions.delete(chatId);
+                this.showMainDashboard(chatId);
+                return;
+              }
+
+              session.data.matchId = matchId;
+              session.data.matchDetails = match;
+              session.state = "awaiting_entry_amount";
+
+              this.bot.sendMessage(
+                chatId,
+                `🎮 **${match?.name}** (${match?.gameName})\n` +
+                  `⏰ Time: ${match?.time}\n` +
+                  `💰 Entry Fees: Rs.${match?.entryFees}\n` +
+                  `🏆 1st Prize: Rs.${match?.firstPrize}\n` +
+                  `🥈 2nd Prize: Rs.${match?.secondPrize}\n` +
+                  `🥉 3rd Prize: Rs.${match?.thirdPrize}\n` +
+                  `🎯 Per Kill: Rs.${match?.perKillPoint}\n` +
+                  `💺 Available Seats: ${match?.availableSeats}/${match?.totalSeats}\n\n` +
+                  `Enter amount to pay for entry:`,
+                { parse_mode: "Markdown" }
+              );
+            } catch (error: any) {
+              this.bot.sendMessage(chatId, error.message || "Match not found");
               userSessions.delete(chatId);
-              this.bot.sendMessage(chatId, result.message);
-              this.showAdminMenu(chatId);
+              this.showMainDashboard(chatId);
+            }
+            break;
+
+          case "awaiting_entry_amount":
+            try {
+              const amount = parseFloat(text!);
+              if (isNaN(amount) || amount <= 0) {
+                this.bot.sendMessage(
+                  chatId,
+                  "Please enter a valid amount (positive number)"
+                );
+                return;
+              }
+
+              const result = await MatchController.enterMatch(
+                chatId.toString(),
+                session.data.matchId,
+                amount
+              );
+
+              userSessions.delete(chatId);
+              const matchData = result.data;
+
+              this.bot.sendMessage(
+                chatId,
+                `✅ ${result.message}\n\n` +
+                  `🎮 Match: ${matchData?.match.name}\n` +
+                  `💰 Amount Paid: Rs.${matchData?.amountPaid}\n` +
+                  `💳 Remaining Balance: Rs.${matchData?.remainingBalance}\n` +
+                  `💺 Remaining Seats: ${matchData?.remainingSeats}`,
+                { parse_mode: "Markdown" }
+              );
+              this.showMainDashboard(chatId);
             } catch (error: any) {
               this.bot.sendMessage(
                 chatId,
-                error.message || "Failed to give match to user"
+                error.message || "Failed to enter match"
               );
               userSessions.delete(chatId);
-              this.showAdminMenu(chatId);
+              this.showMainDashboard(chatId);
             }
             break;
 
@@ -478,6 +574,7 @@ export class BotRoutes {
         [{ text: "📄 My Account", callback_data: "my_account" }],
         [{ text: "🎯 Buy Token", callback_data: "buy_token" }],
         [{ text: "🏆 Today Match", callback_data: "today_match" }],
+        [{ text: "🎮 Enter Match", callback_data: "enter_match" }],
         [{ text: "💸 Withdraw", callback_data: "withdraw" }],
         [{ text: "🔁 Logout", callback_data: "logout" }],
       ],
@@ -494,7 +591,6 @@ export class BotRoutes {
         [{ text: "➕ Add Match", callback_data: "admin_add_match" }],
         [{ text: "📋 Show Matches", callback_data: "admin_show_matches" }],
         [{ text: "🗑️ Delete Match", callback_data: "admin_delete_match" }],
-        [{ text: "🎁 Give Match to User", callback_data: "admin_give_match" }],
         [
           {
             text: "💰 Manage User Balance",
@@ -520,9 +616,7 @@ export class BotRoutes {
           this.bot.sendMessage(chatId, "No games available.");
           return;
         }
-      }
 
-      if (Array.isArray(games)) {
         const keyboard = {
           inline_keyboard: games.map((game: string) => [
             { text: `🎮 ${game}`, callback_data: `${callbackPrefix}_${game}` },
@@ -557,9 +651,14 @@ export class BotRoutes {
           matches.forEach((match: any) => {
             const escapedTime = this.escapeMarkdownV2(match.time);
             const escapedName = this.escapeMarkdownV2(match.name);
-            const escapedPrice = this.escapeMarkdownV2(match.buy.toString());
+            const escapedEntryFees = this.escapeMarkdownV2(
+              match.entryFees.toString()
+            );
 
-            message += `${match.serial}\\. ${escapedTime} \\- ${escapedName} \\(Rs\\.${escapedPrice}\\)\n`;
+            message += `**ID:** ${match.id} \\| ${escapedTime} \\- ${escapedName}\n`;
+            message += `💰 **Entry:** Rs\\.${escapedEntryFees} \\| 💺 **Seats:** ${match.availableSeats}/${match.totalSeats}\n`;
+            message += `🏆 **1st:** Rs\\.${match.firstPrize} \\| 🥈 **2nd:** Rs\\.${match.secondPrize} \\| 🥉 **3rd:** Rs\\.${match.thirdPrize}\n`;
+            message += `🎯 **Per Kill:** Rs\\.${match.perKillPoint}\n\n`;
           });
         }
       }
@@ -570,6 +669,7 @@ export class BotRoutes {
       this.bot.sendMessage(chatId, `Failed to load matches for ${gameName}.`);
     }
   }
+
   private async showAllMatches(chatId: number) {
     try {
       const result = await MatchController.getAllMatches();
@@ -584,7 +684,12 @@ export class BotRoutes {
             message += `**ID:** ${match.id} | **Serial:** ${match.serial}\n`;
             message += `**Game:** ${match.gameName}\n`;
             message += `**Name:** ${match.matchName}\n`;
-            message += `💰 **Price:** Rs.${match.price}\n`;
+            message += `💰 **Entry Fees:** Rs.${match.entryFees}\n`;
+            message += `🏆 **1st Prize:** Rs.${match.firstPrize}\n`;
+            message += `🥈 **2nd Prize:** Rs.${match.secondPrize}\n`;
+            message += `🥉 **3rd Prize:** Rs.${match.thirdPrize}\n`;
+            message += `🎯 **Per Kill:** Rs.${match.perKillPoint}\n`;
+            message += `💺 **Seats:** ${match.occupiedSeats}/${match.totalSeats}\n`;
             message += `⏰ **Time:** ${match.time}\n`;
             message += `📅 **Date:** ${match.date}\n\n`;
           });
@@ -634,43 +739,23 @@ export class BotRoutes {
         balance: 0,
         matchHistory: [],
       };
+
       let message = `📄 **My Account**\n`;
       message += `Email: ${data.email}\n`;
       message += `Balance: Rs.${data.balance}\n\n`;
       message += `**Match History:**\n`;
+
       if (data.matchHistory.length === 0) {
-        message += "No matches purchased yet.";
+        message += "No matches entered yet.";
       } else {
         data.matchHistory.forEach((match: any) => {
-          message += `${match.serial}. ${match.time} - ${match.gameName}: ${match.matchName} (Rs.${match.buy})\n`;
+          message += `${match.serial}. ${match.time} - ${match.gameName}: ${match.matchName} (Rs.${match.amount}) [${match.type}]\n`;
         });
       }
 
       this.bot.sendMessage(chatId, message, { parse_mode: "Markdown" });
     } catch (error) {
       this.bot.sendMessage(chatId, "Failed to load account details.");
-    }
-  }
-
-  private async showTodayMatches(chatId: number) {
-    try {
-      const result = await MatchController.getTodayMatches();
-      const matches = result.data;
-
-      let message = `🏆 **Today's Matches**\n\n`;
-      if (Array.isArray(matches)) {
-        if (matches.length === 0) {
-          message += "No matches scheduled for today.";
-        } else {
-          matches.forEach((match: any) => {
-            message += `${match.serial}. ${match.time} - ${match.gameName}: ${match.matchName} (Rs.${match.buy})\n`;
-          });
-        }
-      }
-
-      this.bot.sendMessage(chatId, message, { parse_mode: "Markdown" });
-    } catch (error) {
-      this.bot.sendMessage(chatId, "Failed to load today's matches.");
     }
   }
 
