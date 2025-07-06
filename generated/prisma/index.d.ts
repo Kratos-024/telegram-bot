@@ -3221,7 +3221,7 @@ export namespace Prisma {
     readonly matchName: FieldRef<"Match", 'String'>
     readonly platformShare: FieldRef<"Match", 'Int'>
     readonly platformShareTotal: FieldRef<"Match", 'Float'>
-    readonly netPrizePool: FieldRef<"Match", 'Int'>
+    readonly netPrizePool: FieldRef<"Match", 'Float'>
     readonly price: FieldRef<"Match", 'Float'>
     readonly perKillPoint: FieldRef<"Match", 'Float'>
     readonly firstPrize: FieldRef<"Match", 'Float'>
@@ -6124,7 +6124,7 @@ export namespace Prisma {
     matchName?: StringFilter<"Match"> | string
     platformShare?: IntNullableFilter<"Match"> | number | null
     platformShareTotal?: FloatNullableFilter<"Match"> | number | null
-    netPrizePool?: IntNullableFilter<"Match"> | number | null
+    netPrizePool?: FloatNullableFilter<"Match"> | number | null
     price?: FloatFilter<"Match"> | number
     perKillPoint?: FloatFilter<"Match"> | number
     firstPrize?: FloatFilter<"Match"> | number
@@ -6169,7 +6169,7 @@ export namespace Prisma {
     matchName?: StringFilter<"Match"> | string
     platformShare?: IntNullableFilter<"Match"> | number | null
     platformShareTotal?: FloatNullableFilter<"Match"> | number | null
-    netPrizePool?: IntNullableFilter<"Match"> | number | null
+    netPrizePool?: FloatNullableFilter<"Match"> | number | null
     price?: FloatFilter<"Match"> | number
     perKillPoint?: FloatFilter<"Match"> | number
     firstPrize?: FloatFilter<"Match"> | number
@@ -6217,7 +6217,7 @@ export namespace Prisma {
     matchName?: StringWithAggregatesFilter<"Match"> | string
     platformShare?: IntNullableWithAggregatesFilter<"Match"> | number | null
     platformShareTotal?: FloatNullableWithAggregatesFilter<"Match"> | number | null
-    netPrizePool?: IntNullableWithAggregatesFilter<"Match"> | number | null
+    netPrizePool?: FloatNullableWithAggregatesFilter<"Match"> | number | null
     price?: FloatWithAggregatesFilter<"Match"> | number
     perKillPoint?: FloatWithAggregatesFilter<"Match"> | number
     firstPrize?: FloatWithAggregatesFilter<"Match"> | number
@@ -6461,7 +6461,7 @@ export namespace Prisma {
     matchName?: StringFieldUpdateOperationsInput | string
     platformShare?: NullableIntFieldUpdateOperationsInput | number | null
     platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
-    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6482,7 +6482,7 @@ export namespace Prisma {
     matchName?: StringFieldUpdateOperationsInput | string
     platformShare?: NullableIntFieldUpdateOperationsInput | number | null
     platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
-    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6521,7 +6521,7 @@ export namespace Prisma {
     matchName?: StringFieldUpdateOperationsInput | string
     platformShare?: NullableIntFieldUpdateOperationsInput | number | null
     platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
-    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6540,7 +6540,7 @@ export namespace Prisma {
     matchName?: StringFieldUpdateOperationsInput | string
     platformShare?: NullableIntFieldUpdateOperationsInput | number | null
     platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
-    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -7835,7 +7835,7 @@ export namespace Prisma {
     matchName?: StringFieldUpdateOperationsInput | string
     platformShare?: NullableIntFieldUpdateOperationsInput | number | null
     platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
-    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -7855,7 +7855,7 @@ export namespace Prisma {
     matchName?: StringFieldUpdateOperationsInput | string
     platformShare?: NullableIntFieldUpdateOperationsInput | number | null
     platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
-    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -7983,7 +7983,7 @@ export namespace Prisma {
     matchName?: StringFieldUpdateOperationsInput | string
     platformShare?: NullableIntFieldUpdateOperationsInput | number | null
     platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
-    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -8003,7 +8003,7 @@ export namespace Prisma {
     matchName?: StringFieldUpdateOperationsInput | string
     platformShare?: NullableIntFieldUpdateOperationsInput | number | null
     platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
-    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number

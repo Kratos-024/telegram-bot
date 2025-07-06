@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE "Match" ALTER COLUMN "netPrizePool" SET DEFAULT 0,
-ALTER COLUMN "platformShareTotal" SET DEFAULT 0.3,
-ALTER COLUMN "platformShareTotal" SET DATA TYPE DOUBLE PRECISION;

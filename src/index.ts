@@ -119,13 +119,9 @@ app.post("/api/v1/bot/send-message", async (req, res) => {
     });
   }
 });
-const notificationService = new MatchNotificationService(bot);
-notificationService.startMatchNotificationCron();
 const shutdown = () => {
   console.log("Shutting down bot...");
-  notificationService.stopMatchNotificationCron();
-
-  MatchNotificationService;
+  matchNotificationService.stopMatchNotificationCron();
 
   if (isDev || forcePolling) {
     bot.stopPolling();

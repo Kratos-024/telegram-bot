@@ -16,6 +16,9 @@ CREATE TABLE "Match" (
     "imageFileId" TEXT,
     "gameName" TEXT NOT NULL,
     "matchName" TEXT NOT NULL,
+    "platformShare" INTEGER DEFAULT 30,
+    "platformShareTotal" DOUBLE PRECISION DEFAULT 0,
+    "netPrizePool" DOUBLE PRECISION DEFAULT 0,
     "price" DOUBLE PRECISION NOT NULL,
     "perKillPoint" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "firstPrize" DOUBLE PRECISION NOT NULL DEFAULT 0,
@@ -63,13 +66,13 @@ CREATE UNIQUE INDEX "Purchase_userId_matchId_key" ON "Purchase"("userId", "match
 CREATE UNIQUE INDEX "MatchEntry_userId_matchId_key" ON "MatchEntry"("userId", "matchId");
 
 -- AddForeignKey
-ALTER TABLE "Purchase" ADD CONSTRAINT "Purchase_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Purchase" ADD CONSTRAINT "Purchase_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Purchase" ADD CONSTRAINT "Purchase_matchId_fkey" FOREIGN KEY ("matchId") REFERENCES "Match"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Purchase" ADD CONSTRAINT "Purchase_matchId_fkey" FOREIGN KEY ("matchId") REFERENCES "Match"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MatchEntry" ADD CONSTRAINT "MatchEntry_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "MatchEntry" ADD CONSTRAINT "MatchEntry_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MatchEntry" ADD CONSTRAINT "MatchEntry_matchId_fkey" FOREIGN KEY ("matchId") REFERENCES "Match"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "MatchEntry" ADD CONSTRAINT "MatchEntry_matchId_fkey" FOREIGN KEY ("matchId") REFERENCES "Match"("id") ON DELETE CASCADE ON UPDATE CASCADE;
