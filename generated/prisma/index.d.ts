@@ -256,8 +256,8 @@ export namespace Prisma {
   export import Exact = $Public.Exact
 
   /**
-   * Prisma Client JS version: 6.10.1
-   * Query Engine version: 9b628578b3b7cae625e8c927178f15a170e74a9c
+   * Prisma Client JS version: 6.11.1
+   * Query Engine version: f40f79ec31188888a2e33acda0ecc8fd10a853a9
    */
   export type PrismaVersion = {
     client: string
@@ -2384,6 +2384,9 @@ export namespace Prisma {
 
   export type MatchAvgAggregateOutputType = {
     id: number | null
+    platformShare: number | null
+    platformShareTotal: number | null
+    netPrizePool: number | null
     price: number | null
     perKillPoint: number | null
     firstPrize: number | null
@@ -2395,6 +2398,9 @@ export namespace Prisma {
 
   export type MatchSumAggregateOutputType = {
     id: number | null
+    platformShare: number | null
+    platformShareTotal: number | null
+    netPrizePool: number | null
     price: number | null
     perKillPoint: number | null
     firstPrize: number | null
@@ -2406,8 +2412,12 @@ export namespace Prisma {
 
   export type MatchMinAggregateOutputType = {
     id: number | null
+    imageFileId: string | null
     gameName: string | null
     matchName: string | null
+    platformShare: number | null
+    platformShareTotal: number | null
+    netPrizePool: number | null
     price: number | null
     perKillPoint: number | null
     firstPrize: number | null
@@ -2421,8 +2431,12 @@ export namespace Prisma {
 
   export type MatchMaxAggregateOutputType = {
     id: number | null
+    imageFileId: string | null
     gameName: string | null
     matchName: string | null
+    platformShare: number | null
+    platformShareTotal: number | null
+    netPrizePool: number | null
     price: number | null
     perKillPoint: number | null
     firstPrize: number | null
@@ -2436,8 +2450,12 @@ export namespace Prisma {
 
   export type MatchCountAggregateOutputType = {
     id: number
+    imageFileId: number
     gameName: number
     matchName: number
+    platformShare: number
+    platformShareTotal: number
+    netPrizePool: number
     price: number
     perKillPoint: number
     firstPrize: number
@@ -2453,6 +2471,9 @@ export namespace Prisma {
 
   export type MatchAvgAggregateInputType = {
     id?: true
+    platformShare?: true
+    platformShareTotal?: true
+    netPrizePool?: true
     price?: true
     perKillPoint?: true
     firstPrize?: true
@@ -2464,6 +2485,9 @@ export namespace Prisma {
 
   export type MatchSumAggregateInputType = {
     id?: true
+    platformShare?: true
+    platformShareTotal?: true
+    netPrizePool?: true
     price?: true
     perKillPoint?: true
     firstPrize?: true
@@ -2475,8 +2499,12 @@ export namespace Prisma {
 
   export type MatchMinAggregateInputType = {
     id?: true
+    imageFileId?: true
     gameName?: true
     matchName?: true
+    platformShare?: true
+    platformShareTotal?: true
+    netPrizePool?: true
     price?: true
     perKillPoint?: true
     firstPrize?: true
@@ -2490,8 +2518,12 @@ export namespace Prisma {
 
   export type MatchMaxAggregateInputType = {
     id?: true
+    imageFileId?: true
     gameName?: true
     matchName?: true
+    platformShare?: true
+    platformShareTotal?: true
+    netPrizePool?: true
     price?: true
     perKillPoint?: true
     firstPrize?: true
@@ -2505,8 +2537,12 @@ export namespace Prisma {
 
   export type MatchCountAggregateInputType = {
     id?: true
+    imageFileId?: true
     gameName?: true
     matchName?: true
+    platformShare?: true
+    platformShareTotal?: true
+    netPrizePool?: true
     price?: true
     perKillPoint?: true
     firstPrize?: true
@@ -2607,8 +2643,12 @@ export namespace Prisma {
 
   export type MatchGroupByOutputType = {
     id: number
+    imageFileId: string | null
     gameName: string
     matchName: string
+    platformShare: number | null
+    platformShareTotal: number | null
+    netPrizePool: number | null
     price: number
     perKillPoint: number
     firstPrize: number
@@ -2641,8 +2681,12 @@ export namespace Prisma {
 
   export type MatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    imageFileId?: boolean
     gameName?: boolean
     matchName?: boolean
+    platformShare?: boolean
+    platformShareTotal?: boolean
+    netPrizePool?: boolean
     price?: boolean
     perKillPoint?: boolean
     firstPrize?: boolean
@@ -2659,8 +2703,12 @@ export namespace Prisma {
 
   export type MatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    imageFileId?: boolean
     gameName?: boolean
     matchName?: boolean
+    platformShare?: boolean
+    platformShareTotal?: boolean
+    netPrizePool?: boolean
     price?: boolean
     perKillPoint?: boolean
     firstPrize?: boolean
@@ -2674,8 +2722,12 @@ export namespace Prisma {
 
   export type MatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    imageFileId?: boolean
     gameName?: boolean
     matchName?: boolean
+    platformShare?: boolean
+    platformShareTotal?: boolean
+    netPrizePool?: boolean
     price?: boolean
     perKillPoint?: boolean
     firstPrize?: boolean
@@ -2689,8 +2741,12 @@ export namespace Prisma {
 
   export type MatchSelectScalar = {
     id?: boolean
+    imageFileId?: boolean
     gameName?: boolean
     matchName?: boolean
+    platformShare?: boolean
+    platformShareTotal?: boolean
+    netPrizePool?: boolean
     price?: boolean
     perKillPoint?: boolean
     firstPrize?: boolean
@@ -2702,7 +2758,7 @@ export namespace Prisma {
     date?: boolean
   }
 
-  export type MatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "gameName" | "matchName" | "price" | "perKillPoint" | "firstPrize" | "secondPrize" | "thirdPrize" | "entryFees" | "totalSeats" | "time" | "date", ExtArgs["result"]["match"]>
+  export type MatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "imageFileId" | "gameName" | "matchName" | "platformShare" | "platformShareTotal" | "netPrizePool" | "price" | "perKillPoint" | "firstPrize" | "secondPrize" | "thirdPrize" | "entryFees" | "totalSeats" | "time" | "date", ExtArgs["result"]["match"]>
   export type MatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | Match$purchasesArgs<ExtArgs>
     matchEntries?: boolean | Match$matchEntriesArgs<ExtArgs>
@@ -2719,8 +2775,12 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      imageFileId: string | null
       gameName: string
       matchName: string
+      platformShare: number | null
+      platformShareTotal: number | null
+      netPrizePool: number | null
       price: number
       perKillPoint: number
       firstPrize: number
@@ -3156,8 +3216,12 @@ export namespace Prisma {
    */
   interface MatchFieldRefs {
     readonly id: FieldRef<"Match", 'Int'>
+    readonly imageFileId: FieldRef<"Match", 'String'>
     readonly gameName: FieldRef<"Match", 'String'>
     readonly matchName: FieldRef<"Match", 'String'>
+    readonly platformShare: FieldRef<"Match", 'Int'>
+    readonly platformShareTotal: FieldRef<"Match", 'Float'>
+    readonly netPrizePool: FieldRef<"Match", 'Int'>
     readonly price: FieldRef<"Match", 'Float'>
     readonly perKillPoint: FieldRef<"Match", 'Float'>
     readonly firstPrize: FieldRef<"Match", 'Float'>
@@ -5856,8 +5920,12 @@ export namespace Prisma {
 
   export const MatchScalarFieldEnum: {
     id: 'id',
+    imageFileId: 'imageFileId',
     gameName: 'gameName',
     matchName: 'matchName',
+    platformShare: 'platformShare',
+    platformShareTotal: 'platformShareTotal',
+    netPrizePool: 'netPrizePool',
     price: 'price',
     perKillPoint: 'perKillPoint',
     firstPrize: 'firstPrize',
@@ -5907,6 +5975,14 @@ export namespace Prisma {
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const NullsOrder: {
+    first: 'first',
+    last: 'last'
+  };
+
+  export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
   /**
@@ -6043,8 +6119,12 @@ export namespace Prisma {
     OR?: MatchWhereInput[]
     NOT?: MatchWhereInput | MatchWhereInput[]
     id?: IntFilter<"Match"> | number
+    imageFileId?: StringNullableFilter<"Match"> | string | null
     gameName?: StringFilter<"Match"> | string
     matchName?: StringFilter<"Match"> | string
+    platformShare?: IntNullableFilter<"Match"> | number | null
+    platformShareTotal?: FloatNullableFilter<"Match"> | number | null
+    netPrizePool?: IntNullableFilter<"Match"> | number | null
     price?: FloatFilter<"Match"> | number
     perKillPoint?: FloatFilter<"Match"> | number
     firstPrize?: FloatFilter<"Match"> | number
@@ -6060,8 +6140,12 @@ export namespace Prisma {
 
   export type MatchOrderByWithRelationInput = {
     id?: SortOrder
+    imageFileId?: SortOrderInput | SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
+    platformShare?: SortOrderInput | SortOrder
+    platformShareTotal?: SortOrderInput | SortOrder
+    netPrizePool?: SortOrderInput | SortOrder
     price?: SortOrder
     perKillPoint?: SortOrder
     firstPrize?: SortOrder
@@ -6080,8 +6164,12 @@ export namespace Prisma {
     AND?: MatchWhereInput | MatchWhereInput[]
     OR?: MatchWhereInput[]
     NOT?: MatchWhereInput | MatchWhereInput[]
+    imageFileId?: StringNullableFilter<"Match"> | string | null
     gameName?: StringFilter<"Match"> | string
     matchName?: StringFilter<"Match"> | string
+    platformShare?: IntNullableFilter<"Match"> | number | null
+    platformShareTotal?: FloatNullableFilter<"Match"> | number | null
+    netPrizePool?: IntNullableFilter<"Match"> | number | null
     price?: FloatFilter<"Match"> | number
     perKillPoint?: FloatFilter<"Match"> | number
     firstPrize?: FloatFilter<"Match"> | number
@@ -6097,8 +6185,12 @@ export namespace Prisma {
 
   export type MatchOrderByWithAggregationInput = {
     id?: SortOrder
+    imageFileId?: SortOrderInput | SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
+    platformShare?: SortOrderInput | SortOrder
+    platformShareTotal?: SortOrderInput | SortOrder
+    netPrizePool?: SortOrderInput | SortOrder
     price?: SortOrder
     perKillPoint?: SortOrder
     firstPrize?: SortOrder
@@ -6120,8 +6212,12 @@ export namespace Prisma {
     OR?: MatchScalarWhereWithAggregatesInput[]
     NOT?: MatchScalarWhereWithAggregatesInput | MatchScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Match"> | number
+    imageFileId?: StringNullableWithAggregatesFilter<"Match"> | string | null
     gameName?: StringWithAggregatesFilter<"Match"> | string
     matchName?: StringWithAggregatesFilter<"Match"> | string
+    platformShare?: IntNullableWithAggregatesFilter<"Match"> | number | null
+    platformShareTotal?: FloatNullableWithAggregatesFilter<"Match"> | number | null
+    netPrizePool?: IntNullableWithAggregatesFilter<"Match"> | number | null
     price?: FloatWithAggregatesFilter<"Match"> | number
     perKillPoint?: FloatWithAggregatesFilter<"Match"> | number
     firstPrize?: FloatWithAggregatesFilter<"Match"> | number
@@ -6319,15 +6415,19 @@ export namespace Prisma {
   }
 
   export type MatchCreateInput = {
+    imageFileId?: string | null
     gameName: string
     matchName: string
+    platformShare?: number | null
+    platformShareTotal?: number | null
+    netPrizePool?: number | null
     price: number
     perKillPoint?: number
     firstPrize?: number
     secondPrize?: number
     thirdPrize?: number
     entryFees: number
-    totalSeats?: number
+    totalSeats: number
     time: string
     date?: Date | string
     purchases?: PurchaseCreateNestedManyWithoutMatchInput
@@ -6336,15 +6436,19 @@ export namespace Prisma {
 
   export type MatchUncheckedCreateInput = {
     id?: number
+    imageFileId?: string | null
     gameName: string
     matchName: string
+    platformShare?: number | null
+    platformShareTotal?: number | null
+    netPrizePool?: number | null
     price: number
     perKillPoint?: number
     firstPrize?: number
     secondPrize?: number
     thirdPrize?: number
     entryFees: number
-    totalSeats?: number
+    totalSeats: number
     time: string
     date?: Date | string
     purchases?: PurchaseUncheckedCreateNestedManyWithoutMatchInput
@@ -6352,8 +6456,12 @@ export namespace Prisma {
   }
 
   export type MatchUpdateInput = {
+    imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
+    platformShare?: NullableIntFieldUpdateOperationsInput | number | null
+    platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6369,8 +6477,12 @@ export namespace Prisma {
 
   export type MatchUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
+    platformShare?: NullableIntFieldUpdateOperationsInput | number | null
+    platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6386,22 +6498,30 @@ export namespace Prisma {
 
   export type MatchCreateManyInput = {
     id?: number
+    imageFileId?: string | null
     gameName: string
     matchName: string
+    platformShare?: number | null
+    platformShareTotal?: number | null
+    netPrizePool?: number | null
     price: number
     perKillPoint?: number
     firstPrize?: number
     secondPrize?: number
     thirdPrize?: number
     entryFees: number
-    totalSeats?: number
+    totalSeats: number
     time: string
     date?: Date | string
   }
 
   export type MatchUpdateManyMutationInput = {
+    imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
+    platformShare?: NullableIntFieldUpdateOperationsInput | number | null
+    platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6415,8 +6535,12 @@ export namespace Prisma {
 
   export type MatchUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
+    platformShare?: NullableIntFieldUpdateOperationsInput | number | null
+    platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6692,10 +6816,56 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type MatchCountOrderByAggregateInput = {
     id?: SortOrder
+    imageFileId?: SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
+    platformShare?: SortOrder
+    platformShareTotal?: SortOrder
+    netPrizePool?: SortOrder
     price?: SortOrder
     perKillPoint?: SortOrder
     firstPrize?: SortOrder
@@ -6709,6 +6879,9 @@ export namespace Prisma {
 
   export type MatchAvgOrderByAggregateInput = {
     id?: SortOrder
+    platformShare?: SortOrder
+    platformShareTotal?: SortOrder
+    netPrizePool?: SortOrder
     price?: SortOrder
     perKillPoint?: SortOrder
     firstPrize?: SortOrder
@@ -6720,8 +6893,12 @@ export namespace Prisma {
 
   export type MatchMaxOrderByAggregateInput = {
     id?: SortOrder
+    imageFileId?: SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
+    platformShare?: SortOrder
+    platformShareTotal?: SortOrder
+    netPrizePool?: SortOrder
     price?: SortOrder
     perKillPoint?: SortOrder
     firstPrize?: SortOrder
@@ -6735,8 +6912,12 @@ export namespace Prisma {
 
   export type MatchMinOrderByAggregateInput = {
     id?: SortOrder
+    imageFileId?: SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
+    platformShare?: SortOrder
+    platformShareTotal?: SortOrder
+    netPrizePool?: SortOrder
     price?: SortOrder
     perKillPoint?: SortOrder
     firstPrize?: SortOrder
@@ -6750,6 +6931,9 @@ export namespace Prisma {
 
   export type MatchSumOrderByAggregateInput = {
     id?: SortOrder
+    platformShare?: SortOrder
+    platformShareTotal?: SortOrder
+    netPrizePool?: SortOrder
     price?: SortOrder
     perKillPoint?: SortOrder
     firstPrize?: SortOrder
@@ -6757,6 +6941,56 @@ export namespace Prisma {
     thirdPrize?: SortOrder
     entryFees?: SortOrder
     totalSeats?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -6986,6 +7220,26 @@ export namespace Prisma {
     connect?: MatchEntryWhereUniqueInput | MatchEntryWhereUniqueInput[]
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type PurchaseUpdateManyWithoutMatchNestedInput = {
     create?: XOR<PurchaseCreateWithoutMatchInput, PurchaseUncheckedCreateWithoutMatchInput> | PurchaseCreateWithoutMatchInput[] | PurchaseUncheckedCreateWithoutMatchInput[]
     connectOrCreate?: PurchaseCreateOrConnectWithoutMatchInput | PurchaseCreateOrConnectWithoutMatchInput[]
@@ -7208,6 +7462,91 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type PurchaseCreateWithoutUserInput = {
     createdAt?: Date | string
     match: MatchCreateNestedOneWithoutPurchasesInput
@@ -7406,15 +7745,19 @@ export namespace Prisma {
   }
 
   export type MatchCreateWithoutPurchasesInput = {
+    imageFileId?: string | null
     gameName: string
     matchName: string
+    platformShare?: number | null
+    platformShareTotal?: number | null
+    netPrizePool?: number | null
     price: number
     perKillPoint?: number
     firstPrize?: number
     secondPrize?: number
     thirdPrize?: number
     entryFees: number
-    totalSeats?: number
+    totalSeats: number
     time: string
     date?: Date | string
     matchEntries?: MatchEntryCreateNestedManyWithoutMatchInput
@@ -7422,15 +7765,19 @@ export namespace Prisma {
 
   export type MatchUncheckedCreateWithoutPurchasesInput = {
     id?: number
+    imageFileId?: string | null
     gameName: string
     matchName: string
+    platformShare?: number | null
+    platformShareTotal?: number | null
+    netPrizePool?: number | null
     price: number
     perKillPoint?: number
     firstPrize?: number
     secondPrize?: number
     thirdPrize?: number
     entryFees: number
-    totalSeats?: number
+    totalSeats: number
     time: string
     date?: Date | string
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutMatchInput
@@ -7483,8 +7830,12 @@ export namespace Prisma {
   }
 
   export type MatchUpdateWithoutPurchasesInput = {
+    imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
+    platformShare?: NullableIntFieldUpdateOperationsInput | number | null
+    platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -7499,8 +7850,12 @@ export namespace Prisma {
 
   export type MatchUncheckedUpdateWithoutPurchasesInput = {
     id?: IntFieldUpdateOperationsInput | number
+    imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
+    platformShare?: NullableIntFieldUpdateOperationsInput | number | null
+    platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -7538,15 +7893,19 @@ export namespace Prisma {
   }
 
   export type MatchCreateWithoutMatchEntriesInput = {
+    imageFileId?: string | null
     gameName: string
     matchName: string
+    platformShare?: number | null
+    platformShareTotal?: number | null
+    netPrizePool?: number | null
     price: number
     perKillPoint?: number
     firstPrize?: number
     secondPrize?: number
     thirdPrize?: number
     entryFees: number
-    totalSeats?: number
+    totalSeats: number
     time: string
     date?: Date | string
     purchases?: PurchaseCreateNestedManyWithoutMatchInput
@@ -7554,15 +7913,19 @@ export namespace Prisma {
 
   export type MatchUncheckedCreateWithoutMatchEntriesInput = {
     id?: number
+    imageFileId?: string | null
     gameName: string
     matchName: string
+    platformShare?: number | null
+    platformShareTotal?: number | null
+    netPrizePool?: number | null
     price: number
     perKillPoint?: number
     firstPrize?: number
     secondPrize?: number
     thirdPrize?: number
     entryFees: number
-    totalSeats?: number
+    totalSeats: number
     time: string
     date?: Date | string
     purchases?: PurchaseUncheckedCreateNestedManyWithoutMatchInput
@@ -7615,8 +7978,12 @@ export namespace Prisma {
   }
 
   export type MatchUpdateWithoutMatchEntriesInput = {
+    imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
+    platformShare?: NullableIntFieldUpdateOperationsInput | number | null
+    platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -7631,8 +7998,12 @@ export namespace Prisma {
 
   export type MatchUncheckedUpdateWithoutMatchEntriesInput = {
     id?: IntFieldUpdateOperationsInput | number
+    imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
+    platformShare?: NullableIntFieldUpdateOperationsInput | number | null
+    platformShareTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: NullableIntFieldUpdateOperationsInput | number | null
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number

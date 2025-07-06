@@ -2,33 +2,98 @@ import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import prisma from "../db";
 
+interface PrizeBreakdown {
+  totalCollected: number;
+  platformShare: number;
+  netPrizePool: number;
+  firstPrize: number;
+  secondPrize: number;
+  thirdPrize: number;
+  perKillTotal: number;
+  perKillReward: number;
+}
+
+interface PrizePoolInput {
+  entryFee: number;
+  numberOfPlayers: number;
+  platformPercent: number;
+  perKillPoint: number;
+}
+
+export function calculatePrizePool(input: PrizePoolInput): PrizeBreakdown {
+  const {
+    entryFee,
+    numberOfPlayers,
+    platformPercent = 0.3,
+    perKillPoint,
+  } = input;
+
+  const firstPrizePercent = 0.4;
+  const secondPrizePercent = 0.25;
+  const thirdPrizePercent = 0.15;
+
+  const totalCollected = entryFee * numberOfPlayers;
+  const platformShare = totalCollected * platformPercent;
+  const netPrizePool = totalCollected - platformShare;
+
+  const perKillTotal = netPrizePool * perKillPoint;
+  const assumedTotalKills = numberOfPlayers * 4;
+  const perKillReward = perKillTotal / assumedTotalKills;
+
+  const firstPrize = netPrizePool * firstPrizePercent;
+  const secondPrize = netPrizePool * secondPrizePercent;
+  const thirdPrize = netPrizePool * thirdPrizePercent;
+
+  return {
+    totalCollected,
+    platformShare,
+    netPrizePool,
+    firstPrize,
+    secondPrize,
+    thirdPrize,
+    perKillTotal,
+    perKillReward,
+  };
+}
+
 export class MatchController {
   static async addMatch(
     gameName: string,
     matchName: string,
+    totalPlayer: number,
+    platformShare: number,
     perKillPoint: number,
-    firstPrize: number,
-    secondPrize: number,
-    thirdPrize: number,
     entryFees: number,
     time: string,
-    totalSeats: number = 100
+    imageFileId: string
   ) {
     try {
       const [year, month, day, hour, minute] = time.split("-").map(Number);
       const matchDate = new Date(year, month - 1, day, hour, minute);
 
+      // Calculate initial prize pool
+      const prizePool = calculatePrizePool({
+        entryFee: entryFees,
+        numberOfPlayers: totalPlayer,
+        platformPercent: platformShare / 100, // Convert percentage to decimal
+        perKillPoint: perKillPoint,
+      });
+
       const match = await prisma.match.create({
         data: {
+          imageFileId: imageFileId,
           gameName,
           matchName,
-          price: entryFees, // Keep price as entryFees for compatibility
-          perKillPoint,
-          firstPrize,
-          secondPrize,
-          thirdPrize,
+          platformShare: platformShare, // This is Int in schema
+          platformShareTotal: prizePool.platformShare, // This is Float in schema
+          netPrizePool: Math.round(prizePool.netPrizePool), // Convert to Int for schema
+          price: entryFees,
+          perKillPoint: prizePool.perKillReward,
+          firstPrize: prizePool.firstPrize,
+          secondPrize: prizePool.secondPrize,
+          thirdPrize: prizePool.thirdPrize,
           entryFees,
-          totalSeats,
+          totalSeats: totalPlayer,
           time,
           date: matchDate,
         },
@@ -63,10 +128,12 @@ export class MatchController {
 
       const matchTable = matches.map((match, index) => ({
         id: match.id,
+        imageFileId: match.imageFileId,
         serial: index + 1,
         time: match.time,
         gameName: match.gameName,
         name: match.matchName,
+        prizePool: match.netPrizePool,
         entryFees: match.entryFees,
         perKillPoint: match.perKillPoint,
         firstPrize: match.firstPrize,
@@ -118,6 +185,8 @@ export class MatchController {
         id: match.id,
         serial: index + 1,
         time: match.time,
+        gameName: match.gameName,
+        prizePool: match.netPrizePool,
         name: match.matchName,
         entryFees: match.entryFees,
         perKillPoint: match.perKillPoint,
@@ -171,6 +240,7 @@ export class MatchController {
 
       const matchTable = matches.map((match, index) => ({
         id: match.id,
+        imageFileId: match.imageFileId,
         serial: index + 1,
         gameName: match.gameName,
         matchName: match.matchName,
@@ -179,6 +249,7 @@ export class MatchController {
         firstPrize: match.firstPrize,
         secondPrize: match.secondPrize,
         thirdPrize: match.thirdPrize,
+        prizePool: match.netPrizePool,
         totalSeats: match.totalSeats,
         occupiedSeats: match.matchEntries.length,
         time: match.time,
@@ -397,7 +468,6 @@ export class MatchController {
     }
   }
 
-  // NEW: Enter match functionality
   static async enterMatch(chatId: string, matchId: number, amountPaid: number) {
     try {
       const user = await prisma.user.findUnique({
@@ -460,20 +530,51 @@ export class MatchController {
           },
         });
 
+        // Create purchase record
+        await tx.purchase.create({
+          data: {
+            userId: user.id,
+            matchId: match.id,
+          },
+        });
+
         return entry;
       });
 
-      const remainingSeats = match.totalSeats - match.matchEntries.length - 1;
+      // Calculate updated prize pool
+      const currentPlayers = match.matchEntries.length + 1;
+      const prizePool = calculatePrizePool({
+        perKillPoint: match.perKillPoint,
+        platformPercent: (match.platformShare || 30) / 100, // Convert to decimal
+        entryFee: match.entryFees,
+        numberOfPlayers: currentPlayers,
+      });
+
+      // Update match with new prize calculations
+      const matchUpdate = await prisma.match.update({
+        where: { id: matchId },
+        data: {
+          firstPrize: prizePool.firstPrize,
+          secondPrize: prizePool.secondPrize,
+          thirdPrize: prizePool.thirdPrize,
+          perKillPoint: prizePool.perKillReward,
+          netPrizePool: Math.round(prizePool.netPrizePool), // Convert to Int
+          platformShareTotal: prizePool.platformShare,
+        },
+      });
+
+      const remainingSeats = match.totalSeats - currentPlayers;
 
       return new ApiResponse(200, "Successfully entered the match!", {
         match: {
-          name: match.matchName,
-          gameName: match.gameName,
-          time: match.time,
-          firstPrize: match.firstPrize,
-          secondPrize: match.secondPrize,
-          thirdPrize: match.thirdPrize,
-          perKillPoint: match.perKillPoint,
+          name: matchUpdate.matchName,
+          gameName: matchUpdate.gameName,
+          time: matchUpdate.time,
+          firstPrize: matchUpdate.firstPrize,
+          secondPrize: matchUpdate.secondPrize,
+          thirdPrize: matchUpdate.thirdPrize,
+          perKillPoint: matchUpdate.perKillPoint,
+          netPrizePool: matchUpdate.netPrizePool,
         },
         amountPaid,
         remainingBalance: user.balance - amountPaid,
@@ -488,8 +589,7 @@ export class MatchController {
     }
   }
 
-  // NEW: Get match details for entry
-  static async getMatchForEntry(matchId: number) {
+  static async getMatchForEntry(matchId: number, chatId: string) {
     try {
       const match = await prisma.match.findUnique({
         where: { id: matchId },
@@ -517,6 +617,7 @@ export class MatchController {
         totalSeats: match.totalSeats,
         occupiedSeats: match.matchEntries.length,
         availableSeats,
+        prizePool: match.netPrizePool,
         isFull: availableSeats <= 0,
       });
     } catch (error: any) {
@@ -525,6 +626,23 @@ export class MatchController {
         throw error;
       }
       throw new ApiError(500, "Failed to get match details");
+    }
+  }
+
+  static async deleteAllMatch() {
+    try {
+      // Delete all related records first due to foreign key constraints
+      await prisma.matchEntry.deleteMany({});
+      await prisma.purchase.deleteMany({});
+      await prisma.match.deleteMany({});
+
+      return new ApiResponse(200, "Deleted all matches successfully", null);
+    } catch (error: any) {
+      console.error("Delete all matches error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to delete all matches");
     }
   }
 }

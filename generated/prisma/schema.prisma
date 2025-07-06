@@ -6,7 +6,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://neondb_owner:npg_CjhgmH7Kual5@ep-odd-cherry-a8o3hzu2-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require"
+  url      = "postgresql://neondb_owner:npg_gZvyrqi5bF4U@ep-red-sun-a8h634uu-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require"
 }
 
 model User {
@@ -22,18 +22,22 @@ model User {
 }
 
 model Match {
-  id           Int      @id @default(autoincrement())
-  gameName     String
-  matchName    String
-  price        Float // This will be the entry fees
-  perKillPoint Float    @default(0)
-  firstPrize   Float    @default(0)
-  secondPrize  Float    @default(0)
-  thirdPrize   Float    @default(0)
-  entryFees    Float // Entry fees for joining the match
-  totalSeats   Int      @default(100) // Maximum players allowed
-  time         String
-  date         DateTime @default(now())
+  id                 Int      @id @default(autoincrement())
+  imageFileId        String?
+  gameName           String
+  matchName          String
+  platformShare      Int?
+  platformShareTotal Float?   @default(0.3)
+  netPrizePool       Int?     @default(0)
+  price              Float // This will be the entry fees
+  perKillPoint       Float    @default(0)
+  firstPrize         Float    @default(0)
+  secondPrize        Float    @default(0)
+  thirdPrize         Float    @default(0)
+  entryFees          Float // Entry fees for joining the match
+  totalSeats         Int
+  time               String
+  date               DateTime @default(now())
 
   purchases    Purchase[]
   matchEntries MatchEntry[]

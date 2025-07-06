@@ -12,7 +12,9 @@
     "prisma-generate": "npx prisma generate --schema=src/db/prisma/schema.prisma",
     "prisma-studio": "npx prisma studio --schema=src/db/prisma/schema.prisma"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "prisma": "^6.11.1"
+  },
   "engines": {
     "node": ">=18.0.0"
   },
@@ -28,11 +30,10 @@
   "dependencies": {
     "@prisma/client": "^6.10.1",
     "@types/express": "^5.0.3",
+    "@types/node-telegram-bot-api": "^0.64.9",
     "dotenv": "^17.0.0",
     "express": "^5.1.0",
     "node-cron": "^4.1.1",
-    "node-telegram-bot-api": "^0.66.0",
-    "@types/node-telegram-bot-api": "^0.64.9",
-    "prisma": "^6.10.1"
+    "node-telegram-bot-api": "^0.66.0"
   }
 }

@@ -154,7 +154,9 @@ export class BotRoutes {
               "Enter user email to check/update balance:"
             );
             break;
-
+          case "admin_delete_allMatch":
+            await this.deleteAllMatches(chatId);
+            break;
           default:
             if (data?.startsWith("user_game_")) {
               const gameName = data.replace("user_game_", "");
@@ -251,7 +253,6 @@ export class BotRoutes {
             }
             break;
 
-          // Admin Add Match Flow
           case "awaiting_game_name":
             session.data.gameName = text;
             session.state = "awaiting_match_name";
@@ -260,8 +261,22 @@ export class BotRoutes {
 
           case "awaiting_match_name":
             session.data.matchName = text;
+            session.state = "awaiting_totalPlayer";
+            this.bot.sendMessage(chatId, "Enter total number of players:");
+            break;
+
+          case "awaiting_totalPlayer":
+            const totalPlayers = parseInt(text!, 10);
+            if (isNaN(totalPlayers)) {
+              this.bot.sendMessage(
+                chatId,
+                "Please enter a valid number of players."
+              );
+              return;
+            }
+            session.data.totalPlayer = totalPlayers;
             session.state = "awaiting_per_kill_point";
-            this.bot.sendMessage(chatId, "Enter per kill point:");
+            this.bot.sendMessage(chatId, "Enter per-kill reward amount:");
             break;
 
           case "awaiting_per_kill_point":
@@ -269,55 +284,30 @@ export class BotRoutes {
             if (isNaN(perKillPoint)) {
               this.bot.sendMessage(
                 chatId,
-                "Please enter a valid per kill point (number)"
+                "Please enter a valid per-kill reward (number)."
               );
               return;
             }
             session.data.perKillPoint = perKillPoint;
-            session.state = "awaiting_first_prize";
-            this.bot.sendMessage(chatId, "Enter first prize amount:");
+            session.state = "awaiting_platform_share";
+            this.bot.sendMessage(
+              chatId,
+              "Enter platform share percentage (e.g., 0.3 for 30%):"
+            );
             break;
 
-          case "awaiting_first_prize":
-            const firstPrize = parseFloat(text!);
-            if (isNaN(firstPrize)) {
+          case "awaiting_platform_share":
+            const platformShare = parseFloat(text!);
+            if (isNaN(platformShare)) {
               this.bot.sendMessage(
                 chatId,
-                "Please enter a valid first prize amount (number)"
+                "Please enter a valid platform share (decimal number)."
               );
               return;
             }
-            session.data.firstPrize = firstPrize;
-            session.state = "awaiting_second_prize";
-            this.bot.sendMessage(chatId, "Enter second prize amount:");
-            break;
-
-          case "awaiting_second_prize":
-            const secondPrize = parseFloat(text!);
-            if (isNaN(secondPrize)) {
-              this.bot.sendMessage(
-                chatId,
-                "Please enter a valid second prize amount (number)"
-              );
-              return;
-            }
-            session.data.secondPrize = secondPrize;
-            session.state = "awaiting_third_prize";
-            this.bot.sendMessage(chatId, "Enter third prize amount:");
-            break;
-
-          case "awaiting_third_prize":
-            const thirdPrize = parseFloat(text!);
-            if (isNaN(thirdPrize)) {
-              this.bot.sendMessage(
-                chatId,
-                "Please enter a valid third prize amount (number)"
-              );
-              return;
-            }
-            session.data.thirdPrize = thirdPrize;
+            session.data.platformShare = platformShare;
             session.state = "awaiting_entry_fees";
-            this.bot.sendMessage(chatId, "Enter entry fees:");
+            this.bot.sendMessage(chatId, "Enter entry fee amount per player:");
             break;
 
           case "awaiting_entry_fees":
@@ -325,7 +315,7 @@ export class BotRoutes {
             if (isNaN(entryFees)) {
               this.bot.sendMessage(
                 chatId,
-                "Please enter a valid entry fees amount (number)"
+                "Please enter a valid entry fee amount (number)."
               );
               return;
             }
@@ -333,7 +323,7 @@ export class BotRoutes {
             session.state = "awaiting_match_time";
             this.bot.sendMessage(
               chatId,
-              "Enter match time (Format: 2025-06-28-12-45):"
+              "Enter match time (Format: YYYY-MM-DD-HH-mm):"
             );
             break;
 
@@ -348,23 +338,16 @@ export class BotRoutes {
                 return;
               }
 
-              await MatchController.addMatch(
-                session.data.gameName,
-                session.data.matchName,
-                session.data.perKillPoint,
-                session.data.firstPrize,
-                session.data.secondPrize,
-                session.data.thirdPrize,
-                session.data.entryFees,
-                text!
+              session.data.matchTime = text!;
+              session.state = "awaiting_image_upload";
+              this.bot.sendMessage(
+                chatId,
+                "✅ Match time saved.\nNow upload the match banner image:"
               );
-              userSessions.delete(chatId);
-              this.bot.sendMessage(chatId, "Match added successfully!");
-              this.showAdminMenu(chatId);
             } catch (error: any) {
               this.bot.sendMessage(
                 chatId,
-                error.message || "Failed to add match"
+                error.message || "Failed to process match time."
               );
               userSessions.delete(chatId);
               this.showAdminMenu(chatId);
@@ -387,7 +370,6 @@ export class BotRoutes {
             }
             break;
 
-          // User Enter Match Flow
           case "awaiting_match_id":
             try {
               const matchId = parseInt(text!);
@@ -400,7 +382,8 @@ export class BotRoutes {
               }
 
               const matchDetails = await MatchController.getMatchForEntry(
-                matchId
+                matchId,
+                chatId
               );
               const match = matchDetails.data;
 
@@ -426,6 +409,7 @@ export class BotRoutes {
                   `🏆 1st Prize: Rs.${match?.firstPrize}\n` +
                   `🥈 2nd Prize: Rs.${match?.secondPrize}\n` +
                   `🥉 3rd Prize: Rs.${match?.thirdPrize}\n` +
+                  `💸 Prize Pool: Rs.${match?.prizePool}\n` +
                   `🎯 Per Kill: Rs.${match?.perKillPoint}\n` +
                   `💺 Available Seats: ${match?.availableSeats}/${match?.totalSeats}\n\n` +
                   `Enter amount to pay for entry:`,
@@ -552,8 +536,57 @@ export class BotRoutes {
         userSessions.delete(chatId);
       }
     });
-  }
 
+    // MOVED PHOTO HANDLER OUTSIDE - This is the fix!
+    this.bot.on("photo", async (msg) => {
+      const chatId = msg.chat.id;
+      const session = userSessions.get(chatId);
+
+      if (session?.state === "awaiting_image_upload") {
+        try {
+          if (!msg.photo || msg.photo.length === 0) {
+            this.bot.sendMessage(
+              chatId,
+              "❌ No image detected. Please try again."
+            );
+            return;
+          }
+
+          const fileId = msg.photo[msg.photo.length - 1].file_id;
+          session.data.imageFileId = fileId;
+
+          await MatchController.addMatch(
+            session.data.gameName,
+            session.data.matchName,
+            session.data.perKillPoint,
+            session.data.totalPlayer,
+            session.data.platformShare,
+            session.data.entryFees,
+            session.data.matchTime,
+            fileId
+          );
+
+          userSessions.delete(chatId);
+          this.bot.sendMessage(
+            chatId,
+            "✅ Match added successfully with image!"
+          );
+          this.showAdminMenu(chatId);
+        } catch (error: any) {
+          this.bot.sendMessage(
+            chatId,
+            error.message || "❌ Failed to add match."
+          );
+          userSessions.delete(chatId);
+          this.showAdminMenu(chatId);
+        }
+      }
+    });
+  }
+  // Inside setupRoutes(), at the end
+  // ✅ Add this at the end of setupRoutes:
+  // const notificationService = new MatchNotificationService(this.bot);
+  // notificationService.startMatchNotificationCron();
   private showStartMenu(chatId: number) {
     const keyboard = {
       inline_keyboard: [
@@ -591,6 +624,13 @@ export class BotRoutes {
         [{ text: "➕ Add Match", callback_data: "admin_add_match" }],
         [{ text: "📋 Show Matches", callback_data: "admin_show_matches" }],
         [{ text: "🗑️ Delete Match", callback_data: "admin_delete_match" }],
+        [
+          {
+            text: "🗑️ Delete all Match",
+            callback_data: "admin_delete_allMatch",
+          },
+        ],
+
         [
           {
             text: "💰 Manage User Balance",
@@ -658,6 +698,7 @@ export class BotRoutes {
             message += `**ID:** ${match.id} \\| ${escapedTime} \\- ${escapedName}\n`;
             message += `💰 **Entry:** Rs\\.${escapedEntryFees} \\| 💺 **Seats:** ${match.availableSeats}/${match.totalSeats}\n`;
             message += `🏆 **1st:** Rs\\.${match.firstPrize} \\| 🥈 **2nd:** Rs\\.${match.secondPrize} \\| 🥉 **3rd:** Rs\\.${match.thirdPrize}\n`;
+            message += `🎯 **Prize Pool:** Rs\\.${match.prizePool}\n\n`;
             message += `🎯 **Per Kill:** Rs\\.${match.perKillPoint}\n\n`;
           });
         }
@@ -675,40 +716,58 @@ export class BotRoutes {
       const result = await MatchController.getAllMatches();
       const matches = result.data;
 
-      let message = `📋 **All Matches**\n\n`;
-      if (Array.isArray(matches)) {
-        if (matches.length === 0) {
-          message += "No matches found.";
+      if (!Array.isArray(matches) || matches.length === 0) {
+        await this.bot.sendMessage(
+          chatId,
+          "📋 **All Matches**\n\nNo matches found.",
+          {
+            parse_mode: "Markdown",
+          }
+        );
+        return;
+      }
+
+      for (const match of matches) {
+        const matchText =
+          `**ID:** ${match.id} | **Serial:** ${match.serial}\n` +
+          `**Game:** ${match.gameName}\n` +
+          `**Name:** ${match.matchName}\n` +
+          `💰 **Entry Fees:** Rs.${match.entryFees}\n` +
+          `🏆 **1st Prize:** Rs.${match.firstPrize}\n` +
+          `🥈 **2nd Prize:** Rs.${match.secondPrize}\n` +
+          `🥉 **3rd Prize:** Rs.${match.thirdPrize}\n` +
+          `💸 Prize Pool: Rs.${match?.prizePool}\n` +
+          `🎯 **Per Kill:** Rs.${match.perKillPoint}\n` +
+          `💺 **Seats:** ${match.occupiedSeats}/${match.totalSeats}\n` +
+          `⏰ **Time:** ${match.time}\n` +
+          `📅 **Date:** ${match.date}`;
+
+        if (match.imageFileId) {
+          await this.bot.sendPhoto(chatId, match.imageFileId, {
+            caption: matchText,
+            parse_mode: "Markdown",
+          });
         } else {
-          matches.forEach((match: any) => {
-            message += `**ID:** ${match.id} | **Serial:** ${match.serial}\n`;
-            message += `**Game:** ${match.gameName}\n`;
-            message += `**Name:** ${match.matchName}\n`;
-            message += `💰 **Entry Fees:** Rs.${match.entryFees}\n`;
-            message += `🏆 **1st Prize:** Rs.${match.firstPrize}\n`;
-            message += `🥈 **2nd Prize:** Rs.${match.secondPrize}\n`;
-            message += `🥉 **3rd Prize:** Rs.${match.thirdPrize}\n`;
-            message += `🎯 **Per Kill:** Rs.${match.perKillPoint}\n`;
-            message += `💺 **Seats:** ${match.occupiedSeats}/${match.totalSeats}\n`;
-            message += `⏰ **Time:** ${match.time}\n`;
-            message += `📅 **Date:** ${match.date}\n\n`;
+          await this.bot.sendMessage(chatId, matchText, {
+            parse_mode: "Markdown",
           });
         }
       }
-
-      if (message.length > 4000) {
-        const messageParts = this.splitMessage(message, 4000);
-        for (const part of messageParts) {
-          await this.bot.sendMessage(chatId, part, { parse_mode: "Markdown" });
-        }
-      } else {
-        this.bot.sendMessage(chatId, message, { parse_mode: "Markdown" });
-      }
     } catch (error) {
-      this.bot.sendMessage(chatId, "Failed to load matches.");
+      this.bot.sendMessage(chatId, "❌ Failed to load matches.");
     }
   }
+  private async deleteAllMatches(chatId: number) {
+    try {
+      const result = await MatchController.deleteAllMatch();
 
+      await this.bot.sendMessage(chatId, result, {
+        parse_mode: "Markdown",
+      });
+    } catch (error) {
+      this.bot.sendMessage(chatId, "❌ Failed to load matches.");
+    }
+  }
   private splitMessage(message: string, maxLength: number): string[] {
     const parts: string[] = [];
     const lines = message.split("\n");

@@ -55,7 +55,6 @@ console.log("Bot routes initialized...");
 
 app.use("/api/v1/getResponse", cornRouter);
 
-// Health check endpoint
 app.get("/health", (req, res) => {
   res.json({
     status: "healthy",
@@ -120,9 +119,14 @@ app.post("/api/v1/bot/send-message", async (req, res) => {
     });
   }
 });
-
+const notificationService = new MatchNotificationService(bot);
+notificationService.startMatchNotificationCron();
 const shutdown = () => {
   console.log("Shutting down bot...");
+  notificationService.stopMatchNotificationCron();
+
+  MatchNotificationService;
+
   if (isDev || forcePolling) {
     bot.stopPolling();
   }

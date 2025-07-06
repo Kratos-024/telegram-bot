@@ -10,10 +10,7 @@ export class MatchNotificationService {
     this.bot = bot;
   }
 
-  // Start the cron job to check for matches every minute
   startMatchNotificationCron() {
-    // Run every minute: '* * * * *'
-    // Format: second minute hour day month dayOfWeek
     cron.schedule("* * * * *", async () => {
       try {
         await this.checkAndNotifyMatches();
@@ -25,7 +22,6 @@ export class MatchNotificationService {
     console.log("Match notification cron job started - checking every minute");
   }
 
-  // Check for matches and notify users
   private async checkAndNotifyMatches() {
     try {
       const matches = await MatchController.getMatchesForNotification();
@@ -36,10 +32,14 @@ export class MatchNotificationService {
 
       console.log(`Found ${matches.length} matches to notify about`);
 
+      console.log(`Found ${matches[0].purchases[0]}  atche to notify about`);
+      console.log(
+        `Found ${matches[0].purchases[0].user.chatId} match to notify about`
+      );
       for (const match of matches) {
-        // Notify all users who have purchased this match
         for (const purchase of match.purchases) {
           const user = purchase.user;
+          console.log(`user ${user}`);
 
           if (user.chatId && user.chatId !== "") {
             try {
@@ -48,12 +48,29 @@ export class MatchNotificationService {
                 `🎮 **Game:** ${match.gameName}\n` +
                 `⏰ **Time:** ${match.time}\n` +
                 `🎯 **Match:** ${match.matchName}\n` +
-                `💰 **Price:** Rs.${match.price}\n\n` +
+                `💰 **Entry Fee:** Rs.${match.entryFees || match.price}\n` +
+                `🏆 **1st Prize:** Rs.${match.firstPrize}\n` +
+                `🥈 **2nd Prize:** Rs.${match.secondPrize}\n` +
+                `🥉 **3rd Prize:** Rs.${match.thirdPrize}\n` +
+                `🎯 **Per Kill:** Rs.${match.perKillPoint}\n\n` +
                 `Your match is starting now! Good luck! 🍀`;
 
-              await this.bot.sendMessage(parseInt(user.chatId), message, {
-                parse_mode: "Markdown",
-              });
+              if (match.imageFileId) {
+                await this.bot.sendPhoto(
+                  parseInt(user.chatId),
+                  match.imageFileId,
+                  {
+                    caption: message,
+                    parse_mode: "Markdown",
+                  }
+                );
+                console.log(`Notification sent to user ${message}`);
+              } else {
+                // Send text message if no image
+                await this.bot.sendMessage(parseInt(user.chatId), message, {
+                  parse_mode: "Markdown",
+                });
+              }
 
               console.log(
                 `Notification sent to user ${user.email} for match ${match.matchName} in game ${match.gameName}`
@@ -72,7 +89,6 @@ export class MatchNotificationService {
     }
   }
 
-  // Optional: Get current time in the required format for testing
   getCurrentTimeFormat(): string {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
@@ -83,13 +99,11 @@ export class MatchNotificationService {
     ).padStart(2, "0")}-${String(now.getMinutes()).padStart(2, "0")}`;
   }
 
-  // Manual trigger for testing purposes
   async triggerNotificationCheck() {
     console.log("Manually triggering notification check...");
     await this.checkAndNotifyMatches();
   }
 
-  // Additional helper method to test with specific time
   async testNotificationForTime(timeString: string) {
     console.log(`Testing notification for time: ${timeString}`);
     try {
@@ -105,5 +119,9 @@ export class MatchNotificationService {
     } catch (error) {
       console.error("Error in test notification:", error);
     }
+  }
+
+  stopMatchNotificationCron() {
+    console.log("Match notification cron job stopped");
   }
 }
