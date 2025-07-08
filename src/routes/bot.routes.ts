@@ -314,7 +314,13 @@ export class BotRoutes {
                 text!
               );
               userSessions.delete(chatId);
-              this.bot.sendMessage(chatId, createResult.message);
+
+              // Add terms and conditions message
+              const termsMessage = `✅ Account created successfully!\n\n📋 **TERMS & CONDITIONS**\n\nBy joining and participating in our skill-based tournaments, you confirm that you are 18 years of age or older. All payments, entries, and actions made through our platform are done voluntarily and with your full consent. We are not liable for any unauthorized transactions made without your explicit consent. By using our service, you agree to follow all tournament rules and guidelines. Failure to do so may result in disqualification or suspension of your account. These terms may be updated at any time, so please review them regularly.`;
+
+              this.bot.sendMessage(chatId, termsMessage, {
+                parse_mode: "Markdown",
+              });
               this.showMainDashboard(chatId);
             } catch (error: any) {
               this.bot.sendMessage(
@@ -324,7 +330,6 @@ export class BotRoutes {
               userSessions.delete(chatId);
             }
             break;
-
           // case "awaiting_login_email":
           //   session.data.email = text;
           //   session.state = "awaiting_login_password";
