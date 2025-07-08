@@ -4,6 +4,7 @@ import TelegramBot from "node-telegram-bot-api";
 import { UserController } from "../controllers/User.controller";
 import { WithdrawController } from "../controllers/Withdraw.controller";
 import { MatchController } from "../controllers/Math.controller";
+import { text } from "express";
 
 interface UserSession {
   state: string;
@@ -225,10 +226,12 @@ export class BotRoutes {
               state: "awaiting_match_id_for_participants",
               data: {},
             });
+
             this.bot.sendMessage(
               chatId,
               "🎮 Enter match ID to view participants:"
             );
+
             break;
 
           // NEW: Show all users table
@@ -241,35 +244,7 @@ export class BotRoutes {
             await this.showUserStatistics(chatId);
             break;
 
-          // Fixed Custom Time Selection
-          // case "custom_time":
-          //   const timeSession = userSessions.get(chatId);
-          //   if (timeSession) {
-          //     timeSession.state = "9lo";
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "📅 Enter match date in format YYYY-MM-DD (e.g., 2025-07-15):"
-          //     );
-          //   }
-          //   break;
-
           default:
-            // Handle quick time selection
-            // if (data?.startsWith("quicktime_")) {
-            //   const timeValue = data.replace("quicktime_", "");
-            //   const currentSession = userSessions.get(chatId);
-            //   if (currentSession) {
-            //     currentSession.data.matchTime = timeValue;
-            //     currentSession.state = "awaiting_image_upload";
-            //     this.bot.sendMessage(
-            //       chatId,
-            //       `✅ Match time set to: ${this.formatDisplayTime(
-            //         timeValue
-            //       )}\n\n📸 Now upload the match banner image:`
-            //     );
-            //   }
-            // }
-            // Handle user game selection
             if (data?.startsWith("user_game_")) {
               const gameName = data.replace("user_game_", "");
               await this.showGameMatches(chatId, gameName);
@@ -304,10 +279,29 @@ export class BotRoutes {
             session.state = "awaiting_password";
             this.bot.sendMessage(chatId, "Please enter your password:");
             break;
+          case "awaiting_match_id_for_participants":
+            const matchId = parseInt(msg.text!, 10);
+            if (isNaN(matchId)) {
+              this.bot.sendMessage(
+                chatId,
+                "❌ Invalid match ID. Please enter a number."
+              );
+              return;
+            }
 
+            await this.handleMatchParticipantsCommand(chatId, `${matchId}`);
+            userSessions.delete(chatId); // Optional: clear session
+            break;
+
+            await this.handleMatchParticipantsCommand(
+              chatId,
+              matchId.toString()
+            );
+            userSessions.delete(chatId);
+            break;
           case "awaiting_password":
             try {
-              const createResult = await UserController.createAccount(
+              await UserController.createAccount(
                 this.bot,
                 chatId,
                 session.data.email,
@@ -330,323 +324,6 @@ export class BotRoutes {
               userSessions.delete(chatId);
             }
             break;
-          // case "awaiting_login_email":
-          //   session.data.email = text;
-          //   session.state = "awaiting_login_password";
-          //   this.bot.sendMessage(chatId, "Please enter your password:");
-          //   break;
-
-          // case "awaiting_login_password":
-          //   try {
-          //     const loginResult = await UserController.login(
-          //       this.bot,
-          //       chatId,
-          //       session.data.email,
-          //       text!
-          //     );
-          //     userSessions.delete(chatId);
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       `Login successful! ${loginResult.message}`
-          //     );
-          //     this.showMainDashboard(chatId);
-          //   } catch (error: any) {
-          //     this.bot.sendMessage(chatId, error.message || "Failed to login");
-          //     userSessions.delete(chatId);
-          //   }
-          //   break;
-
-          // case "awaiting_admin_id":
-          //   session.data.adminId = text;
-          //   session.state = "awaiting_admin_password";
-          //   this.bot.sendMessage(chatId, "Please enter Admin Password:");
-          //   break;
-
-          // case "awaiting_admin_password":
-          //   const adminId = process.env.ADMIN_ID;
-          //   const adminPassword = process.env.ADMIN_PASSWORD;
-
-          //   if (session.data.adminId === adminId && text === adminPassword) {
-          //     userSessions.delete(chatId);
-          //     this.bot.sendMessage(chatId, "Admin authentication successful!");
-          //     this.showAdminMenu(chatId);
-          //   } else {
-          //     userSessions.delete(chatId);
-          //     this.bot.sendMessage(chatId, "Wrong credentials! Access denied.");
-          //     this.showStartMenu(chatId);
-          //   }
-          //   break;
-
-          // case "awaiting_game_name":
-          //   session.data.gameName = text;
-          //   session.state = "awaiting_match_name";
-          //   this.bot.sendMessage(chatId, "Enter match name:");
-          //   break;
-
-          // case "awaiting_match_name":
-          //   session.data.matchName = text;
-          //   session.state = "awaiting_totalPlayer";
-          //   this.bot.sendMessage(chatId, "Enter total number of players:");
-          //   break;
-
-          // case "awaiting_totalPlayer":
-          //   const totalPlayers = parseInt(text!, 10);
-          //   if (isNaN(totalPlayers) || totalPlayers < 1 || totalPlayers > 100) {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "❌ Please enter a valid number of players (1-100).\n" +
-          //         "💡 Examples: 10, 20, 50, 100"
-          //     );
-          //     return;
-          //   }
-          //   session.data.totalPlayer = totalPlayers;
-          //   session.state = "awaiting_per_kill_point";
-          //   this.bot.sendMessage(
-          //     chatId,
-          //     "💀 Enter per-kill reward amount:\n" +
-          //       "💡 Examples:\n" +
-          //       "• 5 (Rs.5 per kill)\n" +
-          //       "• 10 (Rs.10 per kill)\n" +
-          //       "• 20 (Rs.20 per kill)"
-          //   );
-          //   break;
-
-          // case "awaiting_per_kill_point":
-          //   const perKillPoint = parseFloat(text!);
-          //   if (
-          //     isNaN(perKillPoint) ||
-          //     perKillPoint < 0 ||
-          //     perKillPoint > 1000
-          //   ) {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "❌ Please enter a valid per-kill reward (0-1000).\n" +
-          //         "💡 Examples: 5, 10, 15, 20"
-          //     );
-          //     return;
-          //   }
-          //   session.data.perKillPoint = perKillPoint;
-          //   session.state = "awaiting_entry_fees";
-          //   this.bot.sendMessage(
-
-          //     +chatId,
-          //     "🏢 Enter platform share percentage (Integer):\n" +
-          //       "💡 Examples:\n" +
-          //       "• 0.3 (30% platform share)\n" +
-          //       "• .25 (25% platform share)\n" +
-          //       "• .20 (20% platform share)\n" +
-          //       "• .35 (35% platform share)"
-          //   );
-          //   break;
-
-          // case "awaiting_entry_fees":
-          //   const entryFees = parseFloat(text!);
-          //   if (isNaN(entryFees) || entryFees < 1 || entryFees > 10000) {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "❌ Please enter a valid entry fee (1-10000).\n" +
-          //         "💡 Examples: 50, 100, 200, 500"
-          //     );
-          //     return;
-          //   }
-          //   session.data.entryFees = entryFees;
-          //   session.state = "awaiting_first_prize";
-
-          //   // Show match preview
-          //   this.bot.sendMessage(
-          //     chatId,
-
-          //     "⏰ Now let's set the match time:",
-          //     { parse_mode: "Markdown" }
-          //   );
-
-          //   this.showSimpleTimeSelection(chatId);
-          //   break;
-          // case "awaiting_first_prize":
-          //   const firstPrize = parseFloat(text!);
-          //   if (isNaN(firstPrize) || firstPrize < 1 || firstPrize > 100000) {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "❌ Please enter a valid first prize amount (1-100000).\n" +
-          //         "💡 Examples: 1000, 2500, 5000, 10000"
-          //     );
-          //     return;
-          //   }
-          //   session.data.firstPrize = firstPrize;
-          //   session.state = "awaiting_second_prize";
-
-          //   this.bot.sendMessage(
-          //     chatId,
-          //     "🥈 *Second Prize*\n\n" +
-          //       "Enter the second prize amount:\n" +
-          //       "💰 Should be less than first prize\n" +
-          //       "📊 Recommended: 30-60% of first prize",
-          //     { parse_mode: "Markdown" }
-          //   );
-          //   break;
-
-          // case "awaiting_second_prize":
-          //   const secondPrize = parseFloat(text!);
-          //   if (isNaN(secondPrize) || secondPrize < 1 || secondPrize > 100000) {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "❌ Please enter a valid second prize amount (1-100000).\n" +
-          //         "💡 Examples: 500, 1000, 1500, 2000"
-          //     );
-          //     return;
-          //   }
-
-          //   if (secondPrize >= session.data.firstPrize) {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       `❌ Second prize (Rs.${secondPrize}) must be less than first prize (Rs.${session.data.firstPrize}).\n` +
-          //         "💡 Please enter a smaller amount."
-          //     );
-          //     return;
-          //   }
-
-          //   session.data.secondPrize = secondPrize;
-          //   session.state = "awaiting_third_prize";
-
-          //   this.bot.sendMessage(
-          //     chatId,
-          //     "🥉 *Third Prize*\n\n" +
-          //       "Enter the third prize amount:\n" +
-          //       "💰 Should be less than second prize\n" +
-          //       "📊 Recommended: 10-30% of first prize",
-          //     { parse_mode: "Markdown" }
-          //   );
-          //   break;
-
-          // case "awaiting_third_prize":
-          //   const thirdPrize = parseFloat(text!);
-          //   if (isNaN(thirdPrize) || thirdPrize < 1 || thirdPrize > 100000) {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "❌ Please enter a valid third prize amount (1-100000).\n" +
-          //         "💡 Examples: 250, 500, 750, 1000"
-          //     );
-          //     return;
-          //   }
-
-          //   if (thirdPrize >= session.data.secondPrize) {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       `❌ Third prize (Rs.${thirdPrize}) must be less than second prize (Rs.${session.data.secondPrize}).\n` +
-          //         "💡 Please enter a smaller amount."
-          //     );
-          //     return;
-          //   }
-
-          //   session.data.thirdPrize = thirdPrize;
-          //   session.state = "awaiting_custom_date";
-
-          // case "awaiting_custom_date":
-          //   try {
-          //     const dateRegex = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
-          //     const match = text!.match(dateRegex);
-
-          //     if (!match) {
-          //       this.bot.sendMessage(
-          //         chatId,
-          //         "❌ Invalid date format! Please use YYYY-MM-DD (e.g., 2025-07-15)"
-          //       );
-          //       return;
-          //     }
-
-          //     const [, year, month, day] = match;
-          //     const selectedDate = `${year}-${month.padStart(
-          //       2,
-          //       "0"
-          //     )}-${day.padStart(2, "0")}`;
-
-          //     const dateObj = new Date(selectedDate);
-          //     const today = new Date();
-          //     today.setHours(0, 0, 0, 0);
-
-          //     if (isNaN(dateObj.getTime())) {
-          //       this.bot.sendMessage(
-          //         chatId,
-          //         "❌ Invalid date! Please enter a valid date."
-          //       );
-          //       return;
-          //     }
-
-          //     if (dateObj < today) {
-          //       this.bot.sendMessage(
-          //         chatId,
-          //         "❌ Date cannot be in the past! Please enter a future date."
-          //       );
-          //       return;
-          //     }
-
-          //     session.data.selectedDate = selectedDate;
-          //     session.state = "awaiting_custom_time";
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       `📅 Date set to: ${selectedDate}\n\n⏰ Now enter time in format HH:MM (24-hour format):\n💡 Examples: 14:30, 09:15, 20:00`
-          //     );
-          //   } catch (error) {
-          //     console.error("Date processing error:", error);
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "❌ Error processing date. Please try again with format YYYY-MM-DD"
-          //     );
-          //   }
-          //   break;
-
-          // case "awaiting_custom_time":
-          //   try {
-          //     const timeRegex = /^(\d{1,2}):(\d{2})$/;
-          //     const match = text!.match(timeRegex);
-
-          //     if (!match) {
-          //       this.bot.sendMessage(
-          //         chatId,
-          //         "❌ Invalid time format! Please use HH:MM (e.g., 14:30, 09:15)"
-          //       );
-          //       return;
-          //     }
-
-          //     const [, hour, minute] = match;
-          //     const hourNum = parseInt(hour);
-          //     const minuteNum = parseInt(minute);
-
-          //     if (
-          //       hourNum < 0 ||
-          //       hourNum > 23 ||
-          //       minuteNum < 0 ||
-          //       minuteNum > 59
-          //     ) {
-          //       this.bot.sendMessage(
-          //         chatId,
-          //         "❌ Invalid time! Hour must be 0-23, Minute must be 0-59\n💡 Examples: 14:30, 09:15, 20:00"
-          //       );
-          //       return;
-          //     }
-
-          //     const finalTime = `${session.data.selectedDate}-${hour.padStart(
-          //       2,
-          //       "0"
-          //     )}-${minute}`;
-
-          //     session.data.matchTime = finalTime;
-          //     session.state = "awaiting_image_upload";
-
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       `✅ Match time set to: ${this.formatDisplayTime(
-          //         finalTime
-          //       )}\n\n📸 Now upload the match banner image:`
-          //     );
-          //   } catch (error) {
-          //     console.error("Time processing error:", error);
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "❌ Error processing time. Please try again with format HH:MM"
-          //     );
-          //   }
-          //   break;
 
           case "awaiting_login_email":
             session.data.email = text;
