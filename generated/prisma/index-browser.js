@@ -134,8 +134,6 @@ exports.Prisma.MatchScalarFieldEnum = {
   imageFileId: 'imageFileId',
   gameName: 'gameName',
   matchName: 'matchName',
-  platformShare: 'platformShare',
-  platformShareTotal: 'platformShareTotal',
   netPrizePool: 'netPrizePool',
   price: 'price',
   perKillPoint: 'perKillPoint',

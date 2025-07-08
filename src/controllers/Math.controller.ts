@@ -2,143 +2,6 @@ import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import prisma from "../db";
 
-interface PrizeBreakdown {
-  totalCollected: number;
-  platformShare: number;
-  netPrizePool: number;
-  firstPrize: number;
-  secondPrize: number;
-  thirdPrize: number;
-  perKillTotal: number;
-  perKillReward: number;
-  currentPlayers: number;
-  maxPlayers: number;
-  prizeGrowth: {
-    nextPlayerFirstPrize: number;
-    nextPlayerSecondPrize: number;
-    nextPlayerThirdPrize: number;
-    growthAmount: number;
-  };
-}
-
-interface PrizePoolInput {
-  entryFee: number;
-  numberOfPlayers: number;
-  maxPlayers: number;
-  platformPercent: number;
-  perKillPoint: number;
-}
-
-export function calculateDynamicPrizePool(
-  input: PrizePoolInput
-): PrizeBreakdown {
-  const { entryFee, numberOfPlayers, maxPlayers, platformPercent } = input;
-  if (platformPercent >= 1.0) {
-    throw new Error(
-      "Platform percentage cannot be 100% or more - no prize pool would remain"
-    );
-  }
-
-  if (platformPercent >= 0.8) {
-    console.warn(
-      "Warning: Platform percentage is very high (80%+), leaving minimal prize pool"
-    );
-  }
-
-  // Validation: Entry fee should be positive
-  if (entryFee <= 0) {
-    throw new Error("Entry fee must be greater than 0");
-  }
-
-  // Validation: Number of players should be reasonable
-  if (numberOfPlayers < 0) {
-    throw new Error("Number of players cannot be negative");
-  }
-
-  console.log("Prize pool calculation input:", input);
-
-  const firstPrizePercent = 0.4;
-  const secondPrizePercent = 0.25;
-  const thirdPrizePercent = 0.15;
-  const perKillPercent = 0.2; // 20% for per-kill rewards
-
-  const totalCollected = entryFee * numberOfPlayers;
-  const platformShare = totalCollected * platformPercent;
-  const netPrizePool = totalCollected - platformShare;
-
-  // Additional validation: Check if prize pool is meaningful
-  if (netPrizePool <= 0 && numberOfPlayers > 0) {
-    throw new Error(
-      `Invalid configuration: Platform share (${platformPercent * 100}%) ` +
-        `leaves no prize pool. Total collected: ${totalCollected}, ` +
-        `Platform share: ${platformShare}, Net prize pool: ${netPrizePool}`
-    );
-  }
-
-  // Calculate per-kill allocation
-  const perKillTotal = netPrizePool * perKillPercent;
-  const remainingForPositions = netPrizePool - perKillTotal;
-
-  // Calculate assumed total kills (4 kills per player assumption)
-  const assumedTotalKills = numberOfPlayers * 4;
-  const perKillReward =
-    assumedTotalKills > 0 ? perKillTotal / assumedTotalKills : 0;
-
-  // Calculate position prizes from remaining pool
-  const firstPrize = remainingForPositions * firstPrizePercent;
-  const secondPrize = remainingForPositions * secondPrizePercent;
-  const thirdPrize = remainingForPositions * thirdPrizePercent;
-
-  // Calculate what prizes would be if one more player joins
-  const nextPlayerTotal = entryFee * (numberOfPlayers + 1);
-  const nextPlayerPlatformShare = nextPlayerTotal * platformPercent;
-  const nextPlayerNetPool = nextPlayerTotal - nextPlayerPlatformShare;
-  const nextPlayerPerKillTotal = nextPlayerNetPool * perKillPercent;
-  const nextPlayerRemainingForPositions =
-    nextPlayerNetPool - nextPlayerPerKillTotal;
-
-  const nextPlayerFirstPrize =
-    nextPlayerRemainingForPositions * firstPrizePercent;
-  const nextPlayerSecondPrize =
-    nextPlayerRemainingForPositions * secondPrizePercent;
-  const nextPlayerThirdPrize =
-    nextPlayerRemainingForPositions * thirdPrizePercent;
-
-  const growthAmount = entryFee * (1 - platformPercent);
-
-  // Log the calculation for debugging
-  console.log("Prize pool breakdown:", {
-    totalCollected,
-    platformShare,
-    netPrizePool,
-    perKillTotal,
-    remainingForPositions,
-    firstPrize,
-    secondPrize,
-    thirdPrize,
-    perKillReward,
-  });
-
-  return {
-    totalCollected,
-    platformShare,
-    netPrizePool,
-    firstPrize,
-    secondPrize,
-    thirdPrize,
-    perKillTotal,
-    perKillReward,
-    currentPlayers: numberOfPlayers,
-    maxPlayers,
-    prizeGrowth: {
-      nextPlayerFirstPrize,
-      nextPlayerSecondPrize,
-      nextPlayerThirdPrize,
-      growthAmount,
-    },
-  };
-}
-
 // Additional helper function to validate platform settings
 export function validatePlatformSettings(
   entryFee: number,
@@ -218,53 +81,29 @@ export class MatchController {
     gameName: string,
     matchName: string,
     totalPlayer: number,
-    platformShare: number,
     perKillPoint: number,
     entryFees: number,
     time: string,
+    firstPrize: number,
+    secondPrize: number,
+    thirdPrize: number,
     imageFileId: string
   ) {
     try {
       const [year, month, day, hour, minute] = time.split("-").map(Number);
       const matchDate = new Date(year, month - 1, day, hour, minute);
-      console.log("lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf");
-      console.log("lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf");
-      console.log("lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf");
-      console.log("lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf");
-      console.log("lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf");
-      console.log(
-        "lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf",
-        platformShare
-      );
-      const initialPrizePool = calculateDynamicPrizePool({
-        entryFee: entryFees,
-        numberOfPlayers: 0,
-        maxPlayers: totalPlayer,
-        platformPercent: platformShare,
-        perKillPoint: perKillPoint / 100,
-      });
-      console.log("lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf");
-      console.log("lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf");
-      console.log("lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf");
-      console.log("lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf");
-      console.log("lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf");
-      console.log(
-        "lksfdjgfdsdfsdfhoskdhflskdjflksfdjgfdsdfsdfhoskdhflskdjf",
-        initialPrizePool.platformShare
-      );
+
       const match = await prisma.match.create({
         data: {
           imageFileId: imageFileId,
           gameName,
           matchName,
-          platformShare: platformShare,
-          platformShareTotal: initialPrizePool.platformShare,
-          netPrizePool: Math.round(initialPrizePool.netPrizePool),
+          netPrizePool: firstPrize + secondPrize + thirdPrize,
           price: entryFees,
-          perKillPoint: initialPrizePool.perKillReward,
-          firstPrize: initialPrizePool.firstPrize,
-          secondPrize: initialPrizePool.secondPrize,
-          thirdPrize: initialPrizePool.thirdPrize,
+          perKillPoint: perKillPoint,
+          firstPrize: firstPrize,
+          secondPrize: secondPrize,
+          thirdPrize: thirdPrize,
           entryFees,
           totalSeats: totalPlayer,
           time,
@@ -272,21 +111,15 @@ export class MatchController {
         },
       });
 
-      return new ApiResponse(201, "Match added successfully", {
-        ...match,
-        prizePreview: {
-          message: "Prize pool will grow as players join!",
-          maxPossibleFirstPrize: entryFees * totalPlayer * 0.7 * 0.8 * 0.4,
-          maxPossibleSecondPrize: entryFees * totalPlayer * 0.7 * 0.8 * 0.25,
-          maxPossibleThirdPrize: entryFees * totalPlayer * 0.7 * 0.8 * 0.15,
-        },
-      });
+      return new ApiResponse(201, "Match added successfully", match);
     } catch (error) {
       console.error("Add match error:", error);
       throw new ApiError(500, "Failed to add match");
     }
   }
 
+  // Remove all calculateDynamicPrizePool calls and prize updating logic
+  // Keep the match as-is without updating prizes
   static async enterMatch(chatId: string, matchId: number, amountPaid: number) {
     try {
       const user = await prisma.user.findUnique({
@@ -308,17 +141,14 @@ export class MatchController {
         throw new ApiError(404, "Match not found");
       }
 
-      // Check if seats are available
       if (match.matchEntries.length >= match.totalSeats) {
         throw new ApiError(400, "Match is full! No seats available.");
       }
 
-      // Check if user has sufficient balance
       if (user.balance < amountPaid) {
         throw new ApiError(400, "Insufficient balance");
       }
 
-      // Check if user already entered this match
       const existingEntry = await prisma.matchEntry.findUnique({
         where: {
           userId_matchId: {
@@ -332,18 +162,14 @@ export class MatchController {
         throw new ApiError(400, "You have already entered this match");
       }
 
-      // Calculate current players count before joining
       const currentPlayersBeforeJoin = match.matchEntries.length;
 
-      // Start transaction to ensure data consistency
       const result = await prisma.$transaction(async (tx) => {
-        // Deduct balance
         await tx.user.update({
           where: { id: user.id },
           data: { balance: user.balance - amountPaid },
         });
 
-        // Create match entry record
         const entry = await tx.matchEntry.create({
           data: {
             userId: user.id,
@@ -352,7 +178,6 @@ export class MatchController {
           },
         });
 
-        // Create purchase record
         await tx.purchase.create({
           data: {
             userId: user.id,
@@ -363,79 +188,25 @@ export class MatchController {
         return entry;
       });
 
-      // Calculate NEW prize pool with updated player count
       const newPlayerCount = currentPlayersBeforeJoin + 1;
-      const updatedPrizePool = calculateDynamicPrizePool({
-        entryFee: match.entryFees,
-        numberOfPlayers: newPlayerCount,
-        maxPlayers: match.totalSeats,
-        platformPercent: match.platformShare || 0.3,
-        perKillPoint: 0.2,
-      });
-      console.log(
-        "updatedPrizePoolupdatedPrizePoolupdatedPrizePool",
-        updatedPrizePool
-      );
-      // Update match with new prize calculations
-      const updatedMatch = await prisma.match.update({
-        where: { id: matchId },
-        data: {
-          firstPrize: updatedPrizePool.firstPrize,
-          secondPrize: updatedPrizePool.secondPrize,
-          thirdPrize: updatedPrizePool.thirdPrize,
-          perKillPoint: updatedPrizePool.perKillReward,
-          netPrizePool: Math.round(updatedPrizePool.netPrizePool),
-          platformShareTotal: updatedPrizePool.platformShare,
-        },
-      });
-
       const remainingSeats = match.totalSeats - newPlayerCount;
 
       return new ApiResponse(200, "Successfully entered the match!", {
         match: {
-          name: updatedMatch.matchName,
-          gameName: updatedMatch.gameName,
-          time: updatedMatch.time,
-          firstPrize: updatedMatch.firstPrize,
-          secondPrize: updatedMatch.secondPrize,
-          thirdPrize: updatedMatch.thirdPrize,
-          perKillPoint: updatedMatch.perKillPoint,
-          netPrizePool: updatedMatch.netPrizePool,
-        },
-        prizeUpdate: {
-          message: "🎉 Prize pool has been updated!",
-          prizeIncrease: {
-            firstPrize:
-              updatedPrizePool.firstPrize -
-              (currentPlayersBeforeJoin === 0 ? 0 : match.firstPrize),
-            secondPrize:
-              updatedPrizePool.secondPrize -
-              (currentPlayersBeforeJoin === 0 ? 0 : match.secondPrize),
-            thirdPrize:
-              updatedPrizePool.thirdPrize -
-              (currentPlayersBeforeJoin === 0 ? 0 : match.thirdPrize),
-          },
-          nextPlayerBoost:
-            remainingSeats > 0
-              ? {
-                  message: "Next player will increase prizes by:",
-                  firstPrizeIncrease:
-                    updatedPrizePool.prizeGrowth.nextPlayerFirstPrize -
-                    updatedPrizePool.firstPrize,
-                  secondPrizeIncrease:
-                    updatedPrizePool.prizeGrowth.nextPlayerSecondPrize -
-                    updatedPrizePool.secondPrize,
-                  thirdPrizeIncrease:
-                    updatedPrizePool.prizeGrowth.nextPlayerThirdPrize -
-                    updatedPrizePool.thirdPrize,
-                }
-              : null,
+          name: match.matchName,
+          gameName: match.gameName,
+          time: match.time,
+          firstPrize: match.firstPrize,
+          secondPrize: match.secondPrize,
+          thirdPrize: match.thirdPrize,
+          perKillPoint: match.perKillPoint,
+          netPrizePool: match.netPrizePool,
         },
         playerInfo: {
           currentPlayers: newPlayerCount,
           maxPlayers: match.totalSeats,
           remainingSeats,
-          playerNumber: newPlayerCount, // This player's position
+          playerNumber: newPlayerCount,
         },
         amountPaid,
         remainingBalance: user.balance - amountPaid,
@@ -471,30 +242,6 @@ export class MatchController {
 
       const matchTable = matches.map((match, index) => {
         const currentPlayers = match.matchEntries.length;
-        const canGrow = currentPlayers < match.totalSeats;
-
-        // Calculate what prizes would be if one more player joins
-        let nextPlayerPrizes = null;
-        if (canGrow) {
-          const nextPrizePool = calculateDynamicPrizePool({
-            entryFee: match.entryFees,
-            numberOfPlayers: currentPlayers + 1,
-            maxPlayers: match.totalSeats,
-            platformPercent: (match.platformShare || 30) / 100,
-            perKillPoint: 0.2,
-          });
-
-          nextPlayerPrizes = {
-            firstPrize: nextPrizePool.firstPrize,
-            secondPrize: nextPrizePool.secondPrize,
-            thirdPrize: nextPrizePool.thirdPrize,
-            increase: {
-              firstPrize: nextPrizePool.firstPrize - match.firstPrize,
-              secondPrize: nextPrizePool.secondPrize - match.secondPrize,
-              thirdPrize: nextPrizePool.thirdPrize - match.thirdPrize,
-            },
-          };
-        }
 
         return {
           id: match.id,
@@ -512,9 +259,7 @@ export class MatchController {
           totalSeats: match.totalSeats,
           occupiedSeats: currentPlayers,
           availableSeats: match.totalSeats - currentPlayers,
-          prizeGrowth: {
-            canGrow,
-            nextPlayerPrizes,
+          matchStatus: {
             fillPercentage: (currentPlayers / match.totalSeats) * 100,
             status:
               currentPlayers === 0
@@ -523,16 +268,12 @@ export class MatchController {
                 ? "🔥 Full"
                 : currentPlayers >= match.totalSeats * 0.8
                 ? "⚡ Almost Full"
-                : "📈 Growing",
+                : "📈 Available",
           },
         };
       });
 
-      return new ApiResponse(
-        200,
-        "Today's matches with dynamic prize growth",
-        matchTable
-      );
+      return new ApiResponse(200, "Today's matches", matchTable);
     } catch (error) {
       console.error("Get today's matches error:", error);
       throw new ApiError(500, "Failed to get matches");
@@ -571,33 +312,6 @@ export class MatchController {
 
       const matchTable = matches.map((match, index) => {
         const currentPlayers = match.matchEntries.length;
-        const canGrow = currentPlayers < match.totalSeats;
-
-        // Calculate potential prize growth
-        let prizeGrowthInfo = null;
-        if (canGrow) {
-          const nextPrizePool = calculateDynamicPrizePool({
-            entryFee: match.entryFees,
-            numberOfPlayers: currentPlayers + 1,
-            maxPlayers: match.totalSeats,
-            platformPercent: (match.platformShare || 30) / 100,
-            perKillPoint: 0.2,
-          });
-
-          prizeGrowthInfo = {
-            nextJoinBoost: {
-              firstPrize: nextPrizePool.firstPrize - match.firstPrize,
-              secondPrize: nextPrizePool.secondPrize - match.secondPrize,
-              thirdPrize: nextPrizePool.thirdPrize - match.thirdPrize,
-            },
-            maxPossiblePrizes: {
-              firstPrize: match.entryFees * match.totalSeats * 0.7 * 0.8 * 0.4,
-              secondPrize:
-                match.entryFees * match.totalSeats * 0.7 * 0.8 * 0.25,
-              thirdPrize: match.entryFees * match.totalSeats * 0.7 * 0.8 * 0.15,
-            },
-          };
-        }
 
         return {
           id: match.id,
@@ -614,24 +328,23 @@ export class MatchController {
           totalSeats: match.totalSeats,
           occupiedSeats: currentPlayers,
           availableSeats: match.totalSeats - currentPlayers,
-          dynamicPrizeInfo: {
+          matchInfo: {
             currentFillPercentage: (currentPlayers / match.totalSeats) * 100,
-            prizeGrowthInfo,
             status:
               currentPlayers === 0
                 ? "🆕 Just Created"
                 : currentPlayers === match.totalSeats
                 ? "🔥 Full Match"
                 : currentPlayers >= match.totalSeats * 0.75
-                ? "⚡ Almost Full - Prizes Growing!"
-                : "📈 Prize Pool Growing",
+                ? "⚡ Almost Full"
+                : "📈 Available",
           },
         };
       });
 
       return new ApiResponse(
         200,
-        `Today's ${cleanedGameName} matches with live prize tracking`,
+        `Today's ${cleanedGameName} matches`,
         matchTable
       );
     } catch (error) {
@@ -657,31 +370,7 @@ export class MatchController {
       const availableSeats = match.totalSeats - currentPlayers;
       const canGrow = availableSeats > 0;
 
-      // Calculate what prizes would be after joining
-      let prizeAfterJoining = null;
-      if (canGrow) {
-        const updatedPrizePool = calculateDynamicPrizePool({
-          entryFee: match.entryFees,
-          numberOfPlayers: currentPlayers + 1,
-          maxPlayers: match.totalSeats,
-          platformPercent: (match.platformShare || 30) / 100,
-          perKillPoint: 0.2,
-        });
-
-        prizeAfterJoining = {
-          firstPrize: updatedPrizePool.firstPrize,
-          secondPrize: updatedPrizePool.secondPrize,
-          thirdPrize: updatedPrizePool.thirdPrize,
-          increase: {
-            firstPrize: updatedPrizePool.firstPrize - match.firstPrize,
-            secondPrize: updatedPrizePool.secondPrize - match.secondPrize,
-            thirdPrize: updatedPrizePool.thirdPrize - match.thirdPrize,
-          },
-          yourContribution: match.entryFees * 0.7, // After platform share
-        };
-      }
-
-      return new ApiResponse(200, "Match details with live prize preview", {
+      return new ApiResponse(200, "Match details", {
         id: match.id,
         name: match.matchName,
         gameName: match.gameName,
@@ -693,7 +382,6 @@ export class MatchController {
           thirdPrize: match.thirdPrize,
           perKillPoint: match.perKillPoint,
         },
-        prizeAfterJoining,
         matchStatus: {
           totalSeats: match.totalSeats,
           occupiedSeats: currentPlayers,
@@ -703,14 +391,6 @@ export class MatchController {
           canJoin: canGrow,
           prizePool: match.netPrizePool,
         },
-        incentive: canGrow
-          ? {
-              message: "🚀 Join now and boost the prize pool for everyone!",
-              yourImpact: `Your entry will increase the total prize pool by ₹${Math.round(
-                match.entryFees * 0.7
-              )}`,
-            }
-          : null,
       });
     } catch (error: any) {
       console.error("Get match for entry error:", error);
@@ -1002,6 +682,57 @@ export class MatchController {
         throw error;
       }
       throw new ApiError(500, "Failed to delete all matches");
+    }
+  }
+  static async getMatchById(matchId: number) {
+    try {
+      const match = await prisma.match.findUnique({
+        where: {
+          id: matchId,
+        },
+        include: {
+          purchases: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  email: true,
+                  chatId: true,
+                  balance: true,
+                  createdAt: true,
+                  // Exclude password for security
+                },
+              },
+            },
+          },
+          matchEntries: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  email: true,
+                  chatId: true,
+                  balance: true,
+                  createdAt: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!match) {
+        console.log(`Match with ID ${matchId} not found`);
+        return null;
+      }
+
+      console.log(
+        `Retrieved match: ${match.matchName} with ${match.purchases.length} purchases`
+      );
+      return match;
+    } catch (error) {
+      console.error("Error fetching match by ID:", error);
+      throw new Error(`Failed to fetch match with ID ${matchId}`);
     }
   }
 }

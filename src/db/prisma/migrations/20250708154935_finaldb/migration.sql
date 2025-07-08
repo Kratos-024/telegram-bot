@@ -16,8 +16,6 @@ CREATE TABLE "Match" (
     "imageFileId" TEXT,
     "gameName" TEXT NOT NULL,
     "matchName" TEXT NOT NULL,
-    "platformShare" INTEGER DEFAULT 30,
-    "platformShareTotal" DOUBLE PRECISION DEFAULT 0,
     "netPrizePool" DOUBLE PRECISION DEFAULT 0,
     "price" DOUBLE PRECISION NOT NULL,
     "perKillPoint" DOUBLE PRECISION NOT NULL DEFAULT 0,

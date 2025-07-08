@@ -889,4 +889,188 @@ export class UserController {
       throw new ApiError(500, "Failed to check match entry eligibility");
     }
   }
+  // Add these new functions to your UserController class
+
+  // NEW: Get all users who joined a specific match (Admin function)
+  static async getMatchParticipants(matchId: number) {
+    try {
+      const match = await prisma.match.findUnique({
+        where: { id: matchId },
+        include: {
+          matchEntries: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  email: true,
+                  balance: true,
+                  chatId: true,
+                  createdAt: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "asc",
+            },
+          },
+        },
+      });
+
+      if (!match) {
+        throw new ApiError(404, "Match not found");
+      }
+
+      const participants = match.matchEntries.map((entry, index) => ({
+        serial: index + 1,
+        userId: entry.user.id,
+        email: entry.user.email,
+        chatId: entry.user.chatId,
+        currentBalance: entry.user.balance,
+        amountPaid: entry.amountPaid,
+        entryTime: entry.createdAt,
+        userRegisteredAt: entry.user.createdAt,
+      }));
+
+      return new ApiResponse(200, "Match participants retrieved successfully", {
+        match: {
+          id: match.id,
+          name: match.matchName,
+          gameName: match.gameName,
+          matchName: match.matchName,
+
+          time: match.time,
+          totalSeats: match.totalSeats,
+          occupiedSeats: match.matchEntries.length,
+          availableSeats: match.totalSeats - match.matchEntries.length,
+          entryFees: match.entryFees,
+          firstPrize: match.firstPrize,
+          secondPrize: match.secondPrize,
+          thirdPrize: match.thirdPrize,
+          perKillPoint: match.perKillPoint,
+        },
+        participants,
+        totalParticipants: participants.length,
+      });
+    } catch (error: any) {
+      console.error("Get match participants error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to get match participants");
+    }
+  }
+
+  // NEW: Get all users with their account details in table format (Admin function)
+  static async getAllUsersTable() {
+    try {
+      const users = await prisma.user.findMany({
+        select: {
+          id: true,
+          email: true,
+          password: true,
+          balance: true,
+          chatId: true,
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: "desc", // Latest users first
+        },
+      });
+
+      const usersTable = users.map((user, index) => ({
+        serial: index + 1,
+        userId: user.id,
+        email: user.email,
+        password: user.password,
+        accountBalance: user.balance || 0,
+        chatId: user.chatId || "Not logged in",
+        registrationDate: user.createdAt,
+        status: user.chatId ? "Active" : "Inactive",
+      }));
+
+      return new ApiResponse(200, "All users retrieved successfully", {
+        users: usersTable,
+        totalUsers: usersTable.length,
+        activeUsers: usersTable.filter((user) => user.status === "Active")
+          .length,
+        inactiveUsers: usersTable.filter((user) => user.status === "Inactive")
+          .length,
+        totalBalance: usersTable.reduce(
+          (sum, user) => sum + user.accountBalance,
+          0
+        ),
+      });
+    } catch (error: any) {
+      console.error("Get all users table error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to get users table");
+    }
+  }
+
+  // BONUS: Get user statistics (Admin function)
+  static async getUserStatistics() {
+    try {
+      const [
+        totalUsers,
+        activeUsers,
+        totalMatches,
+        totalEntries,
+        totalPurchases,
+        totalBalance,
+        recentUsers,
+      ] = await Promise.all([
+        prisma.user.count(),
+        prisma.user.count({ where: { chatId: { not: "" } } }),
+        prisma.match.count(),
+        prisma.matchEntry.count(),
+        prisma.purchase.count(),
+        prisma.user.aggregate({ _sum: { balance: true } }),
+        prisma.user.findMany({
+          take: 5,
+          orderBy: { createdAt: "desc" },
+          select: {
+            email: true,
+            balance: true,
+            createdAt: true,
+          },
+        }),
+      ]);
+
+      return new ApiResponse(200, "User statistics retrieved successfully", {
+        statistics: {
+          totalUsers,
+          activeUsers,
+          inactiveUsers: totalUsers - activeUsers,
+          totalMatches,
+          totalMatchEntries: totalEntries,
+          totalPurchases,
+          totalSystemBalance: totalBalance._sum.balance || 0,
+          userEngagement: {
+            averageEntriesPerUser:
+              totalUsers > 0 ? (totalEntries / totalUsers).toFixed(2) : 0,
+            averagePurchasesPerUser:
+              totalUsers > 0 ? (totalPurchases / totalUsers).toFixed(2) : 0,
+            averageBalancePerUser:
+              totalUsers > 0
+                ? ((totalBalance._sum.balance || 0) / totalUsers).toFixed(2)
+                : 0,
+          },
+        },
+        recentUsers: recentUsers.map((user, index) => ({
+          serial: index + 1,
+          email: user.email,
+          balance: user.balance,
+          registeredAt: user.createdAt,
+        })),
+      });
+    } catch (error: any) {
+      console.error("Get user statistics error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to get user statistics");
+    }
+  }
 }
