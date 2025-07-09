@@ -36,7 +36,7 @@ export class BotRoutes {
         ],
       };
 
-      this.bot.sendMessage(chatId, "Welcome to the Matchmaking Bot!", {
+      this.bot.sendMessage(chatId, "Welcome to the gameley Bot!", {
         reply_markup: keyboard,
       });
     });
@@ -1084,7 +1084,7 @@ export class BotRoutes {
       ],
     };
 
-    this.bot.sendMessage(chatId, "Welcome to the Matchmaking Bot!", {
+    this.bot.sendMessage(chatId, "Welcome to the gameley Bot!", {
       reply_markup: keyboard,
     });
   }

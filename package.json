@@ -1,7 +1,7 @@
 {
-  "name": "matchmaking-bot",
+  "name": "gameley-bot",
   "version": "1.0.0",
-  "description": "A simple matchmaking Telegram bot",
+  "description": "A simple gameley Telegram bot",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -b ",
@@ -23,7 +23,7 @@
     "typescript",
     "express",
     "prisma",
-    "matchmaking"
+    "gameley"
   ],
   "author": "Your Name",
   "license": "MIT",
