@@ -119,7 +119,7 @@ export class BotRoutes {
             await this.showGameCategories(chatId, "user_game_selection");
             break;
 
-          case "ente9lor_match":
+          case "enter_match":
             userSessions.set(chatId, {
               state: "awaiting_match_id",
               data: {},
