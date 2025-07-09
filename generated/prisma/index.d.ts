@@ -2409,6 +2409,8 @@ export namespace Prisma {
   export type MatchMinAggregateOutputType = {
     id: number | null
     imageFileId: string | null
+    gameId: string | null
+    matchPassword: string | null
     gameName: string | null
     matchName: string | null
     netPrizePool: number | null
@@ -2426,6 +2428,8 @@ export namespace Prisma {
   export type MatchMaxAggregateOutputType = {
     id: number | null
     imageFileId: string | null
+    gameId: string | null
+    matchPassword: string | null
     gameName: string | null
     matchName: string | null
     netPrizePool: number | null
@@ -2443,6 +2447,8 @@ export namespace Prisma {
   export type MatchCountAggregateOutputType = {
     id: number
     imageFileId: number
+    gameId: number
+    matchPassword: number
     gameName: number
     matchName: number
     netPrizePool: number
@@ -2486,6 +2492,8 @@ export namespace Prisma {
   export type MatchMinAggregateInputType = {
     id?: true
     imageFileId?: true
+    gameId?: true
+    matchPassword?: true
     gameName?: true
     matchName?: true
     netPrizePool?: true
@@ -2503,6 +2511,8 @@ export namespace Prisma {
   export type MatchMaxAggregateInputType = {
     id?: true
     imageFileId?: true
+    gameId?: true
+    matchPassword?: true
     gameName?: true
     matchName?: true
     netPrizePool?: true
@@ -2520,6 +2530,8 @@ export namespace Prisma {
   export type MatchCountAggregateInputType = {
     id?: true
     imageFileId?: true
+    gameId?: true
+    matchPassword?: true
     gameName?: true
     matchName?: true
     netPrizePool?: true
@@ -2624,6 +2636,8 @@ export namespace Prisma {
   export type MatchGroupByOutputType = {
     id: number
     imageFileId: string | null
+    gameId: string | null
+    matchPassword: string | null
     gameName: string
     matchName: string
     netPrizePool: number | null
@@ -2660,6 +2674,8 @@ export namespace Prisma {
   export type MatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     imageFileId?: boolean
+    gameId?: boolean
+    matchPassword?: boolean
     gameName?: boolean
     matchName?: boolean
     netPrizePool?: boolean
@@ -2680,6 +2696,8 @@ export namespace Prisma {
   export type MatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     imageFileId?: boolean
+    gameId?: boolean
+    matchPassword?: boolean
     gameName?: boolean
     matchName?: boolean
     netPrizePool?: boolean
@@ -2697,6 +2715,8 @@ export namespace Prisma {
   export type MatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     imageFileId?: boolean
+    gameId?: boolean
+    matchPassword?: boolean
     gameName?: boolean
     matchName?: boolean
     netPrizePool?: boolean
@@ -2714,6 +2734,8 @@ export namespace Prisma {
   export type MatchSelectScalar = {
     id?: boolean
     imageFileId?: boolean
+    gameId?: boolean
+    matchPassword?: boolean
     gameName?: boolean
     matchName?: boolean
     netPrizePool?: boolean
@@ -2728,7 +2750,7 @@ export namespace Prisma {
     date?: boolean
   }
 
-  export type MatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "imageFileId" | "gameName" | "matchName" | "netPrizePool" | "price" | "perKillPoint" | "firstPrize" | "secondPrize" | "thirdPrize" | "entryFees" | "totalSeats" | "time" | "date", ExtArgs["result"]["match"]>
+  export type MatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "imageFileId" | "gameId" | "matchPassword" | "gameName" | "matchName" | "netPrizePool" | "price" | "perKillPoint" | "firstPrize" | "secondPrize" | "thirdPrize" | "entryFees" | "totalSeats" | "time" | "date", ExtArgs["result"]["match"]>
   export type MatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | Match$purchasesArgs<ExtArgs>
     matchEntries?: boolean | Match$matchEntriesArgs<ExtArgs>
@@ -2746,6 +2768,8 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: number
       imageFileId: string | null
+      gameId: string | null
+      matchPassword: string | null
       gameName: string
       matchName: string
       netPrizePool: number | null
@@ -3185,6 +3209,8 @@ export namespace Prisma {
   interface MatchFieldRefs {
     readonly id: FieldRef<"Match", 'Int'>
     readonly imageFileId: FieldRef<"Match", 'String'>
+    readonly gameId: FieldRef<"Match", 'String'>
+    readonly matchPassword: FieldRef<"Match", 'String'>
     readonly gameName: FieldRef<"Match", 'String'>
     readonly matchName: FieldRef<"Match", 'String'>
     readonly netPrizePool: FieldRef<"Match", 'Float'>
@@ -5887,6 +5913,8 @@ export namespace Prisma {
   export const MatchScalarFieldEnum: {
     id: 'id',
     imageFileId: 'imageFileId',
+    gameId: 'gameId',
+    matchPassword: 'matchPassword',
     gameName: 'gameName',
     matchName: 'matchName',
     netPrizePool: 'netPrizePool',
@@ -6084,6 +6112,8 @@ export namespace Prisma {
     NOT?: MatchWhereInput | MatchWhereInput[]
     id?: IntFilter<"Match"> | number
     imageFileId?: StringNullableFilter<"Match"> | string | null
+    gameId?: StringNullableFilter<"Match"> | string | null
+    matchPassword?: StringNullableFilter<"Match"> | string | null
     gameName?: StringFilter<"Match"> | string
     matchName?: StringFilter<"Match"> | string
     netPrizePool?: FloatNullableFilter<"Match"> | number | null
@@ -6103,6 +6133,8 @@ export namespace Prisma {
   export type MatchOrderByWithRelationInput = {
     id?: SortOrder
     imageFileId?: SortOrderInput | SortOrder
+    gameId?: SortOrderInput | SortOrder
+    matchPassword?: SortOrderInput | SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
     netPrizePool?: SortOrderInput | SortOrder
@@ -6125,6 +6157,8 @@ export namespace Prisma {
     OR?: MatchWhereInput[]
     NOT?: MatchWhereInput | MatchWhereInput[]
     imageFileId?: StringNullableFilter<"Match"> | string | null
+    gameId?: StringNullableFilter<"Match"> | string | null
+    matchPassword?: StringNullableFilter<"Match"> | string | null
     gameName?: StringFilter<"Match"> | string
     matchName?: StringFilter<"Match"> | string
     netPrizePool?: FloatNullableFilter<"Match"> | number | null
@@ -6144,6 +6178,8 @@ export namespace Prisma {
   export type MatchOrderByWithAggregationInput = {
     id?: SortOrder
     imageFileId?: SortOrderInput | SortOrder
+    gameId?: SortOrderInput | SortOrder
+    matchPassword?: SortOrderInput | SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
     netPrizePool?: SortOrderInput | SortOrder
@@ -6169,6 +6205,8 @@ export namespace Prisma {
     NOT?: MatchScalarWhereWithAggregatesInput | MatchScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Match"> | number
     imageFileId?: StringNullableWithAggregatesFilter<"Match"> | string | null
+    gameId?: StringNullableWithAggregatesFilter<"Match"> | string | null
+    matchPassword?: StringNullableWithAggregatesFilter<"Match"> | string | null
     gameName?: StringWithAggregatesFilter<"Match"> | string
     matchName?: StringWithAggregatesFilter<"Match"> | string
     netPrizePool?: FloatNullableWithAggregatesFilter<"Match"> | number | null
@@ -6370,6 +6408,8 @@ export namespace Prisma {
 
   export type MatchCreateInput = {
     imageFileId?: string | null
+    gameId?: string | null
+    matchPassword?: string | null
     gameName: string
     matchName: string
     netPrizePool?: number | null
@@ -6389,6 +6429,8 @@ export namespace Prisma {
   export type MatchUncheckedCreateInput = {
     id?: number
     imageFileId?: string | null
+    gameId?: string | null
+    matchPassword?: string | null
     gameName: string
     matchName: string
     netPrizePool?: number | null
@@ -6407,6 +6449,8 @@ export namespace Prisma {
 
   export type MatchUpdateInput = {
     imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    gameId?: NullableStringFieldUpdateOperationsInput | string | null
+    matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
     netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -6426,6 +6470,8 @@ export namespace Prisma {
   export type MatchUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    gameId?: NullableStringFieldUpdateOperationsInput | string | null
+    matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
     netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -6445,6 +6491,8 @@ export namespace Prisma {
   export type MatchCreateManyInput = {
     id?: number
     imageFileId?: string | null
+    gameId?: string | null
+    matchPassword?: string | null
     gameName: string
     matchName: string
     netPrizePool?: number | null
@@ -6461,6 +6509,8 @@ export namespace Prisma {
 
   export type MatchUpdateManyMutationInput = {
     imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    gameId?: NullableStringFieldUpdateOperationsInput | string | null
+    matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
     netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -6478,6 +6528,8 @@ export namespace Prisma {
   export type MatchUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    gameId?: NullableStringFieldUpdateOperationsInput | string | null
+    matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
     netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -6790,6 +6842,8 @@ export namespace Prisma {
   export type MatchCountOrderByAggregateInput = {
     id?: SortOrder
     imageFileId?: SortOrder
+    gameId?: SortOrder
+    matchPassword?: SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
     netPrizePool?: SortOrder
@@ -6819,6 +6873,8 @@ export namespace Prisma {
   export type MatchMaxOrderByAggregateInput = {
     id?: SortOrder
     imageFileId?: SortOrder
+    gameId?: SortOrder
+    matchPassword?: SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
     netPrizePool?: SortOrder
@@ -6836,6 +6892,8 @@ export namespace Prisma {
   export type MatchMinOrderByAggregateInput = {
     id?: SortOrder
     imageFileId?: SortOrder
+    gameId?: SortOrder
+    matchPassword?: SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
     netPrizePool?: SortOrder
@@ -7625,6 +7683,8 @@ export namespace Prisma {
 
   export type MatchCreateWithoutPurchasesInput = {
     imageFileId?: string | null
+    gameId?: string | null
+    matchPassword?: string | null
     gameName: string
     matchName: string
     netPrizePool?: number | null
@@ -7643,6 +7703,8 @@ export namespace Prisma {
   export type MatchUncheckedCreateWithoutPurchasesInput = {
     id?: number
     imageFileId?: string | null
+    gameId?: string | null
+    matchPassword?: string | null
     gameName: string
     matchName: string
     netPrizePool?: number | null
@@ -7706,6 +7768,8 @@ export namespace Prisma {
 
   export type MatchUpdateWithoutPurchasesInput = {
     imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    gameId?: NullableStringFieldUpdateOperationsInput | string | null
+    matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
     netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -7724,6 +7788,8 @@ export namespace Prisma {
   export type MatchUncheckedUpdateWithoutPurchasesInput = {
     id?: IntFieldUpdateOperationsInput | number
     imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    gameId?: NullableStringFieldUpdateOperationsInput | string | null
+    matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
     netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -7765,6 +7831,8 @@ export namespace Prisma {
 
   export type MatchCreateWithoutMatchEntriesInput = {
     imageFileId?: string | null
+    gameId?: string | null
+    matchPassword?: string | null
     gameName: string
     matchName: string
     netPrizePool?: number | null
@@ -7783,6 +7851,8 @@ export namespace Prisma {
   export type MatchUncheckedCreateWithoutMatchEntriesInput = {
     id?: number
     imageFileId?: string | null
+    gameId?: string | null
+    matchPassword?: string | null
     gameName: string
     matchName: string
     netPrizePool?: number | null
@@ -7846,6 +7916,8 @@ export namespace Prisma {
 
   export type MatchUpdateWithoutMatchEntriesInput = {
     imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    gameId?: NullableStringFieldUpdateOperationsInput | string | null
+    matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
     netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
@@ -7864,6 +7936,8 @@ export namespace Prisma {
   export type MatchUncheckedUpdateWithoutMatchEntriesInput = {
     id?: IntFieldUpdateOperationsInput | number
     imageFileId?: NullableStringFieldUpdateOperationsInput | string | null
+    gameId?: NullableStringFieldUpdateOperationsInput | string | null
+    matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
     netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null

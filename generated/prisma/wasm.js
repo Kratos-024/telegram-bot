@@ -132,6 +132,8 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.MatchScalarFieldEnum = {
   id: 'id',
   imageFileId: 'imageFileId',
+  gameId: 'gameId',
+  matchPassword: 'matchPassword',
   gameName: 'gameName',
   matchName: 'matchName',
   netPrizePool: 'netPrizePool',

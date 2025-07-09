@@ -116,9 +116,10 @@ export class BotRoutes {
             );
             break;
 
-          // case "today_match":
-          //   await this.showGameCategories(chatId, "user_game_selection");
-          //   break;
+          case "today_match":
+            await this.showGameCategories(chatId, "user_game_selection");
+            break;
+
           // case "enter_match":
           //   userSessions.set(chatId, {
           //     state: "awaiting_match_id",
@@ -126,58 +127,6 @@ export class BotRoutes {
           //   });
           //   this.bot.sendMessage(chatId, "Enter match ID to join:");
           //   break;
-
-          // case "withdraw":
-          //   await this.showWithdraw(chatId);
-          //   break;
-
-          // case "admin_add_match":
-          //   // Clear any existing session before starting new match creation
-          //   userSessions.delete(chatId);
-          //   userSessions.set(chatId, {
-          //     state: "awaiting_game_name",
-          //     data: {},
-          //   });
-          //   this.bot.sendMessage(chatId, "🎮 Enter game name:");
-          //   break;
-
-          // case "admin_show_matches":
-          //   await this.showAllMatches(chatId);
-          //   break;
-
-          // case "admin_delete_match":
-          //   userSessions.set(chatId, {
-          //     state: "awaiting_delete_match_name",
-          //     data: {},
-          //   });
-          //   this.bot.sendMessage(chatId, "Enter the exact match ID to delete:");
-          //   break;
-
-          // case "admin_user_balance":
-          //   userSessions.set(chatId, {
-          //     state: "awaiting_user_email_for_balance",
-          //     data: {},
-          //   });
-          //   this.bot.sendMessage(
-          //     chatId,
-          //     "Enter user Userid to check/update balance:"
-          //   );
-          //   break;
-
-          // case "admin_delete_allMatch":
-          //   await this.deleteAllMatches(chatId);
-          //   break;
-          case "today_match":
-            await this.showGameCategories(chatId, "user_game_selection");
-            break;
-
-          case "enter_match":
-            userSessions.set(chatId, {
-              state: "awaiting_match_id",
-              data: {},
-            });
-            this.bot.sendMessage(chatId, "Enter match ID to join:");
-            break;
 
           case "withdraw":
             await this.showWithdraw(chatId);
@@ -522,6 +471,44 @@ export class BotRoutes {
             }
 
             session.data.thirdPrize = thirdPrize;
+            session.state = "awaiting_game_id";
+            this.bot.sendMessage(
+              chatId,
+              "🎮 *Game ID*\n\nPlease enter the Game ID:\n🔤 Minimum 3 characters required",
+              { parse_mode: "Markdown" }
+            );
+            break;
+
+          case "awaiting_game_id":
+            const gameId = text?.trim();
+            if (!gameId || gameId.length < 3) {
+              this.bot.sendMessage(
+                chatId,
+                "❌ Please enter a valid Game ID (minimum 3 characters)."
+              );
+              return;
+            }
+
+            session.data.gameId = gameId;
+            session.state = "awaiting_match_password";
+            this.bot.sendMessage(
+              chatId,
+              "🔐 *Match Password*\n\nEnter a secure match password:\n🔑 Minimum 4 characters required",
+              { parse_mode: "Markdown" }
+            );
+            break;
+
+          case "awaiting_match_password":
+            const matchPassword = text?.trim();
+            if (!matchPassword || matchPassword.length < 4) {
+              this.bot.sendMessage(
+                chatId,
+                "❌ Password too short. Please enter at least 4 characters."
+              );
+              return;
+            }
+
+            session.data.matchPassword = matchPassword;
             session.state = "awaiting_custom_date";
 
             this.bot.sendMessage(chatId, "⏰ Now let's set the match time:", {
@@ -664,7 +651,104 @@ export class BotRoutes {
               this.showAdminMenu(chatId);
             }
             break;
+          case "enter_match":
+            userSessions.set(chatId, {
+              state: "awaiting_match_id",
+              data: {},
+            });
+            this.bot.sendMessage(chatId, "Enter match ID to join:");
+            break;
 
+          // case "awaiting_match_id":
+          //   try {
+          //     const matchId = parseInt(text!);
+          //     if (isNaN(matchId)) {
+          //       this.bot.sendMessage(
+          //         chatId,
+          //         "Please enter a valid match ID (number)"
+          //       );
+          //       return;
+          //     }
+
+          //     const matchDetails = await MatchController.getMatchForEntry(
+          //       matchId
+          //     );
+          //     const match = matchDetails.data;
+
+          //     if (match?.matchStatus.isFull) {
+          //       this.bot.sendMessage(
+          //         chatId,
+          //         "❌ Match is full! No seats available."
+          //       );
+          //       userSessions.delete(chatId);
+          //       this.showMainDashboard(chatId);
+          //       return;
+          //     }
+
+          //     session.data.matchId = matchId;
+          //     session.data.matchDetails = match;
+          //     session.state = "awaiting_entry_amount";
+
+          //     this.bot.sendMessage(
+          //       chatId,
+          //       `🎮 **${match?.name}** (${match?.gameName})\n` +
+          //         `⏰ Time: ${match?.time}\n` +
+          //         `💰 Entry Fees: Rs.${match?.entryFees}\n` +
+          //         `🏆 1st Prize: Rs.${match?.currentPrizes.firstPrize}\n` +
+          //         `🥈 2nd Prize: Rs.${match?.currentPrizes.secondPrize}\n` +
+          //         `🥉 3rd Prize: Rs.${match?.currentPrizes.thirdPrize}\n` +
+          //         `💸 Prize Pool: Rs.${match?.matchStatus.prizePool}\n` +
+          //         `🎯 Per Kill: Rs.${match?.currentPrizes.perKillPoint}\n` +
+          //         `💺 Available Seats: ${match?.matchStatus.availableSeats}/${match?.matchStatus.totalSeats}\n\n` +
+          //         `Enter amount to pay for entry:`,
+          //       { parse_mode: "Markdown" }
+          //     );
+          //   } catch (error: any) {
+          //     this.bot.sendMessage(chatId, error.message || "Match not found");
+          //     userSessions.delete(chatId);
+          //     this.showMainDashboard(chatId);
+          //   }
+          //   break;
+
+          // case "awaiting_entry_amount":
+          //   try {
+          //     const amount = parseFloat(text!);
+          //     if (isNaN(amount) || amount <= 0) {
+          //       this.bot.sendMessage(
+          //         chatId,
+          //         "Please enter a valid amount (positive number)"
+          //       );
+          //       return;
+          //     }
+
+          //     const result = await MatchController.enterMatch(
+          //       chatId.toString(),
+          //       session.data.matchId,
+          //       amount
+          //     );
+          //     userSessions.delete(chatId);
+          //     const matchData = result.data;
+
+          //     this.bot.sendMessage(
+          //       chatId,
+          //       `✅ ${result.message}\n\n` +
+          //         `🎮 Match: ${matchData?.match.name}\n` +
+          //         `💰 Amount Paid: Rs.${matchData?.amountPaid}\n` +
+          //         `💳 Remaining Balance: Rs.${matchData?.remainingBalance}\n` +
+          //         `🔑 Math Joining Info MatchId: ${matchData?.match.gameId} and Password:${matchData?.match.matchPassword}\n` +
+          //         `💺 Remaining Seats: ${matchData?.playerInfo.remainingSeats}`,
+          //       { parse_mode: "Markdown" }
+          //     );
+          //     this.showMainDashboard(chatId);
+          //   } catch (error: any) {
+          //     this.bot.sendMessage(
+          //       chatId,
+          //       error.message || "Failed to enter match"
+          //     );
+          //     userSessions.delete(chatId);
+          //     this.showMainDashboard(chatId);
+          //   }
+          //   break;
           case "awaiting_match_id":
             try {
               const matchId = parseInt(text!);
@@ -706,6 +790,7 @@ export class BotRoutes {
                   `💸 Prize Pool: Rs.${match?.matchStatus.prizePool}\n` +
                   `🎯 Per Kill: Rs.${match?.currentPrizes.perKillPoint}\n` +
                   `💺 Available Seats: ${match?.matchStatus.availableSeats}/${match?.matchStatus.totalSeats}\n\n` +
+                  `⚡ **Required Entry Amount: Rs.${match?.entryFees}**\n` +
                   `Enter amount to pay for entry:`,
                 { parse_mode: "Markdown" }
               );
@@ -727,6 +812,21 @@ export class BotRoutes {
                 return;
               }
 
+              const requiredEntryFees = session.data.matchDetails?.entryFees;
+
+              // Check if the entered amount matches the required entry fees
+              if (amount !== requiredEntryFees) {
+                this.bot.sendMessage(
+                  chatId,
+                  `❌ **Incorrect Amount!**\n\n` +
+                    `💰 You entered: Rs.${amount}\n` +
+                    `✅ Required amount: Rs.${requiredEntryFees}\n\n` +
+                    `Please enter the exact entry fee amount: Rs.${requiredEntryFees}`,
+                  { parse_mode: "Markdown" }
+                );
+                return;
+              }
+
               const result = await MatchController.enterMatch(
                 chatId.toString(),
                 session.data.matchId,
@@ -742,6 +842,7 @@ export class BotRoutes {
                   `🎮 Match: ${matchData?.match.name}\n` +
                   `💰 Amount Paid: Rs.${matchData?.amountPaid}\n` +
                   `💳 Remaining Balance: Rs.${matchData?.remainingBalance}\n` +
+                  `🔑 Match Joining Info - MatchId: ${matchData?.match.gameId} and Password: ${matchData?.match.matchPassword}\n` +
                   `💺 Remaining Seats: ${matchData?.playerInfo.remainingSeats}`,
                 { parse_mode: "Markdown" }
               );
@@ -755,7 +856,6 @@ export class BotRoutes {
               this.showMainDashboard(chatId);
             }
             break;
-
           case "awaiting_user_email_for_balance":
             try {
               const result = await MatchController.getUserBalance(text!);
@@ -930,6 +1030,8 @@ export class BotRoutes {
 
         // Validate all required data before proceeding
         const requiredFields = [
+          "gameId",
+          "matchPassword",
           "gameName",
           "matchName",
           "perKillPoint",
@@ -968,6 +1070,8 @@ export class BotRoutes {
           session.data.firstPrize,
           session.data.secondPrize,
           session.data.thirdPrize,
+          session.data.gameId,
+          session.data.matchPassword,
           fileId
         );
 
@@ -989,6 +1093,8 @@ export class BotRoutes {
               `🥈 2nd Prize: Rs.${matchData.secondPrize || "N/A"}\n` +
               `🥉 3rd Prize: Rs.${matchData.thirdPrize || "N/A"}\n\n` +
               `📝 Match ID: ${matchData.id}\n` +
+              `📝 Match ID: ${matchData.gameId}\n` +
+              `🔑 Match ID: ${matchData.matchPassword}\n` +
               `💡 ${matchData.matchName || "Match ready for players!"}`,
             { parse_mode: "Markdown" }
           );

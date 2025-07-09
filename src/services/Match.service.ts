@@ -1,4 +1,5 @@
 import cron from "node-cron";
+
 import TelegramBot from "node-telegram-bot-api";
 import { MatchController } from "../controllers/Math.controller";
 
@@ -21,14 +22,18 @@ export class MatchNotificationService {
   startMatchNotificationCron() {
     cron.schedule("* * * * *", async () => {
       try {
-        const currentTimeIST = this.getCurrentTimeFormatIST();
-        await this.checkAndNotifyMatches(currentTimeIST);
+        this.getCurrentTimeFormatIST();
+        const notificationTimeIST = this.getNotificationTimeIST();
+        console.log(`Testing notification for time: ${notificationTimeIST}`);
+        await this.checkAndNotifyMatches(notificationTimeIST);
       } catch (error) {
         console.error("Error in match notification cron:", error);
       }
     });
 
-    console.log("Match notification cron job started - checking every minute");
+    console.log(
+      "Match notification cron job started - checking every minute for matches starting in 10 minutes"
+    );
   }
 
   private escapeMarkdown(text: string): string {
@@ -59,16 +64,21 @@ export class MatchNotificationService {
     };
   }
 
-  private async checkAndNotifyMatches(currentTimeIST: string) {
+  private async checkAndNotifyMatches(targetTimeIST: string) {
     try {
-      const matches = await MatchController.getMatchesForNotification();
+      const matches = await MatchController.getMatchesForNotification(
+        targetTimeIST
+      );
 
       if (matches.length === 0) return;
 
-      console.log(`Found ${matches.length} matches to notify about`);
+      console.log(
+        `Found ${matches.length} matches to notify for time: ${targetTimeIST}`
+      );
 
       for (const match of matches) {
         const formattedTime = this.formatMatchTime(match.time);
+        console.log("formattedTime", formattedTime);
         const actualPlayersJoined = match.purchases.length;
         const dynamicPrizes = this.calculateDynamicPrizes(
           match,
@@ -81,7 +91,8 @@ export class MatchNotificationService {
           if (user.chatId && user.chatId !== "") {
             try {
               const message =
-                `🚨 *MATCH ALERT* 🚨\n\n` +
+                `🚨 *MATCH REMINDER* 🚨\n\n` +
+                `⏰ *Starting in 10 minutes!*\n\n` +
                 `🎮 *Game:* ${this.escapeMarkdown(match.gameName)}\n` +
                 `⏰ *Time:* ${this.escapeMarkdown(formattedTime)}\n` +
                 `🎯 *Match:* ${this.escapeMarkdown(match.matchName)}\n` +
@@ -92,7 +103,7 @@ export class MatchNotificationService {
                 `🥈 *2nd Prize:* Rs.${dynamicPrizes.secondPrize}\n` +
                 `🥉 *3rd Prize:* Rs.${dynamicPrizes.thirdPrize}\n` +
                 `🎯 *Per Kill:* Rs.${match.perKillPoint}\n\n` +
-                `Your match is starting now! Good luck! 🍀`;
+                `Get ready! Your match starts in 10 minutes! 🍀`;
 
               if (match.imageFileId) {
                 await this.bot.sendPhoto(
@@ -110,11 +121,11 @@ export class MatchNotificationService {
               }
 
               console.log(
-                `Notification sent to user ${user.email} for match ${match.matchName} in game ${match.gameName}`
+                `10-minute notification sent to user ${user.email} for match ${match.matchName} in game ${match.gameName}`
               );
             } catch (error) {
               console.error(
-                `Failed to send notification to user ${user.email}:`,
+                `Failed to send 10-minute notification to user ${user.email}:`,
                 error
               );
             }
@@ -161,10 +172,35 @@ export class MatchNotificationService {
     ).padStart(2, "0")}-${String(now.getMinutes()).padStart(2, "0")}`;
   }
 
+  /**
+   * Returns time 10 minutes from now in format YYYY-MM-DD-HH-mm in IST
+   */
+  private getNotificationTimeIST(): string {
+    const istNow = new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Kolkata",
+    });
+    const now = new Date(istNow);
+
+    // Add 10 minutes
+    const notificationTime = new Date(now.getTime() + 10 * 60 * 1000);
+
+    return `${notificationTime.getFullYear()}-${String(
+      notificationTime.getMonth() + 1
+    ).padStart(2, "0")}-${String(notificationTime.getDate()).padStart(
+      2,
+      "0"
+    )}-${String(notificationTime.getHours()).padStart(2, "0")}-${String(
+      notificationTime.getMinutes()
+    ).padStart(2, "0")}`;
+  }
+
   async triggerNotificationCheck() {
-    const currentTimeIST = this.getCurrentTimeFormatIST();
-    console.log("Manually triggering notification check for:", currentTimeIST);
-    await this.checkAndNotifyMatches(currentTimeIST);
+    const notificationTimeIST = this.getNotificationTimeIST();
+    console.log(
+      "Manually triggering notification check for matches starting at:",
+      notificationTimeIST
+    );
+    await this.checkAndNotifyMatches(notificationTimeIST);
   }
 
   async testNotificationForTime(timeString: string) {

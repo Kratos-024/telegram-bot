@@ -1,4 +1,5 @@
 import { ApiError } from "../utils/ApiError";
+
 import { ApiResponse } from "../utils/ApiResponse";
 import prisma from "../db";
 
@@ -87,6 +88,8 @@ export class MatchController {
     firstPrize: number,
     secondPrize: number,
     thirdPrize: number,
+    gameId: string,
+    matchPassword: string,
     imageFileId: string
   ) {
     try {
@@ -95,6 +98,8 @@ export class MatchController {
 
       const match = await prisma.match.create({
         data: {
+          gameId,
+          matchPassword,
           imageFileId: imageFileId,
           gameName,
           matchName,
@@ -163,8 +168,7 @@ export class MatchController {
       }
 
       const currentPlayersBeforeJoin = match.matchEntries.length;
-
-      const result = await prisma.$transaction(async (tx) => {
+      await prisma.$transaction(async (tx) => {
         await tx.user.update({
           where: { id: user.id },
           data: { balance: user.balance - amountPaid },
@@ -184,7 +188,6 @@ export class MatchController {
             matchId: match.id,
           },
         });
-
         return entry;
       });
 
@@ -193,6 +196,8 @@ export class MatchController {
 
       return new ApiResponse(200, "Successfully entered the match!", {
         match: {
+          gameId: match.gameId,
+          matchPassword: match.matchPassword,
           name: match.matchName,
           gameName: match.gameName,
           time: match.time,
@@ -634,22 +639,22 @@ export class MatchController {
     }
   }
 
-  static async getMatchesForNotification() {
+  static async getMatchesForNotification(targetTimeIST: string) {
     try {
-      const istNow = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Kolkata",
-      });
-      const now = new Date(istNow);
+      // const istNow = new Date().toLocaleString("en-US", {
+      //   timeZone: "Asia/Kolkata",
+      // });
+      // const now = new Date(istNow);
 
-      const currentTime = `${now.getFullYear()}-${String(
-        now.getMonth() + 1
-      ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}-${String(
-        now.getHours()
-      ).padStart(2, "0")}-${String(now.getMinutes()).padStart(2, "0")}`;
+      // const currentTime = `${now.getFullYear()}-${String(
+      //   now.getMonth() + 1
+      // ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}-${String(
+      //   now.getHours()
+      // ).padStart(2, "0")}-${String(now.getMinutes()).padStart(2, "0")}`;
 
       const matches = await prisma.match.findMany({
         where: {
-          time: currentTime,
+          time: targetTimeIST,
         },
         include: {
           purchases: {
