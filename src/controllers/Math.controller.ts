@@ -636,7 +636,11 @@ export class MatchController {
 
   static async getMatchesForNotification() {
     try {
-      const now = new Date();
+      const istNow = new Date().toLocaleString("en-US", {
+        timeZone: "Asia/Kolkata",
+      });
+      const now = new Date(istNow);
+
       const currentTime = `${now.getFullYear()}-${String(
         now.getMonth() + 1
       ).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}-${String(
