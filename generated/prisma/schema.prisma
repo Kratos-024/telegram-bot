@@ -15,7 +15,7 @@ model User {
   password  String
   balance   Float    @default(0)
   createdAt DateTime @default(now())
-  chatId    String   @unique
+  chatId    String?  @unique
 
   purchases    Purchase[]
   matchEntries MatchEntry[]

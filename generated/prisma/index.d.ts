@@ -1402,7 +1402,7 @@ export namespace Prisma {
     password: string
     balance: number
     createdAt: Date
-    chatId: string
+    chatId: string | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -1484,7 +1484,7 @@ export namespace Prisma {
       password: string
       balance: number
       createdAt: Date
-      chatId: string
+      chatId: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -6050,7 +6050,7 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     balance?: FloatFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
-    chatId?: StringFilter<"User"> | string
+    chatId?: StringNullableFilter<"User"> | string | null
     purchases?: PurchaseListRelationFilter
     matchEntries?: MatchEntryListRelationFilter
   }
@@ -6061,7 +6061,7 @@ export namespace Prisma {
     password?: SortOrder
     balance?: SortOrder
     createdAt?: SortOrder
-    chatId?: SortOrder
+    chatId?: SortOrderInput | SortOrder
     purchases?: PurchaseOrderByRelationAggregateInput
     matchEntries?: MatchEntryOrderByRelationAggregateInput
   }
@@ -6086,7 +6086,7 @@ export namespace Prisma {
     password?: SortOrder
     balance?: SortOrder
     createdAt?: SortOrder
-    chatId?: SortOrder
+    chatId?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -6103,7 +6103,7 @@ export namespace Prisma {
     password?: StringWithAggregatesFilter<"User"> | string
     balance?: FloatWithAggregatesFilter<"User"> | number
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
-    chatId?: StringWithAggregatesFilter<"User"> | string
+    chatId?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type MatchWhereInput = {
@@ -6343,7 +6343,7 @@ export namespace Prisma {
     password: string
     balance?: number
     createdAt?: Date | string
-    chatId: string
+    chatId?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
   }
@@ -6354,7 +6354,7 @@ export namespace Prisma {
     password: string
     balance?: number
     createdAt?: Date | string
-    chatId: string
+    chatId?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
   }
@@ -6364,7 +6364,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chatId?: StringFieldUpdateOperationsInput | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
   }
@@ -6375,7 +6375,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chatId?: StringFieldUpdateOperationsInput | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -6386,7 +6386,7 @@ export namespace Prisma {
     password: string
     balance?: number
     createdAt?: Date | string
-    chatId: string
+    chatId?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -6394,7 +6394,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chatId?: StringFieldUpdateOperationsInput | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -6403,7 +6403,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chatId?: StringFieldUpdateOperationsInput | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MatchCreateInput = {
@@ -6687,6 +6687,21 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type PurchaseListRelationFilter = {
     every?: PurchaseWhereInput
     some?: PurchaseWhereInput
@@ -6697,6 +6712,11 @@ export namespace Prisma {
     every?: MatchEntryWhereInput
     some?: MatchEntryWhereInput
     none?: MatchEntryWhereInput
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
   }
 
   export type PurchaseOrderByRelationAggregateInput = {
@@ -6808,7 +6828,7 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -6820,12 +6840,10 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type MatchCountOrderByAggregateInput = {
@@ -6907,24 +6925,6 @@ export namespace Prisma {
     thirdPrize?: SortOrder
     entryFees?: SortOrder
     totalSeats?: SortOrder
-  }
-
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -7062,6 +7062,10 @@ export namespace Prisma {
     set?: Date | string
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type PurchaseUpdateManyWithoutUserNestedInput = {
     create?: XOR<PurchaseCreateWithoutUserInput, PurchaseUncheckedCreateWithoutUserInput> | PurchaseCreateWithoutUserInput[] | PurchaseUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PurchaseCreateOrConnectWithoutUserInput | PurchaseCreateOrConnectWithoutUserInput[]
@@ -7152,10 +7156,6 @@ export namespace Prisma {
     connectOrCreate?: MatchEntryCreateOrConnectWithoutMatchInput | MatchEntryCreateOrConnectWithoutMatchInput[]
     createMany?: MatchEntryCreateManyMatchInputEnvelope
     connect?: MatchEntryWhereUniqueInput | MatchEntryWhereUniqueInput[]
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type PurchaseUpdateManyWithoutMatchNestedInput = {
@@ -7317,6 +7317,20 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type NestedStringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -7378,20 +7392,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedDateTimeFilter<$PrismaModel>
     _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
-  export type NestedStringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -7600,7 +7600,7 @@ export namespace Prisma {
     password: string
     balance?: number
     createdAt?: Date | string
-    chatId: string
+    chatId?: string | null
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
   }
 
@@ -7610,7 +7610,7 @@ export namespace Prisma {
     password: string
     balance?: number
     createdAt?: Date | string
-    chatId: string
+    chatId?: string | null
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -7679,7 +7679,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chatId?: StringFieldUpdateOperationsInput | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
   }
 
@@ -7689,7 +7689,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chatId?: StringFieldUpdateOperationsInput | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
   }
 
@@ -7748,7 +7748,7 @@ export namespace Prisma {
     password: string
     balance?: number
     createdAt?: Date | string
-    chatId: string
+    chatId?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
   }
 
@@ -7758,7 +7758,7 @@ export namespace Prisma {
     password: string
     balance?: number
     createdAt?: Date | string
-    chatId: string
+    chatId?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
   }
 
@@ -7827,7 +7827,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chatId?: StringFieldUpdateOperationsInput | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
   }
 
@@ -7837,7 +7837,7 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    chatId?: StringFieldUpdateOperationsInput | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
   }
 
