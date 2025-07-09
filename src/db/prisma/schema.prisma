@@ -28,7 +28,7 @@ model Match {
   matchPassword      String?
   gameName           String
   matchName          String
-  netPrizePool       Float?    @default(0)         // Changed from Int to Float
+  netPrizePool       Float    @default(0)         // Changed from Int to Float
   price              Float                         // Entry fees
   perKillPoint       Float     @default(0)         // Per kill reward
   firstPrize         Float     @default(0)

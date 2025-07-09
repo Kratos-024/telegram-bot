@@ -320,6 +320,7 @@ export class MatchController {
 
         return {
           id: match.id,
+          imageFileId: match.imageFileId,
           serial: index + 1,
           time: match.time,
           gameName: match.gameName,

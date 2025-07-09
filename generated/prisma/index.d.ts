@@ -2640,7 +2640,7 @@ export namespace Prisma {
     matchPassword: string | null
     gameName: string
     matchName: string
-    netPrizePool: number | null
+    netPrizePool: number
     price: number
     perKillPoint: number
     firstPrize: number
@@ -2772,7 +2772,7 @@ export namespace Prisma {
       matchPassword: string | null
       gameName: string
       matchName: string
-      netPrizePool: number | null
+      netPrizePool: number
       price: number
       perKillPoint: number
       firstPrize: number
@@ -6116,7 +6116,7 @@ export namespace Prisma {
     matchPassword?: StringNullableFilter<"Match"> | string | null
     gameName?: StringFilter<"Match"> | string
     matchName?: StringFilter<"Match"> | string
-    netPrizePool?: FloatNullableFilter<"Match"> | number | null
+    netPrizePool?: FloatFilter<"Match"> | number
     price?: FloatFilter<"Match"> | number
     perKillPoint?: FloatFilter<"Match"> | number
     firstPrize?: FloatFilter<"Match"> | number
@@ -6137,7 +6137,7 @@ export namespace Prisma {
     matchPassword?: SortOrderInput | SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
-    netPrizePool?: SortOrderInput | SortOrder
+    netPrizePool?: SortOrder
     price?: SortOrder
     perKillPoint?: SortOrder
     firstPrize?: SortOrder
@@ -6161,7 +6161,7 @@ export namespace Prisma {
     matchPassword?: StringNullableFilter<"Match"> | string | null
     gameName?: StringFilter<"Match"> | string
     matchName?: StringFilter<"Match"> | string
-    netPrizePool?: FloatNullableFilter<"Match"> | number | null
+    netPrizePool?: FloatFilter<"Match"> | number
     price?: FloatFilter<"Match"> | number
     perKillPoint?: FloatFilter<"Match"> | number
     firstPrize?: FloatFilter<"Match"> | number
@@ -6182,7 +6182,7 @@ export namespace Prisma {
     matchPassword?: SortOrderInput | SortOrder
     gameName?: SortOrder
     matchName?: SortOrder
-    netPrizePool?: SortOrderInput | SortOrder
+    netPrizePool?: SortOrder
     price?: SortOrder
     perKillPoint?: SortOrder
     firstPrize?: SortOrder
@@ -6209,7 +6209,7 @@ export namespace Prisma {
     matchPassword?: StringNullableWithAggregatesFilter<"Match"> | string | null
     gameName?: StringWithAggregatesFilter<"Match"> | string
     matchName?: StringWithAggregatesFilter<"Match"> | string
-    netPrizePool?: FloatNullableWithAggregatesFilter<"Match"> | number | null
+    netPrizePool?: FloatWithAggregatesFilter<"Match"> | number
     price?: FloatWithAggregatesFilter<"Match"> | number
     perKillPoint?: FloatWithAggregatesFilter<"Match"> | number
     firstPrize?: FloatWithAggregatesFilter<"Match"> | number
@@ -6412,7 +6412,7 @@ export namespace Prisma {
     matchPassword?: string | null
     gameName: string
     matchName: string
-    netPrizePool?: number | null
+    netPrizePool?: number
     price: number
     perKillPoint?: number
     firstPrize?: number
@@ -6433,7 +6433,7 @@ export namespace Prisma {
     matchPassword?: string | null
     gameName: string
     matchName: string
-    netPrizePool?: number | null
+    netPrizePool?: number
     price: number
     perKillPoint?: number
     firstPrize?: number
@@ -6453,7 +6453,7 @@ export namespace Prisma {
     matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
-    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6474,7 +6474,7 @@ export namespace Prisma {
     matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
-    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6495,7 +6495,7 @@ export namespace Prisma {
     matchPassword?: string | null
     gameName: string
     matchName: string
-    netPrizePool?: number | null
+    netPrizePool?: number
     price: number
     perKillPoint?: number
     firstPrize?: number
@@ -6513,7 +6513,7 @@ export namespace Prisma {
     matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
-    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6532,7 +6532,7 @@ export namespace Prisma {
     matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
-    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -6823,17 +6823,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type FloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -6936,22 +6925,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type UserScalarRelationFilter = {
@@ -7183,14 +7156,6 @@ export namespace Prisma {
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
-  }
-
-  export type NullableFloatFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
   }
 
   export type PurchaseUpdateManyWithoutMatchNestedInput = {
@@ -7429,17 +7394,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -7466,22 +7420,6 @@ export namespace Prisma {
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
-  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedFloatNullableFilter<$PrismaModel>
-    _min?: NestedFloatNullableFilter<$PrismaModel>
-    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type PurchaseCreateWithoutUserInput = {
@@ -7687,7 +7625,7 @@ export namespace Prisma {
     matchPassword?: string | null
     gameName: string
     matchName: string
-    netPrizePool?: number | null
+    netPrizePool?: number
     price: number
     perKillPoint?: number
     firstPrize?: number
@@ -7707,7 +7645,7 @@ export namespace Prisma {
     matchPassword?: string | null
     gameName: string
     matchName: string
-    netPrizePool?: number | null
+    netPrizePool?: number
     price: number
     perKillPoint?: number
     firstPrize?: number
@@ -7772,7 +7710,7 @@ export namespace Prisma {
     matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
-    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -7792,7 +7730,7 @@ export namespace Prisma {
     matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
-    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -7835,7 +7773,7 @@ export namespace Prisma {
     matchPassword?: string | null
     gameName: string
     matchName: string
-    netPrizePool?: number | null
+    netPrizePool?: number
     price: number
     perKillPoint?: number
     firstPrize?: number
@@ -7855,7 +7793,7 @@ export namespace Prisma {
     matchPassword?: string | null
     gameName: string
     matchName: string
-    netPrizePool?: number | null
+    netPrizePool?: number
     price: number
     perKillPoint?: number
     firstPrize?: number
@@ -7920,7 +7858,7 @@ export namespace Prisma {
     matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
-    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number
@@ -7940,7 +7878,7 @@ export namespace Prisma {
     matchPassword?: NullableStringFieldUpdateOperationsInput | string | null
     gameName?: StringFieldUpdateOperationsInput | string
     matchName?: StringFieldUpdateOperationsInput | string
-    netPrizePool?: NullableFloatFieldUpdateOperationsInput | number | null
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
     price?: FloatFieldUpdateOperationsInput | number
     perKillPoint?: FloatFieldUpdateOperationsInput | number
     firstPrize?: FloatFieldUpdateOperationsInput | number

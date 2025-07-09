@@ -4,7 +4,6 @@ import TelegramBot from "node-telegram-bot-api";
 import { UserController } from "../controllers/User.controller";
 import { WithdrawController } from "../controllers/Withdraw.controller";
 import { MatchController } from "../controllers/Math.controller";
-import { text } from "express";
 
 interface UserSession {
   state: string;
@@ -120,13 +119,13 @@ export class BotRoutes {
             await this.showGameCategories(chatId, "user_game_selection");
             break;
 
-          // case "enter_match":
-          //   userSessions.set(chatId, {
-          //     state: "awaiting_match_id",
-          //     data: {},
-          //   });
-          //   this.bot.sendMessage(chatId, "Enter match ID to join:");
-          //   break;
+          case "enter_match":
+            userSessions.set(chatId, {
+              state: "awaiting_match_id",
+              data: {},
+            });
+            this.bot.sendMessage(chatId, "Enter match ID to join:");
+            break;
 
           case "withdraw":
             await this.showWithdraw(chatId);
@@ -242,12 +241,6 @@ export class BotRoutes {
             userSessions.delete(chatId); // Optional: clear session
             break;
 
-            await this.handleMatchParticipantsCommand(
-              chatId,
-              matchId.toString()
-            );
-            userSessions.delete(chatId);
-            break;
           case "awaiting_password":
             try {
               await UserController.createAccount(
@@ -282,7 +275,7 @@ export class BotRoutes {
 
           case "awaiting_login_password":
             try {
-              const loginResult = await UserController.login(
+              await UserController.login(
                 this.bot,
                 chatId,
                 session.data.email,
@@ -651,104 +644,7 @@ export class BotRoutes {
               this.showAdminMenu(chatId);
             }
             break;
-          case "enter_match":
-            userSessions.set(chatId, {
-              state: "awaiting_match_id",
-              data: {},
-            });
-            this.bot.sendMessage(chatId, "Enter match ID to join:");
-            break;
 
-          // case "awaiting_match_id":
-          //   try {
-          //     const matchId = parseInt(text!);
-          //     if (isNaN(matchId)) {
-          //       this.bot.sendMessage(
-          //         chatId,
-          //         "Please enter a valid match ID (number)"
-          //       );
-          //       return;
-          //     }
-
-          //     const matchDetails = await MatchController.getMatchForEntry(
-          //       matchId
-          //     );
-          //     const match = matchDetails.data;
-
-          //     if (match?.matchStatus.isFull) {
-          //       this.bot.sendMessage(
-          //         chatId,
-          //         "❌ Match is full! No seats available."
-          //       );
-          //       userSessions.delete(chatId);
-          //       this.showMainDashboard(chatId);
-          //       return;
-          //     }
-
-          //     session.data.matchId = matchId;
-          //     session.data.matchDetails = match;
-          //     session.state = "awaiting_entry_amount";
-
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       `🎮 **${match?.name}** (${match?.gameName})\n` +
-          //         `⏰ Time: ${match?.time}\n` +
-          //         `💰 Entry Fees: Rs.${match?.entryFees}\n` +
-          //         `🏆 1st Prize: Rs.${match?.currentPrizes.firstPrize}\n` +
-          //         `🥈 2nd Prize: Rs.${match?.currentPrizes.secondPrize}\n` +
-          //         `🥉 3rd Prize: Rs.${match?.currentPrizes.thirdPrize}\n` +
-          //         `💸 Prize Pool: Rs.${match?.matchStatus.prizePool}\n` +
-          //         `🎯 Per Kill: Rs.${match?.currentPrizes.perKillPoint}\n` +
-          //         `💺 Available Seats: ${match?.matchStatus.availableSeats}/${match?.matchStatus.totalSeats}\n\n` +
-          //         `Enter amount to pay for entry:`,
-          //       { parse_mode: "Markdown" }
-          //     );
-          //   } catch (error: any) {
-          //     this.bot.sendMessage(chatId, error.message || "Match not found");
-          //     userSessions.delete(chatId);
-          //     this.showMainDashboard(chatId);
-          //   }
-          //   break;
-
-          // case "awaiting_entry_amount":
-          //   try {
-          //     const amount = parseFloat(text!);
-          //     if (isNaN(amount) || amount <= 0) {
-          //       this.bot.sendMessage(
-          //         chatId,
-          //         "Please enter a valid amount (positive number)"
-          //       );
-          //       return;
-          //     }
-
-          //     const result = await MatchController.enterMatch(
-          //       chatId.toString(),
-          //       session.data.matchId,
-          //       amount
-          //     );
-          //     userSessions.delete(chatId);
-          //     const matchData = result.data;
-
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       `✅ ${result.message}\n\n` +
-          //         `🎮 Match: ${matchData?.match.name}\n` +
-          //         `💰 Amount Paid: Rs.${matchData?.amountPaid}\n` +
-          //         `💳 Remaining Balance: Rs.${matchData?.remainingBalance}\n` +
-          //         `🔑 Math Joining Info MatchId: ${matchData?.match.gameId} and Password:${matchData?.match.matchPassword}\n` +
-          //         `💺 Remaining Seats: ${matchData?.playerInfo.remainingSeats}`,
-          //       { parse_mode: "Markdown" }
-          //     );
-          //     this.showMainDashboard(chatId);
-          //   } catch (error: any) {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       error.message || "Failed to enter match"
-          //     );
-          //     userSessions.delete(chatId);
-          //     this.showMainDashboard(chatId);
-          //   }
-          //   break;
           case "awaiting_match_id":
             try {
               const matchId = parseInt(text!);
@@ -924,35 +820,6 @@ export class BotRoutes {
               this.showAdminMenu(chatId);
             }
             break;
-
-          // case "awaiting_image_upload":
-          //   if (text?.toLowerCase() === "cancel") {
-          //     userSessions.delete(chatId);
-          //     this.bot.sendMessage(chatId, "❌ Match creation cancelled.");
-          //     this.showAdminMenu(chatId);
-          //   } else {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "📸 Please upload an image file for the match banner.\n" +
-          //         "💡 Send a photo, not text. Or type 'cancel' to abort."
-          //     );
-          //   }
-          //   break;
-
-          // // Handle image retry state
-          // case "awaiting_image_retry":
-          //   if (text?.toLowerCase() === "cancel") {
-          //     userSessions.delete(chatId);
-          //     this.bot.sendMessage(chatId, "❌ Match creation cancelled.");
-          //     this.showAdminMenu(chatId);
-          //   } else {
-          //     this.bot.sendMessage(
-          //       chatId,
-          //       "📸 Please upload the match banner image again:"
-          //     );
-          //     session.state = "awaiting_image_upload";
-          //   }
-          //   break;
 
           default:
             console.log(
@@ -1315,47 +1182,71 @@ export class BotRoutes {
       const result = await MatchController.getTodayMatchesByGame(gameName);
       const matches = result.data;
 
-      let message = `🏆 *Today's Matches \\- ${this.escapeMarkdownV2(
-        gameName
-      )}*\n\n`;
-
       if (Array.isArray(matches)) {
         if (matches.length === 0) {
-          message += "No matches scheduled for today in this game\\.";
-        } else {
-          matches.forEach((match: any) => {
-            // Escape all dynamic content properly
-            const escapedTime = this.escapeMarkdownV2(match.time);
-            const escapedName = this.escapeMarkdownV2(match.name);
-            const escapedEntryFees = this.escapeMarkdownV2(
-              match.entryFees.toString()
-            );
-            const escapedFirstPrize = this.escapeMarkdownV2(
-              match.firstPrize.toString()
-            );
-            const escapedSecondPrize = this.escapeMarkdownV2(
-              match.secondPrize.toString()
-            );
-            const escapedThirdPrize = this.escapeMarkdownV2(
-              match.thirdPrize.toString()
-            );
-            const escapedPrizePool = this.escapeMarkdownV2(
-              match.prizePool.toString()
-            );
-            const escapedPerKillPoint = this.escapeMarkdownV2(
-              match.perKillPoint.toString()
-            );
+          const message = `🏆 *Today's Matches \\- ${this.escapeMarkdownV2(
+            gameName
+          )}*\n\nNo matches scheduled for today in this game\\.`;
+          this.bot.sendMessage(chatId, message, { parse_mode: "MarkdownV2" });
+          return;
+        }
 
-            message += `*ID:* ${match.id} \\| ${escapedTime} \\- ${escapedName}\n`;
-            message += `💰 *Entry:* Rs\\.${escapedEntryFees} \\| 💺 *Seats:* ${match.availableSeats}/${match.totalSeats}\n`;
-            message += `🏆 *1st:* Rs\\.${escapedFirstPrize} \\| 🥈 *2nd:* Rs\\.${escapedSecondPrize} \\| 🥉 *3rd:* Rs\\.${escapedThirdPrize}\n`;
-            message += `🎯 *Prize Pool:* Rs\\.${escapedPrizePool}\n`;
-            message += `🎯 *Per Kill:* Rs\\.${escapedPerKillPoint}\n\n`;
-          });
+        // Send matches one by one with images if available
+        for (const match of matches) {
+          const escapedTime = this.escapeMarkdownV2(match.time);
+          const escapedName = this.escapeMarkdownV2(match.name);
+          const escapedEntryFees = this.escapeMarkdownV2(
+            match.entryFees.toString()
+          );
+          const escapedFirstPrize = this.escapeMarkdownV2(
+            match.firstPrize.toString()
+          );
+          const escapedSecondPrize = this.escapeMarkdownV2(
+            match.secondPrize.toString()
+          );
+          const escapedThirdPrize = this.escapeMarkdownV2(
+            match.thirdPrize.toString()
+          );
+          const escapedPrizePool = this.escapeMarkdownV2(
+            match.prizePool.toString()
+          );
+          const escapedPerKillPoint = this.escapeMarkdownV2(
+            match.perKillPoint.toString()
+          );
+
+          let message = `🏆 *Match Details \\- ${this.escapeMarkdownV2(
+            gameName
+          )}*\n\n`;
+          message += `*ID:* ${match.id} \\| ${escapedTime} \\- ${escapedName}\n`;
+          message += `💰 *Entry:* Rs\\.${escapedEntryFees} \\| 💺 *Seats:* ${match.availableSeats}/${match.totalSeats}\n`;
+          message += `🏆 *1st:* Rs\\.${escapedFirstPrize} \\| 🥈 *2nd:* Rs\\.${escapedSecondPrize} \\| 🥉 *3rd:* Rs\\.${escapedThirdPrize}\n`;
+          message += `🎯 *Prize Pool:* Rs\\.${escapedPrizePool}\n`;
+          message += `🎯 *Per Kill:* Rs\\.${escapedPerKillPoint}\n`;
+          message += `📊 *Status:* ${this.escapeMarkdownV2(
+            match.matchInfo.status
+          )}`;
+
+          try {
+            if (match.imageFileId) {
+              await this.bot.sendPhoto(chatId, match.imageFileId, {
+                caption: message,
+                parse_mode: "MarkdownV2",
+              });
+            } else {
+              // Send text message if no image
+              await this.bot.sendMessage(chatId, message, {
+                parse_mode: "MarkdownV2",
+              });
+            }
+          } catch (error) {
+            console.error(`Failed to send match ${match.id} to user:`, error);
+            // Fallback to text message if image fails
+            await this.bot.sendMessage(chatId, message, {
+              parse_mode: "MarkdownV2",
+            });
+          }
         }
       }
-
-      this.bot.sendMessage(chatId, message, { parse_mode: "MarkdownV2" });
     } catch (error) {
       console.error("showGameMatches error:", error);
       this.bot.sendMessage(chatId, `Failed to load matches for ${gameName}.`);
@@ -1519,7 +1410,6 @@ export class BotRoutes {
         return;
       }
 
-      // Match info header
       let message = `🎮 **Match Details**\n`;
       message += `**ID:** ${data.match.id}\n`;
       message += `**Game:** ${data.match.gameName}\n`;
@@ -1691,7 +1581,7 @@ export class BotRoutes {
   ) {
     const parts = messageText.split(" ");
 
-    if (parts.length < 2) {
+    if (!parts.length) {
       await this.bot.sendMessage(
         chatId,
         "❌ **Usage:** /match_participants <match_id>\n\nExample: /match_participants 123",
@@ -1702,7 +1592,7 @@ export class BotRoutes {
       return;
     }
 
-    const matchId = parseInt(parts[1]);
+    const matchId = parseInt(parts[0]);
 
     if (isNaN(matchId)) {
       await this.bot.sendMessage(
