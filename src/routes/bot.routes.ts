@@ -119,7 +119,7 @@ export class BotRoutes {
             await this.showGameCategories(chatId, "user_game_selection");
             break;
 
-          case "enter_match":
+          case "ente9lor_match":
             userSessions.set(chatId, {
               state: "awaiting_match_id",
               data: {},
@@ -738,7 +738,6 @@ export class BotRoutes {
                   `🎮 Match: ${matchData?.match.name}\n` +
                   `💰 Amount Paid: Rs.${matchData?.amountPaid}\n` +
                   `💳 Remaining Balance: Rs.${matchData?.remainingBalance}\n` +
-                  `🔑 Match Joining Info - MatchId: ${matchData?.match.gameId} and Password: ${matchData?.match.matchPassword}\n` +
                   `💺 Remaining Seats: ${matchData?.playerInfo.remainingSeats}`,
                 { parse_mode: "Markdown" }
               );

@@ -194,7 +194,7 @@ export class MatchController {
       const newPlayerCount = currentPlayersBeforeJoin + 1;
       const remainingSeats = match.totalSeats - newPlayerCount;
 
-      return new ApiResponse(200, "Successfully entered the match!", {
+      return new ApiResponse(200, "Successfully oed the match!", {
         match: {
           gameId: match.gameId,
           matchPassword: match.matchPassword,

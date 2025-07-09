@@ -102,6 +102,7 @@ export class MatchNotificationService {
                 `🏆 *1st Prize:* Rs.${dynamicPrizes.firstPrize}\n` +
                 `🥈 *2nd Prize:* Rs.${dynamicPrizes.secondPrize}\n` +
                 `🥉 *3rd Prize:* Rs.${dynamicPrizes.thirdPrize}\n` +
+                `🔑 Match Joining Info - MatchId: ${match.gameId} and Password: ${match?.matchPassword}\n` +
                 `🎯 *Per Kill:* Rs.${match.perKillPoint}\n\n` +
                 `Get ready! Your match starts in 10 minutes! 🍀`;
 
