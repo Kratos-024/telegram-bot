@@ -338,6 +338,7 @@ import TelegramBot from "node-telegram-bot-api";
 import { ApiError } from "../utils/ApiError";
 import { ApiResponse } from "../utils/ApiResponse";
 import prisma from "../db";
+import { MatchHistoryMiddleware } from "../db/src";
 
 export class UserController {
   static async createAccount(
@@ -511,25 +512,88 @@ export class UserController {
       throw new ApiError(500, "Logout failed");
     }
   }
+  // static async getMyAccount(chatId: string) {
+  //   try {
+  //     const user = await prisma.user.findUnique({
+  //       where: { chatId },
+  //       include: {
+  //         purchases: {
+  //           include: {
+  //             match: true,
+  //           },
+  //           orderBy: {
+  //             id: "desc",
+  //           },
+  //         },
+  //         matchEntries: {
+  //           include: {
+  //             match: true,
+  //           },
+  //           orderBy: {
+  //             id: "desc",
+  //           },
+  //         },
+  //       },
+  //     });
+
+  //     if (!user) {
+  //       throw new ApiError(404, "User not found");
+  //     }
+
+  //     // Combine both purchases and match entries for history
+  //     const allHistory = [
+  //       ...user.purchases.map((purchase, index) => ({
+  //         serial: index + 1,
+  //         time: purchase.match.time,
+  //         gameName: purchase.match.gameName,
+  //         matchName: purchase.match.matchName,
+  //         type: "Purchase",
+  //         amount: purchase.match.price,
+  //         createdAt: purchase.createdAt,
+  //       })),
+  //       ...user.matchEntries.map((entry) => ({
+  //         serial: 0, // Will be updated after sorting
+  //         time: entry.match.time,
+  //         gameName: entry.match.gameName,
+  //         matchName: entry.match.matchName,
+  //         type: "Entry",
+  //         amount: entry.amountPaid,
+  //         createdAt: entry.createdAt,
+  //       })),
+  //     ];
+
+  //     // Sort by creation time and update serial numbers
+  //     allHistory.sort(
+  //       (a, b) =>
+  //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  //     );
+  //     allHistory.forEach((item, index) => {
+  //       item.serial = index + 1;
+  //     });
+
+  //     return new ApiResponse(200, "Account details", {
+  //       email: user.email,
+  //       balance: user.balance || 0,
+  //       matchHistory: allHistory,
+  //     });
+  //   } catch (error: any) {
+  //     console.error("Get my account error:", error);
+  //     if (error instanceof ApiError) {
+  //       throw error;
+  //     }
+  //     throw new ApiError(500, "Failed to get account details");
+  //   }
+  // }
+
+  // Helper method to check if user is logged in
   static async getMyAccount(chatId: string) {
     try {
       const user = await prisma.user.findUnique({
         where: { chatId },
         include: {
-          purchases: {
-            include: {
-              match: true,
-            },
+          matchHistory: {
             orderBy: {
-              id: "desc",
-            },
-          },
-          matchEntries: {
-            include: {
-              match: true,
-            },
-            orderBy: {
-              id: "desc",
+              createdAt: "desc",
             },
           },
         },
@@ -539,41 +603,31 @@ export class UserController {
         throw new ApiError(404, "User not found");
       }
 
-      // Combine both purchases and match entries for history
-      const allHistory = [
-        ...user.purchases.map((purchase, index) => ({
-          serial: index + 1,
-          time: purchase.match.time,
-          gameName: purchase.match.gameName,
-          matchName: purchase.match.matchName,
-          type: "Purchase",
-          amount: purchase.match.price,
-          createdAt: purchase.createdAt,
-        })),
-        ...user.matchEntries.map((entry) => ({
-          serial: 0, // Will be updated after sorting
-          time: entry.match.time,
-          gameName: entry.match.gameName,
-          matchName: entry.match.matchName,
-          type: "Entry",
-          amount: entry.amountPaid,
-          createdAt: entry.createdAt,
-        })),
-      ];
+      // Get user statistics
+      const stats = await MatchHistoryMiddleware.getUserStats(user.id);
 
-      // Sort by creation time and update serial numbers
-      allHistory.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-      allHistory.forEach((item, index) => {
-        item.serial = index + 1;
-      });
+      // Format match history
+      const matchHistory = user.matchHistory.map((history, index) => ({
+        serial: index + 1,
+        time: history.matchTime,
+        gameName: history.gameName,
+        matchName: history.matchName,
+        type: history.type,
+        amount: history.amountPaid,
+        prizeWon: history.prizeWon,
+        killCount: history.killCount,
+        position: history.position,
+        status: history.status,
+        matchDate: history.matchDate,
+        completedAt: history.completedAt,
+        createdAt: history.createdAt,
+      }));
 
       return new ApiResponse(200, "Account details", {
         email: user.email,
         balance: user.balance || 0,
-        matchHistory: allHistory,
+        statistics: stats,
+        matchHistory: matchHistory,
       });
     } catch (error: any) {
       console.error("Get my account error:", error);
@@ -584,7 +638,6 @@ export class UserController {
     }
   }
 
-  // Helper method to check if user is logged in
   static async isUserLoggedIn(chatId: string): Promise<boolean> {
     try {
       const user = await prisma.user.findUnique({

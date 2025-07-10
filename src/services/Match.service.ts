@@ -69,7 +69,6 @@ export class MatchNotificationService {
       const matches = await MatchController.getMatchesForNotification(
         targetTimeIST
       );
-
       if (matches.length === 0) return;
 
       console.log(
@@ -78,7 +77,6 @@ export class MatchNotificationService {
 
       for (const match of matches) {
         const formattedTime = this.formatMatchTime(match.time);
-        console.log("formattedTime", formattedTime);
         const actualPlayersJoined = match.purchases.length;
         const dynamicPrizes = this.calculateDynamicPrizes(
           match,
@@ -132,6 +130,11 @@ export class MatchNotificationService {
             }
           }
         }
+      }
+
+      // ✅ Delete all notified matches after notifications
+      for (const match of matches) {
+        await MatchController.deleteMatch(match.id);
       }
     } catch (error) {
       console.error("Error checking matches for notification:", error);

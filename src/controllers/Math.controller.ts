@@ -2,6 +2,7 @@ import { ApiError } from "../utils/ApiError";
 
 import { ApiResponse } from "../utils/ApiResponse";
 import prisma from "../db";
+import { MatchHistoryMiddleware } from "../db/src";
 
 // Additional helper function to validate platform settings
 export function validatePlatformSettings(
@@ -194,7 +195,15 @@ export class MatchController {
       const newPlayerCount = currentPlayersBeforeJoin + 1;
       const remainingSeats = match.totalSeats - newPlayerCount;
 
-      return new ApiResponse(200, "Successfully oed the match!", {
+      // Use user.id instead of +chatId
+      MatchHistoryMiddleware.createEntryHistory(
+        user.id, // This is the database user ID (should be within INT4 range)
+        matchId,
+        match,
+        amountPaid
+      );
+
+      return new ApiResponse(200, "Successfully entered the match!", {
         match: {
           gameId: match.gameId,
           matchPassword: match.matchPassword,
@@ -473,9 +482,7 @@ export class MatchController {
     try {
       const matchToDelete = await prisma.match.findFirst({
         where: {
-          id: {
-            equals: matchId,
-          },
+          id: matchId,
         },
         include: {
           matchEntries: true,
@@ -490,23 +497,31 @@ export class MatchController {
       const totalEntries =
         matchToDelete.matchEntries.length + matchToDelete.purchases.length;
 
-      if (totalEntries > 0) {
-        throw new ApiError(
-          400,
-          `Cannot delete match "${matchToDelete?.matchName}" as it has ${totalEntries} associated entries/purchases`
-        );
-      }
+      await prisma.matchEntry.deleteMany({
+        where: {
+          matchId,
+        },
+      });
+
+      await prisma.purchase.deleteMany({
+        where: {
+          matchId,
+        },
+      });
 
       await prisma.match.delete({
         where: {
-          id: matchToDelete.id,
+          id: matchId,
         },
       });
 
       return new ApiResponse(
         200,
-        `Match "${matchToDelete?.matchName}" deleted successfully`,
-        null
+        `Match "${matchToDelete.matchName}" deleted successfully`,
+        {
+          deletedMatch: matchToDelete.matchName,
+          refundsProcessed: totalEntries,
+        }
       );
     } catch (error: any) {
       console.error("Delete match error:", error.message);

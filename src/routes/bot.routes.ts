@@ -1299,7 +1299,7 @@ export class BotRoutes {
   }
   private async deleteAllMatches(chatId: number) {
     try {
-      const result = await MatchController.deleteAllMatch();
+      await MatchController.deleteAllMatch();
 
       await this.bot.sendMessage(chatId, "Succesfully deleted", {
         parse_mode: "Markdown",

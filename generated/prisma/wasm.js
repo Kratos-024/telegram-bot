@@ -145,7 +145,9 @@ exports.Prisma.MatchScalarFieldEnum = {
   entryFees: 'entryFees',
   totalSeats: 'totalSeats',
   time: 'time',
-  date: 'date'
+  date: 'date',
+  status: 'status',
+  isDeleted: 'isDeleted'
 };
 
 exports.Prisma.PurchaseScalarFieldEnum = {
@@ -161,6 +163,31 @@ exports.Prisma.MatchEntryScalarFieldEnum = {
   matchId: 'matchId',
   amountPaid: 'amountPaid',
   createdAt: 'createdAt'
+};
+
+exports.Prisma.MatchHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  originalMatchId: 'originalMatchId',
+  gameName: 'gameName',
+  matchName: 'matchName',
+  amountPaid: 'amountPaid',
+  prizeWon: 'prizeWon',
+  killCount: 'killCount',
+  position: 'position',
+  type: 'type',
+  status: 'status',
+  matchDate: 'matchDate',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt',
+  entryFees: 'entryFees',
+  totalSeats: 'totalSeats',
+  netPrizePool: 'netPrizePool',
+  perKillPoint: 'perKillPoint',
+  firstPrize: 'firstPrize',
+  secondPrize: 'secondPrize',
+  thirdPrize: 'thirdPrize',
+  matchTime: 'matchTime'
 };
 
 exports.Prisma.SortOrder = {
@@ -183,7 +210,8 @@ exports.Prisma.ModelName = {
   User: 'User',
   Match: 'Match',
   Purchase: 'Purchase',
-  MatchEntry: 'MatchEntry'
+  MatchEntry: 'MatchEntry',
+  MatchHistory: 'MatchHistory'
 };
 
 /**

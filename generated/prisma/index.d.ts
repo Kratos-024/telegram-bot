@@ -33,6 +33,11 @@ export type Purchase = $Result.DefaultSelection<Prisma.$PurchasePayload>
  * 
  */
 export type MatchEntry = $Result.DefaultSelection<Prisma.$MatchEntryPayload>
+/**
+ * Model MatchHistory
+ * 
+ */
+export type MatchHistory = $Result.DefaultSelection<Prisma.$MatchHistoryPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -198,6 +203,16 @@ export class PrismaClient<
     * ```
     */
   get matchEntry(): Prisma.MatchEntryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.matchHistory`: Exposes CRUD operations for the **MatchHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MatchHistories
+    * const matchHistories = await prisma.matchHistory.findMany()
+    * ```
+    */
+  get matchHistory(): Prisma.MatchHistoryDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -641,7 +656,8 @@ export namespace Prisma {
     User: 'User',
     Match: 'Match',
     Purchase: 'Purchase',
-    MatchEntry: 'MatchEntry'
+    MatchEntry: 'MatchEntry',
+    MatchHistory: 'MatchHistory'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -660,7 +676,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "match" | "purchase" | "matchEntry"
+      modelProps: "user" | "match" | "purchase" | "matchEntry" | "matchHistory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -960,6 +976,80 @@ export namespace Prisma {
           }
         }
       }
+      MatchHistory: {
+        payload: Prisma.$MatchHistoryPayload<ExtArgs>
+        fields: Prisma.MatchHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.MatchHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.MatchHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.MatchHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.MatchHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.MatchHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.MatchHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.MatchHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.MatchHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.MatchHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload>
+          }
+          update: {
+            args: Prisma.MatchHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.MatchHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.MatchHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.MatchHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.MatchHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$MatchHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.MatchHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateMatchHistory>
+          }
+          groupBy: {
+            args: Prisma.MatchHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<MatchHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.MatchHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<MatchHistoryCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1048,6 +1138,7 @@ export namespace Prisma {
     match?: MatchOmit
     purchase?: PurchaseOmit
     matchEntry?: MatchEntryOmit
+    matchHistory?: MatchHistoryOmit
   }
 
   /* Types for Logging */
@@ -1144,11 +1235,13 @@ export namespace Prisma {
   export type UserCountOutputType = {
     purchases: number
     matchEntries: number
+    matchHistory: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | UserCountOutputTypeCountPurchasesArgs
     matchEntries?: boolean | UserCountOutputTypeCountMatchEntriesArgs
+    matchHistory?: boolean | UserCountOutputTypeCountMatchHistoryArgs
   }
 
   // Custom InputTypes
@@ -1174,6 +1267,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountMatchEntriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MatchEntryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountMatchHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MatchHistoryWhereInput
   }
 
 
@@ -1239,12 +1339,12 @@ export namespace Prisma {
   }
 
   export type UserSumAggregateOutputType = {
-    id: number | null
+    id: bigint | null
     balance: number | null
   }
 
   export type UserMinAggregateOutputType = {
-    id: number | null
+    id: bigint | null
     email: string | null
     password: string | null
     balance: number | null
@@ -1253,7 +1353,7 @@ export namespace Prisma {
   }
 
   export type UserMaxAggregateOutputType = {
-    id: number | null
+    id: bigint | null
     email: string | null
     password: string | null
     balance: number | null
@@ -1397,7 +1497,7 @@ export namespace Prisma {
   }
 
   export type UserGroupByOutputType = {
-    id: number
+    id: bigint
     email: string
     password: string
     balance: number
@@ -1433,6 +1533,7 @@ export namespace Prisma {
     chatId?: boolean
     purchases?: boolean | User$purchasesArgs<ExtArgs>
     matchEntries?: boolean | User$matchEntriesArgs<ExtArgs>
+    matchHistory?: boolean | User$matchHistoryArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1467,6 +1568,7 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | User$purchasesArgs<ExtArgs>
     matchEntries?: boolean | User$matchEntriesArgs<ExtArgs>
+    matchHistory?: boolean | User$matchHistoryArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1477,9 +1579,10 @@ export namespace Prisma {
     objects: {
       purchases: Prisma.$PurchasePayload<ExtArgs>[]
       matchEntries: Prisma.$MatchEntryPayload<ExtArgs>[]
+      matchHistory: Prisma.$MatchHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
-      id: number
+      id: bigint
       email: string
       password: string
       balance: number
@@ -1881,6 +1984,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     purchases<T extends User$purchasesArgs<ExtArgs> = {}>(args?: Subset<T, User$purchasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     matchEntries<T extends User$matchEntriesArgs<ExtArgs> = {}>(args?: Subset<T, User$matchEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    matchHistory<T extends User$matchHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$matchHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1910,7 +2014,7 @@ export namespace Prisma {
    * Fields of the User model
    */
   interface UserFieldRefs {
-    readonly id: FieldRef<"User", 'Int'>
+    readonly id: FieldRef<"User", 'BigInt'>
     readonly email: FieldRef<"User", 'String'>
     readonly password: FieldRef<"User", 'String'>
     readonly balance: FieldRef<"User", 'Float'>
@@ -2352,6 +2456,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.matchHistory
+   */
+  export type User$matchHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+    where?: MatchHistoryWhereInput
+    orderBy?: MatchHistoryOrderByWithRelationInput | MatchHistoryOrderByWithRelationInput[]
+    cursor?: MatchHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MatchHistoryScalarFieldEnum | MatchHistoryScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2423,6 +2551,8 @@ export namespace Prisma {
     totalSeats: number | null
     time: string | null
     date: Date | null
+    status: string | null
+    isDeleted: boolean | null
   }
 
   export type MatchMaxAggregateOutputType = {
@@ -2442,6 +2572,8 @@ export namespace Prisma {
     totalSeats: number | null
     time: string | null
     date: Date | null
+    status: string | null
+    isDeleted: boolean | null
   }
 
   export type MatchCountAggregateOutputType = {
@@ -2461,6 +2593,8 @@ export namespace Prisma {
     totalSeats: number
     time: number
     date: number
+    status: number
+    isDeleted: number
     _all: number
   }
 
@@ -2506,6 +2640,8 @@ export namespace Prisma {
     totalSeats?: true
     time?: true
     date?: true
+    status?: true
+    isDeleted?: true
   }
 
   export type MatchMaxAggregateInputType = {
@@ -2525,6 +2661,8 @@ export namespace Prisma {
     totalSeats?: true
     time?: true
     date?: true
+    status?: true
+    isDeleted?: true
   }
 
   export type MatchCountAggregateInputType = {
@@ -2544,6 +2682,8 @@ export namespace Prisma {
     totalSeats?: true
     time?: true
     date?: true
+    status?: true
+    isDeleted?: true
     _all?: true
   }
 
@@ -2650,6 +2790,8 @@ export namespace Prisma {
     totalSeats: number
     time: string
     date: Date
+    status: string
+    isDeleted: boolean
     _count: MatchCountAggregateOutputType | null
     _avg: MatchAvgAggregateOutputType | null
     _sum: MatchSumAggregateOutputType | null
@@ -2688,6 +2830,8 @@ export namespace Prisma {
     totalSeats?: boolean
     time?: boolean
     date?: boolean
+    status?: boolean
+    isDeleted?: boolean
     purchases?: boolean | Match$purchasesArgs<ExtArgs>
     matchEntries?: boolean | Match$matchEntriesArgs<ExtArgs>
     _count?: boolean | MatchCountOutputTypeDefaultArgs<ExtArgs>
@@ -2710,6 +2854,8 @@ export namespace Prisma {
     totalSeats?: boolean
     time?: boolean
     date?: boolean
+    status?: boolean
+    isDeleted?: boolean
   }, ExtArgs["result"]["match"]>
 
   export type MatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2729,6 +2875,8 @@ export namespace Prisma {
     totalSeats?: boolean
     time?: boolean
     date?: boolean
+    status?: boolean
+    isDeleted?: boolean
   }, ExtArgs["result"]["match"]>
 
   export type MatchSelectScalar = {
@@ -2748,9 +2896,11 @@ export namespace Prisma {
     totalSeats?: boolean
     time?: boolean
     date?: boolean
+    status?: boolean
+    isDeleted?: boolean
   }
 
-  export type MatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "imageFileId" | "gameId" | "matchPassword" | "gameName" | "matchName" | "netPrizePool" | "price" | "perKillPoint" | "firstPrize" | "secondPrize" | "thirdPrize" | "entryFees" | "totalSeats" | "time" | "date", ExtArgs["result"]["match"]>
+  export type MatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "imageFileId" | "gameId" | "matchPassword" | "gameName" | "matchName" | "netPrizePool" | "price" | "perKillPoint" | "firstPrize" | "secondPrize" | "thirdPrize" | "entryFees" | "totalSeats" | "time" | "date" | "status" | "isDeleted", ExtArgs["result"]["match"]>
   export type MatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | Match$purchasesArgs<ExtArgs>
     matchEntries?: boolean | Match$matchEntriesArgs<ExtArgs>
@@ -2782,6 +2932,8 @@ export namespace Prisma {
       totalSeats: number
       time: string
       date: Date
+      status: string
+      isDeleted: boolean
     }, ExtArgs["result"]["match"]>
     composites: {}
   }
@@ -3223,6 +3375,8 @@ export namespace Prisma {
     readonly totalSeats: FieldRef<"Match", 'Int'>
     readonly time: FieldRef<"Match", 'String'>
     readonly date: FieldRef<"Match", 'DateTime'>
+    readonly status: FieldRef<"Match", 'String'>
+    readonly isDeleted: FieldRef<"Match", 'Boolean'>
   }
     
 
@@ -3697,20 +3851,20 @@ export namespace Prisma {
 
   export type PurchaseSumAggregateOutputType = {
     id: number | null
-    userId: number | null
+    userId: bigint | null
     matchId: number | null
   }
 
   export type PurchaseMinAggregateOutputType = {
     id: number | null
-    userId: number | null
+    userId: bigint | null
     matchId: number | null
     createdAt: Date | null
   }
 
   export type PurchaseMaxAggregateOutputType = {
     id: number | null
-    userId: number | null
+    userId: bigint | null
     matchId: number | null
     createdAt: Date | null
   }
@@ -3846,7 +4000,7 @@ export namespace Prisma {
 
   export type PurchaseGroupByOutputType = {
     id: number
-    userId: number
+    userId: bigint
     matchId: number
     createdAt: Date
     _count: PurchaseCountAggregateOutputType | null
@@ -3926,7 +4080,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      userId: number
+      userId: bigint
       matchId: number
       createdAt: Date
     }, ExtArgs["result"]["purchase"]>
@@ -4355,7 +4509,7 @@ export namespace Prisma {
    */
   interface PurchaseFieldRefs {
     readonly id: FieldRef<"Purchase", 'Int'>
-    readonly userId: FieldRef<"Purchase", 'Int'>
+    readonly userId: FieldRef<"Purchase", 'BigInt'>
     readonly matchId: FieldRef<"Purchase", 'Int'>
     readonly createdAt: FieldRef<"Purchase", 'DateTime'>
   }
@@ -4793,14 +4947,14 @@ export namespace Prisma {
 
   export type MatchEntrySumAggregateOutputType = {
     id: number | null
-    userId: number | null
+    userId: bigint | null
     matchId: number | null
     amountPaid: number | null
   }
 
   export type MatchEntryMinAggregateOutputType = {
     id: number | null
-    userId: number | null
+    userId: bigint | null
     matchId: number | null
     amountPaid: number | null
     createdAt: Date | null
@@ -4808,7 +4962,7 @@ export namespace Prisma {
 
   export type MatchEntryMaxAggregateOutputType = {
     id: number | null
-    userId: number | null
+    userId: bigint | null
     matchId: number | null
     amountPaid: number | null
     createdAt: Date | null
@@ -4951,7 +5105,7 @@ export namespace Prisma {
 
   export type MatchEntryGroupByOutputType = {
     id: number
-    userId: number
+    userId: bigint
     matchId: number
     amountPaid: number
     createdAt: Date
@@ -5036,7 +5190,7 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      userId: number
+      userId: bigint
       matchId: number
       amountPaid: number
       createdAt: Date
@@ -5466,7 +5620,7 @@ export namespace Prisma {
    */
   interface MatchEntryFieldRefs {
     readonly id: FieldRef<"MatchEntry", 'Int'>
-    readonly userId: FieldRef<"MatchEntry", 'Int'>
+    readonly userId: FieldRef<"MatchEntry", 'BigInt'>
     readonly matchId: FieldRef<"MatchEntry", 'Int'>
     readonly amountPaid: FieldRef<"MatchEntry", 'Float'>
     readonly createdAt: FieldRef<"MatchEntry", 'DateTime'>
@@ -5885,6 +6039,1371 @@ export namespace Prisma {
 
 
   /**
+   * Model MatchHistory
+   */
+
+  export type AggregateMatchHistory = {
+    _count: MatchHistoryCountAggregateOutputType | null
+    _avg: MatchHistoryAvgAggregateOutputType | null
+    _sum: MatchHistorySumAggregateOutputType | null
+    _min: MatchHistoryMinAggregateOutputType | null
+    _max: MatchHistoryMaxAggregateOutputType | null
+  }
+
+  export type MatchHistoryAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+    originalMatchId: number | null
+    amountPaid: number | null
+    prizeWon: number | null
+    killCount: number | null
+    position: number | null
+    entryFees: number | null
+    totalSeats: number | null
+    netPrizePool: number | null
+    perKillPoint: number | null
+    firstPrize: number | null
+    secondPrize: number | null
+    thirdPrize: number | null
+  }
+
+  export type MatchHistorySumAggregateOutputType = {
+    id: number | null
+    userId: bigint | null
+    originalMatchId: number | null
+    amountPaid: number | null
+    prizeWon: number | null
+    killCount: number | null
+    position: number | null
+    entryFees: number | null
+    totalSeats: number | null
+    netPrizePool: number | null
+    perKillPoint: number | null
+    firstPrize: number | null
+    secondPrize: number | null
+    thirdPrize: number | null
+  }
+
+  export type MatchHistoryMinAggregateOutputType = {
+    id: number | null
+    userId: bigint | null
+    originalMatchId: number | null
+    gameName: string | null
+    matchName: string | null
+    amountPaid: number | null
+    prizeWon: number | null
+    killCount: number | null
+    position: number | null
+    type: string | null
+    status: string | null
+    matchDate: Date | null
+    completedAt: Date | null
+    createdAt: Date | null
+    entryFees: number | null
+    totalSeats: number | null
+    netPrizePool: number | null
+    perKillPoint: number | null
+    firstPrize: number | null
+    secondPrize: number | null
+    thirdPrize: number | null
+    matchTime: string | null
+  }
+
+  export type MatchHistoryMaxAggregateOutputType = {
+    id: number | null
+    userId: bigint | null
+    originalMatchId: number | null
+    gameName: string | null
+    matchName: string | null
+    amountPaid: number | null
+    prizeWon: number | null
+    killCount: number | null
+    position: number | null
+    type: string | null
+    status: string | null
+    matchDate: Date | null
+    completedAt: Date | null
+    createdAt: Date | null
+    entryFees: number | null
+    totalSeats: number | null
+    netPrizePool: number | null
+    perKillPoint: number | null
+    firstPrize: number | null
+    secondPrize: number | null
+    thirdPrize: number | null
+    matchTime: string | null
+  }
+
+  export type MatchHistoryCountAggregateOutputType = {
+    id: number
+    userId: number
+    originalMatchId: number
+    gameName: number
+    matchName: number
+    amountPaid: number
+    prizeWon: number
+    killCount: number
+    position: number
+    type: number
+    status: number
+    matchDate: number
+    completedAt: number
+    createdAt: number
+    entryFees: number
+    totalSeats: number
+    netPrizePool: number
+    perKillPoint: number
+    firstPrize: number
+    secondPrize: number
+    thirdPrize: number
+    matchTime: number
+    _all: number
+  }
+
+
+  export type MatchHistoryAvgAggregateInputType = {
+    id?: true
+    userId?: true
+    originalMatchId?: true
+    amountPaid?: true
+    prizeWon?: true
+    killCount?: true
+    position?: true
+    entryFees?: true
+    totalSeats?: true
+    netPrizePool?: true
+    perKillPoint?: true
+    firstPrize?: true
+    secondPrize?: true
+    thirdPrize?: true
+  }
+
+  export type MatchHistorySumAggregateInputType = {
+    id?: true
+    userId?: true
+    originalMatchId?: true
+    amountPaid?: true
+    prizeWon?: true
+    killCount?: true
+    position?: true
+    entryFees?: true
+    totalSeats?: true
+    netPrizePool?: true
+    perKillPoint?: true
+    firstPrize?: true
+    secondPrize?: true
+    thirdPrize?: true
+  }
+
+  export type MatchHistoryMinAggregateInputType = {
+    id?: true
+    userId?: true
+    originalMatchId?: true
+    gameName?: true
+    matchName?: true
+    amountPaid?: true
+    prizeWon?: true
+    killCount?: true
+    position?: true
+    type?: true
+    status?: true
+    matchDate?: true
+    completedAt?: true
+    createdAt?: true
+    entryFees?: true
+    totalSeats?: true
+    netPrizePool?: true
+    perKillPoint?: true
+    firstPrize?: true
+    secondPrize?: true
+    thirdPrize?: true
+    matchTime?: true
+  }
+
+  export type MatchHistoryMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    originalMatchId?: true
+    gameName?: true
+    matchName?: true
+    amountPaid?: true
+    prizeWon?: true
+    killCount?: true
+    position?: true
+    type?: true
+    status?: true
+    matchDate?: true
+    completedAt?: true
+    createdAt?: true
+    entryFees?: true
+    totalSeats?: true
+    netPrizePool?: true
+    perKillPoint?: true
+    firstPrize?: true
+    secondPrize?: true
+    thirdPrize?: true
+    matchTime?: true
+  }
+
+  export type MatchHistoryCountAggregateInputType = {
+    id?: true
+    userId?: true
+    originalMatchId?: true
+    gameName?: true
+    matchName?: true
+    amountPaid?: true
+    prizeWon?: true
+    killCount?: true
+    position?: true
+    type?: true
+    status?: true
+    matchDate?: true
+    completedAt?: true
+    createdAt?: true
+    entryFees?: true
+    totalSeats?: true
+    netPrizePool?: true
+    perKillPoint?: true
+    firstPrize?: true
+    secondPrize?: true
+    thirdPrize?: true
+    matchTime?: true
+    _all?: true
+  }
+
+  export type MatchHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MatchHistory to aggregate.
+     */
+    where?: MatchHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MatchHistories to fetch.
+     */
+    orderBy?: MatchHistoryOrderByWithRelationInput | MatchHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: MatchHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MatchHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MatchHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MatchHistories
+    **/
+    _count?: true | MatchHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MatchHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MatchHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MatchHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MatchHistoryMaxAggregateInputType
+  }
+
+  export type GetMatchHistoryAggregateType<T extends MatchHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateMatchHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMatchHistory[P]>
+      : GetScalarType<T[P], AggregateMatchHistory[P]>
+  }
+
+
+
+
+  export type MatchHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MatchHistoryWhereInput
+    orderBy?: MatchHistoryOrderByWithAggregationInput | MatchHistoryOrderByWithAggregationInput[]
+    by: MatchHistoryScalarFieldEnum[] | MatchHistoryScalarFieldEnum
+    having?: MatchHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MatchHistoryCountAggregateInputType | true
+    _avg?: MatchHistoryAvgAggregateInputType
+    _sum?: MatchHistorySumAggregateInputType
+    _min?: MatchHistoryMinAggregateInputType
+    _max?: MatchHistoryMaxAggregateInputType
+  }
+
+  export type MatchHistoryGroupByOutputType = {
+    id: number
+    userId: bigint
+    originalMatchId: number
+    gameName: string
+    matchName: string
+    amountPaid: number
+    prizeWon: number
+    killCount: number
+    position: number | null
+    type: string
+    status: string
+    matchDate: Date
+    completedAt: Date | null
+    createdAt: Date
+    entryFees: number
+    totalSeats: number
+    netPrizePool: number
+    perKillPoint: number
+    firstPrize: number
+    secondPrize: number
+    thirdPrize: number
+    matchTime: string
+    _count: MatchHistoryCountAggregateOutputType | null
+    _avg: MatchHistoryAvgAggregateOutputType | null
+    _sum: MatchHistorySumAggregateOutputType | null
+    _min: MatchHistoryMinAggregateOutputType | null
+    _max: MatchHistoryMaxAggregateOutputType | null
+  }
+
+  type GetMatchHistoryGroupByPayload<T extends MatchHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<MatchHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MatchHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MatchHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], MatchHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MatchHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    originalMatchId?: boolean
+    gameName?: boolean
+    matchName?: boolean
+    amountPaid?: boolean
+    prizeWon?: boolean
+    killCount?: boolean
+    position?: boolean
+    type?: boolean
+    status?: boolean
+    matchDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    entryFees?: boolean
+    totalSeats?: boolean
+    netPrizePool?: boolean
+    perKillPoint?: boolean
+    firstPrize?: boolean
+    secondPrize?: boolean
+    thirdPrize?: boolean
+    matchTime?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["matchHistory"]>
+
+  export type MatchHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    originalMatchId?: boolean
+    gameName?: boolean
+    matchName?: boolean
+    amountPaid?: boolean
+    prizeWon?: boolean
+    killCount?: boolean
+    position?: boolean
+    type?: boolean
+    status?: boolean
+    matchDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    entryFees?: boolean
+    totalSeats?: boolean
+    netPrizePool?: boolean
+    perKillPoint?: boolean
+    firstPrize?: boolean
+    secondPrize?: boolean
+    thirdPrize?: boolean
+    matchTime?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["matchHistory"]>
+
+  export type MatchHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    originalMatchId?: boolean
+    gameName?: boolean
+    matchName?: boolean
+    amountPaid?: boolean
+    prizeWon?: boolean
+    killCount?: boolean
+    position?: boolean
+    type?: boolean
+    status?: boolean
+    matchDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    entryFees?: boolean
+    totalSeats?: boolean
+    netPrizePool?: boolean
+    perKillPoint?: boolean
+    firstPrize?: boolean
+    secondPrize?: boolean
+    thirdPrize?: boolean
+    matchTime?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["matchHistory"]>
+
+  export type MatchHistorySelectScalar = {
+    id?: boolean
+    userId?: boolean
+    originalMatchId?: boolean
+    gameName?: boolean
+    matchName?: boolean
+    amountPaid?: boolean
+    prizeWon?: boolean
+    killCount?: boolean
+    position?: boolean
+    type?: boolean
+    status?: boolean
+    matchDate?: boolean
+    completedAt?: boolean
+    createdAt?: boolean
+    entryFees?: boolean
+    totalSeats?: boolean
+    netPrizePool?: boolean
+    perKillPoint?: boolean
+    firstPrize?: boolean
+    secondPrize?: boolean
+    thirdPrize?: boolean
+    matchTime?: boolean
+  }
+
+  export type MatchHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "originalMatchId" | "gameName" | "matchName" | "amountPaid" | "prizeWon" | "killCount" | "position" | "type" | "status" | "matchDate" | "completedAt" | "createdAt" | "entryFees" | "totalSeats" | "netPrizePool" | "perKillPoint" | "firstPrize" | "secondPrize" | "thirdPrize" | "matchTime", ExtArgs["result"]["matchHistory"]>
+  export type MatchHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MatchHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type MatchHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $MatchHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "MatchHistory"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      userId: bigint
+      originalMatchId: number
+      gameName: string
+      matchName: string
+      amountPaid: number
+      prizeWon: number
+      killCount: number
+      position: number | null
+      type: string
+      status: string
+      matchDate: Date
+      completedAt: Date | null
+      createdAt: Date
+      entryFees: number
+      totalSeats: number
+      netPrizePool: number
+      perKillPoint: number
+      firstPrize: number
+      secondPrize: number
+      thirdPrize: number
+      matchTime: string
+    }, ExtArgs["result"]["matchHistory"]>
+    composites: {}
+  }
+
+  type MatchHistoryGetPayload<S extends boolean | null | undefined | MatchHistoryDefaultArgs> = $Result.GetResult<Prisma.$MatchHistoryPayload, S>
+
+  type MatchHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<MatchHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: MatchHistoryCountAggregateInputType | true
+    }
+
+  export interface MatchHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['MatchHistory'], meta: { name: 'MatchHistory' } }
+    /**
+     * Find zero or one MatchHistory that matches the filter.
+     * @param {MatchHistoryFindUniqueArgs} args - Arguments to find a MatchHistory
+     * @example
+     * // Get one MatchHistory
+     * const matchHistory = await prisma.matchHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends MatchHistoryFindUniqueArgs>(args: SelectSubset<T, MatchHistoryFindUniqueArgs<ExtArgs>>): Prisma__MatchHistoryClient<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one MatchHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {MatchHistoryFindUniqueOrThrowArgs} args - Arguments to find a MatchHistory
+     * @example
+     * // Get one MatchHistory
+     * const matchHistory = await prisma.matchHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends MatchHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, MatchHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__MatchHistoryClient<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MatchHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchHistoryFindFirstArgs} args - Arguments to find a MatchHistory
+     * @example
+     * // Get one MatchHistory
+     * const matchHistory = await prisma.matchHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends MatchHistoryFindFirstArgs>(args?: SelectSubset<T, MatchHistoryFindFirstArgs<ExtArgs>>): Prisma__MatchHistoryClient<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first MatchHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchHistoryFindFirstOrThrowArgs} args - Arguments to find a MatchHistory
+     * @example
+     * // Get one MatchHistory
+     * const matchHistory = await prisma.matchHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends MatchHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, MatchHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__MatchHistoryClient<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more MatchHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MatchHistories
+     * const matchHistories = await prisma.matchHistory.findMany()
+     * 
+     * // Get first 10 MatchHistories
+     * const matchHistories = await prisma.matchHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const matchHistoryWithIdOnly = await prisma.matchHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends MatchHistoryFindManyArgs>(args?: SelectSubset<T, MatchHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a MatchHistory.
+     * @param {MatchHistoryCreateArgs} args - Arguments to create a MatchHistory.
+     * @example
+     * // Create one MatchHistory
+     * const MatchHistory = await prisma.matchHistory.create({
+     *   data: {
+     *     // ... data to create a MatchHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends MatchHistoryCreateArgs>(args: SelectSubset<T, MatchHistoryCreateArgs<ExtArgs>>): Prisma__MatchHistoryClient<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many MatchHistories.
+     * @param {MatchHistoryCreateManyArgs} args - Arguments to create many MatchHistories.
+     * @example
+     * // Create many MatchHistories
+     * const matchHistory = await prisma.matchHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends MatchHistoryCreateManyArgs>(args?: SelectSubset<T, MatchHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many MatchHistories and returns the data saved in the database.
+     * @param {MatchHistoryCreateManyAndReturnArgs} args - Arguments to create many MatchHistories.
+     * @example
+     * // Create many MatchHistories
+     * const matchHistory = await prisma.matchHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many MatchHistories and only return the `id`
+     * const matchHistoryWithIdOnly = await prisma.matchHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends MatchHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, MatchHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a MatchHistory.
+     * @param {MatchHistoryDeleteArgs} args - Arguments to delete one MatchHistory.
+     * @example
+     * // Delete one MatchHistory
+     * const MatchHistory = await prisma.matchHistory.delete({
+     *   where: {
+     *     // ... filter to delete one MatchHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends MatchHistoryDeleteArgs>(args: SelectSubset<T, MatchHistoryDeleteArgs<ExtArgs>>): Prisma__MatchHistoryClient<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one MatchHistory.
+     * @param {MatchHistoryUpdateArgs} args - Arguments to update one MatchHistory.
+     * @example
+     * // Update one MatchHistory
+     * const matchHistory = await prisma.matchHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends MatchHistoryUpdateArgs>(args: SelectSubset<T, MatchHistoryUpdateArgs<ExtArgs>>): Prisma__MatchHistoryClient<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more MatchHistories.
+     * @param {MatchHistoryDeleteManyArgs} args - Arguments to filter MatchHistories to delete.
+     * @example
+     * // Delete a few MatchHistories
+     * const { count } = await prisma.matchHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends MatchHistoryDeleteManyArgs>(args?: SelectSubset<T, MatchHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MatchHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MatchHistories
+     * const matchHistory = await prisma.matchHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends MatchHistoryUpdateManyArgs>(args: SelectSubset<T, MatchHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MatchHistories and returns the data updated in the database.
+     * @param {MatchHistoryUpdateManyAndReturnArgs} args - Arguments to update many MatchHistories.
+     * @example
+     * // Update many MatchHistories
+     * const matchHistory = await prisma.matchHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more MatchHistories and only return the `id`
+     * const matchHistoryWithIdOnly = await prisma.matchHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends MatchHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, MatchHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one MatchHistory.
+     * @param {MatchHistoryUpsertArgs} args - Arguments to update or create a MatchHistory.
+     * @example
+     * // Update or create a MatchHistory
+     * const matchHistory = await prisma.matchHistory.upsert({
+     *   create: {
+     *     // ... data to create a MatchHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MatchHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends MatchHistoryUpsertArgs>(args: SelectSubset<T, MatchHistoryUpsertArgs<ExtArgs>>): Prisma__MatchHistoryClient<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of MatchHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchHistoryCountArgs} args - Arguments to filter MatchHistories to count.
+     * @example
+     * // Count the number of MatchHistories
+     * const count = await prisma.matchHistory.count({
+     *   where: {
+     *     // ... the filter for the MatchHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends MatchHistoryCountArgs>(
+      args?: Subset<T, MatchHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MatchHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MatchHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MatchHistoryAggregateArgs>(args: Subset<T, MatchHistoryAggregateArgs>): Prisma.PrismaPromise<GetMatchHistoryAggregateType<T>>
+
+    /**
+     * Group by MatchHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MatchHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MatchHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MatchHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: MatchHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MatchHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMatchHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the MatchHistory model
+   */
+  readonly fields: MatchHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MatchHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__MatchHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the MatchHistory model
+   */
+  interface MatchHistoryFieldRefs {
+    readonly id: FieldRef<"MatchHistory", 'Int'>
+    readonly userId: FieldRef<"MatchHistory", 'BigInt'>
+    readonly originalMatchId: FieldRef<"MatchHistory", 'Int'>
+    readonly gameName: FieldRef<"MatchHistory", 'String'>
+    readonly matchName: FieldRef<"MatchHistory", 'String'>
+    readonly amountPaid: FieldRef<"MatchHistory", 'Float'>
+    readonly prizeWon: FieldRef<"MatchHistory", 'Float'>
+    readonly killCount: FieldRef<"MatchHistory", 'Int'>
+    readonly position: FieldRef<"MatchHistory", 'Int'>
+    readonly type: FieldRef<"MatchHistory", 'String'>
+    readonly status: FieldRef<"MatchHistory", 'String'>
+    readonly matchDate: FieldRef<"MatchHistory", 'DateTime'>
+    readonly completedAt: FieldRef<"MatchHistory", 'DateTime'>
+    readonly createdAt: FieldRef<"MatchHistory", 'DateTime'>
+    readonly entryFees: FieldRef<"MatchHistory", 'Float'>
+    readonly totalSeats: FieldRef<"MatchHistory", 'Int'>
+    readonly netPrizePool: FieldRef<"MatchHistory", 'Float'>
+    readonly perKillPoint: FieldRef<"MatchHistory", 'Float'>
+    readonly firstPrize: FieldRef<"MatchHistory", 'Float'>
+    readonly secondPrize: FieldRef<"MatchHistory", 'Float'>
+    readonly thirdPrize: FieldRef<"MatchHistory", 'Float'>
+    readonly matchTime: FieldRef<"MatchHistory", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * MatchHistory findUnique
+   */
+  export type MatchHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which MatchHistory to fetch.
+     */
+    where: MatchHistoryWhereUniqueInput
+  }
+
+  /**
+   * MatchHistory findUniqueOrThrow
+   */
+  export type MatchHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which MatchHistory to fetch.
+     */
+    where: MatchHistoryWhereUniqueInput
+  }
+
+  /**
+   * MatchHistory findFirst
+   */
+  export type MatchHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which MatchHistory to fetch.
+     */
+    where?: MatchHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MatchHistories to fetch.
+     */
+    orderBy?: MatchHistoryOrderByWithRelationInput | MatchHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MatchHistories.
+     */
+    cursor?: MatchHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MatchHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MatchHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MatchHistories.
+     */
+    distinct?: MatchHistoryScalarFieldEnum | MatchHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * MatchHistory findFirstOrThrow
+   */
+  export type MatchHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which MatchHistory to fetch.
+     */
+    where?: MatchHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MatchHistories to fetch.
+     */
+    orderBy?: MatchHistoryOrderByWithRelationInput | MatchHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MatchHistories.
+     */
+    cursor?: MatchHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MatchHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MatchHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MatchHistories.
+     */
+    distinct?: MatchHistoryScalarFieldEnum | MatchHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * MatchHistory findMany
+   */
+  export type MatchHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which MatchHistories to fetch.
+     */
+    where?: MatchHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MatchHistories to fetch.
+     */
+    orderBy?: MatchHistoryOrderByWithRelationInput | MatchHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MatchHistories.
+     */
+    cursor?: MatchHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MatchHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MatchHistories.
+     */
+    skip?: number
+    distinct?: MatchHistoryScalarFieldEnum | MatchHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * MatchHistory create
+   */
+  export type MatchHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a MatchHistory.
+     */
+    data: XOR<MatchHistoryCreateInput, MatchHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * MatchHistory createMany
+   */
+  export type MatchHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many MatchHistories.
+     */
+    data: MatchHistoryCreateManyInput | MatchHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * MatchHistory createManyAndReturn
+   */
+  export type MatchHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many MatchHistories.
+     */
+    data: MatchHistoryCreateManyInput | MatchHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MatchHistory update
+   */
+  export type MatchHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a MatchHistory.
+     */
+    data: XOR<MatchHistoryUpdateInput, MatchHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which MatchHistory to update.
+     */
+    where: MatchHistoryWhereUniqueInput
+  }
+
+  /**
+   * MatchHistory updateMany
+   */
+  export type MatchHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update MatchHistories.
+     */
+    data: XOR<MatchHistoryUpdateManyMutationInput, MatchHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which MatchHistories to update
+     */
+    where?: MatchHistoryWhereInput
+    /**
+     * Limit how many MatchHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * MatchHistory updateManyAndReturn
+   */
+  export type MatchHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update MatchHistories.
+     */
+    data: XOR<MatchHistoryUpdateManyMutationInput, MatchHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which MatchHistories to update
+     */
+    where?: MatchHistoryWhereInput
+    /**
+     * Limit how many MatchHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * MatchHistory upsert
+   */
+  export type MatchHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the MatchHistory to update in case it exists.
+     */
+    where: MatchHistoryWhereUniqueInput
+    /**
+     * In case the MatchHistory found by the `where` argument doesn't exist, create a new MatchHistory with this data.
+     */
+    create: XOR<MatchHistoryCreateInput, MatchHistoryUncheckedCreateInput>
+    /**
+     * In case the MatchHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<MatchHistoryUpdateInput, MatchHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * MatchHistory delete
+   */
+  export type MatchHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which MatchHistory to delete.
+     */
+    where: MatchHistoryWhereUniqueInput
+  }
+
+  /**
+   * MatchHistory deleteMany
+   */
+  export type MatchHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which MatchHistories to delete
+     */
+    where?: MatchHistoryWhereInput
+    /**
+     * Limit how many MatchHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * MatchHistory without action
+   */
+  export type MatchHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MatchHistory
+     */
+    select?: MatchHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MatchHistory
+     */
+    omit?: MatchHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MatchHistoryInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -5926,7 +7445,9 @@ export namespace Prisma {
     entryFees: 'entryFees',
     totalSeats: 'totalSeats',
     time: 'time',
-    date: 'date'
+    date: 'date',
+    status: 'status',
+    isDeleted: 'isDeleted'
   };
 
   export type MatchScalarFieldEnum = (typeof MatchScalarFieldEnum)[keyof typeof MatchScalarFieldEnum]
@@ -5951,6 +7472,34 @@ export namespace Prisma {
   };
 
   export type MatchEntryScalarFieldEnum = (typeof MatchEntryScalarFieldEnum)[keyof typeof MatchEntryScalarFieldEnum]
+
+
+  export const MatchHistoryScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    originalMatchId: 'originalMatchId',
+    gameName: 'gameName',
+    matchName: 'matchName',
+    amountPaid: 'amountPaid',
+    prizeWon: 'prizeWon',
+    killCount: 'killCount',
+    position: 'position',
+    type: 'type',
+    status: 'status',
+    matchDate: 'matchDate',
+    completedAt: 'completedAt',
+    createdAt: 'createdAt',
+    entryFees: 'entryFees',
+    totalSeats: 'totalSeats',
+    netPrizePool: 'netPrizePool',
+    perKillPoint: 'perKillPoint',
+    firstPrize: 'firstPrize',
+    secondPrize: 'secondPrize',
+    thirdPrize: 'thirdPrize',
+    matchTime: 'matchTime'
+  };
+
+  export type MatchHistoryScalarFieldEnum = (typeof MatchHistoryScalarFieldEnum)[keyof typeof MatchHistoryScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -5983,16 +7532,16 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Int'
+   * Reference to a field of type 'BigInt'
    */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+  export type BigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt'>
     
 
 
   /**
-   * Reference to a field of type 'Int[]'
+   * Reference to a field of type 'BigInt[]'
    */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+  export type ListBigIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BigInt[]'>
     
 
 
@@ -6036,6 +7585,27 @@ export namespace Prisma {
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
+
+
+  /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
   /**
    * Deep Input Types
    */
@@ -6045,7 +7615,7 @@ export namespace Prisma {
     AND?: UserWhereInput | UserWhereInput[]
     OR?: UserWhereInput[]
     NOT?: UserWhereInput | UserWhereInput[]
-    id?: IntFilter<"User"> | number
+    id?: BigIntFilter<"User"> | bigint | number
     email?: StringFilter<"User"> | string
     password?: StringFilter<"User"> | string
     balance?: FloatFilter<"User"> | number
@@ -6053,6 +7623,7 @@ export namespace Prisma {
     chatId?: StringNullableFilter<"User"> | string | null
     purchases?: PurchaseListRelationFilter
     matchEntries?: MatchEntryListRelationFilter
+    matchHistory?: MatchHistoryListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -6064,10 +7635,11 @@ export namespace Prisma {
     chatId?: SortOrderInput | SortOrder
     purchases?: PurchaseOrderByRelationAggregateInput
     matchEntries?: MatchEntryOrderByRelationAggregateInput
+    matchHistory?: MatchHistoryOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
-    id?: number
+    id?: bigint | number
     email?: string
     chatId?: string
     AND?: UserWhereInput | UserWhereInput[]
@@ -6078,6 +7650,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     purchases?: PurchaseListRelationFilter
     matchEntries?: MatchEntryListRelationFilter
+    matchHistory?: MatchHistoryListRelationFilter
   }, "id" | "email" | "chatId">
 
   export type UserOrderByWithAggregationInput = {
@@ -6098,7 +7671,7 @@ export namespace Prisma {
     AND?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
     OR?: UserScalarWhereWithAggregatesInput[]
     NOT?: UserScalarWhereWithAggregatesInput | UserScalarWhereWithAggregatesInput[]
-    id?: IntWithAggregatesFilter<"User"> | number
+    id?: BigIntWithAggregatesFilter<"User"> | bigint | number
     email?: StringWithAggregatesFilter<"User"> | string
     password?: StringWithAggregatesFilter<"User"> | string
     balance?: FloatWithAggregatesFilter<"User"> | number
@@ -6126,6 +7699,8 @@ export namespace Prisma {
     totalSeats?: IntFilter<"Match"> | number
     time?: StringFilter<"Match"> | string
     date?: DateTimeFilter<"Match"> | Date | string
+    status?: StringFilter<"Match"> | string
+    isDeleted?: BoolFilter<"Match"> | boolean
     purchases?: PurchaseListRelationFilter
     matchEntries?: MatchEntryListRelationFilter
   }
@@ -6147,6 +7722,8 @@ export namespace Prisma {
     totalSeats?: SortOrder
     time?: SortOrder
     date?: SortOrder
+    status?: SortOrder
+    isDeleted?: SortOrder
     purchases?: PurchaseOrderByRelationAggregateInput
     matchEntries?: MatchEntryOrderByRelationAggregateInput
   }
@@ -6171,6 +7748,8 @@ export namespace Prisma {
     totalSeats?: IntFilter<"Match"> | number
     time?: StringFilter<"Match"> | string
     date?: DateTimeFilter<"Match"> | Date | string
+    status?: StringFilter<"Match"> | string
+    isDeleted?: BoolFilter<"Match"> | boolean
     purchases?: PurchaseListRelationFilter
     matchEntries?: MatchEntryListRelationFilter
   }, "id">
@@ -6192,6 +7771,8 @@ export namespace Prisma {
     totalSeats?: SortOrder
     time?: SortOrder
     date?: SortOrder
+    status?: SortOrder
+    isDeleted?: SortOrder
     _count?: MatchCountOrderByAggregateInput
     _avg?: MatchAvgOrderByAggregateInput
     _max?: MatchMaxOrderByAggregateInput
@@ -6219,6 +7800,8 @@ export namespace Prisma {
     totalSeats?: IntWithAggregatesFilter<"Match"> | number
     time?: StringWithAggregatesFilter<"Match"> | string
     date?: DateTimeWithAggregatesFilter<"Match"> | Date | string
+    status?: StringWithAggregatesFilter<"Match"> | string
+    isDeleted?: BoolWithAggregatesFilter<"Match"> | boolean
   }
 
   export type PurchaseWhereInput = {
@@ -6226,7 +7809,7 @@ export namespace Prisma {
     OR?: PurchaseWhereInput[]
     NOT?: PurchaseWhereInput | PurchaseWhereInput[]
     id?: IntFilter<"Purchase"> | number
-    userId?: IntFilter<"Purchase"> | number
+    userId?: BigIntFilter<"Purchase"> | bigint | number
     matchId?: IntFilter<"Purchase"> | number
     createdAt?: DateTimeFilter<"Purchase"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -6248,7 +7831,7 @@ export namespace Prisma {
     AND?: PurchaseWhereInput | PurchaseWhereInput[]
     OR?: PurchaseWhereInput[]
     NOT?: PurchaseWhereInput | PurchaseWhereInput[]
-    userId?: IntFilter<"Purchase"> | number
+    userId?: BigIntFilter<"Purchase"> | bigint | number
     matchId?: IntFilter<"Purchase"> | number
     createdAt?: DateTimeFilter<"Purchase"> | Date | string
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -6272,7 +7855,7 @@ export namespace Prisma {
     OR?: PurchaseScalarWhereWithAggregatesInput[]
     NOT?: PurchaseScalarWhereWithAggregatesInput | PurchaseScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Purchase"> | number
-    userId?: IntWithAggregatesFilter<"Purchase"> | number
+    userId?: BigIntWithAggregatesFilter<"Purchase"> | bigint | number
     matchId?: IntWithAggregatesFilter<"Purchase"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Purchase"> | Date | string
   }
@@ -6282,7 +7865,7 @@ export namespace Prisma {
     OR?: MatchEntryWhereInput[]
     NOT?: MatchEntryWhereInput | MatchEntryWhereInput[]
     id?: IntFilter<"MatchEntry"> | number
-    userId?: IntFilter<"MatchEntry"> | number
+    userId?: BigIntFilter<"MatchEntry"> | bigint | number
     matchId?: IntFilter<"MatchEntry"> | number
     amountPaid?: FloatFilter<"MatchEntry"> | number
     createdAt?: DateTimeFilter<"MatchEntry"> | Date | string
@@ -6306,7 +7889,7 @@ export namespace Prisma {
     AND?: MatchEntryWhereInput | MatchEntryWhereInput[]
     OR?: MatchEntryWhereInput[]
     NOT?: MatchEntryWhereInput | MatchEntryWhereInput[]
-    userId?: IntFilter<"MatchEntry"> | number
+    userId?: BigIntFilter<"MatchEntry"> | bigint | number
     matchId?: IntFilter<"MatchEntry"> | number
     amountPaid?: FloatFilter<"MatchEntry"> | number
     createdAt?: DateTimeFilter<"MatchEntry"> | Date | string
@@ -6332,13 +7915,156 @@ export namespace Prisma {
     OR?: MatchEntryScalarWhereWithAggregatesInput[]
     NOT?: MatchEntryScalarWhereWithAggregatesInput | MatchEntryScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"MatchEntry"> | number
-    userId?: IntWithAggregatesFilter<"MatchEntry"> | number
+    userId?: BigIntWithAggregatesFilter<"MatchEntry"> | bigint | number
     matchId?: IntWithAggregatesFilter<"MatchEntry"> | number
     amountPaid?: FloatWithAggregatesFilter<"MatchEntry"> | number
     createdAt?: DateTimeWithAggregatesFilter<"MatchEntry"> | Date | string
   }
 
+  export type MatchHistoryWhereInput = {
+    AND?: MatchHistoryWhereInput | MatchHistoryWhereInput[]
+    OR?: MatchHistoryWhereInput[]
+    NOT?: MatchHistoryWhereInput | MatchHistoryWhereInput[]
+    id?: IntFilter<"MatchHistory"> | number
+    userId?: BigIntFilter<"MatchHistory"> | bigint | number
+    originalMatchId?: IntFilter<"MatchHistory"> | number
+    gameName?: StringFilter<"MatchHistory"> | string
+    matchName?: StringFilter<"MatchHistory"> | string
+    amountPaid?: FloatFilter<"MatchHistory"> | number
+    prizeWon?: FloatFilter<"MatchHistory"> | number
+    killCount?: IntFilter<"MatchHistory"> | number
+    position?: IntNullableFilter<"MatchHistory"> | number | null
+    type?: StringFilter<"MatchHistory"> | string
+    status?: StringFilter<"MatchHistory"> | string
+    matchDate?: DateTimeFilter<"MatchHistory"> | Date | string
+    completedAt?: DateTimeNullableFilter<"MatchHistory"> | Date | string | null
+    createdAt?: DateTimeFilter<"MatchHistory"> | Date | string
+    entryFees?: FloatFilter<"MatchHistory"> | number
+    totalSeats?: IntFilter<"MatchHistory"> | number
+    netPrizePool?: FloatFilter<"MatchHistory"> | number
+    perKillPoint?: FloatFilter<"MatchHistory"> | number
+    firstPrize?: FloatFilter<"MatchHistory"> | number
+    secondPrize?: FloatFilter<"MatchHistory"> | number
+    thirdPrize?: FloatFilter<"MatchHistory"> | number
+    matchTime?: StringFilter<"MatchHistory"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type MatchHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    originalMatchId?: SortOrder
+    gameName?: SortOrder
+    matchName?: SortOrder
+    amountPaid?: SortOrder
+    prizeWon?: SortOrder
+    killCount?: SortOrder
+    position?: SortOrderInput | SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    matchDate?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    entryFees?: SortOrder
+    totalSeats?: SortOrder
+    netPrizePool?: SortOrder
+    perKillPoint?: SortOrder
+    firstPrize?: SortOrder
+    secondPrize?: SortOrder
+    thirdPrize?: SortOrder
+    matchTime?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type MatchHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: MatchHistoryWhereInput | MatchHistoryWhereInput[]
+    OR?: MatchHistoryWhereInput[]
+    NOT?: MatchHistoryWhereInput | MatchHistoryWhereInput[]
+    userId?: BigIntFilter<"MatchHistory"> | bigint | number
+    originalMatchId?: IntFilter<"MatchHistory"> | number
+    gameName?: StringFilter<"MatchHistory"> | string
+    matchName?: StringFilter<"MatchHistory"> | string
+    amountPaid?: FloatFilter<"MatchHistory"> | number
+    prizeWon?: FloatFilter<"MatchHistory"> | number
+    killCount?: IntFilter<"MatchHistory"> | number
+    position?: IntNullableFilter<"MatchHistory"> | number | null
+    type?: StringFilter<"MatchHistory"> | string
+    status?: StringFilter<"MatchHistory"> | string
+    matchDate?: DateTimeFilter<"MatchHistory"> | Date | string
+    completedAt?: DateTimeNullableFilter<"MatchHistory"> | Date | string | null
+    createdAt?: DateTimeFilter<"MatchHistory"> | Date | string
+    entryFees?: FloatFilter<"MatchHistory"> | number
+    totalSeats?: IntFilter<"MatchHistory"> | number
+    netPrizePool?: FloatFilter<"MatchHistory"> | number
+    perKillPoint?: FloatFilter<"MatchHistory"> | number
+    firstPrize?: FloatFilter<"MatchHistory"> | number
+    secondPrize?: FloatFilter<"MatchHistory"> | number
+    thirdPrize?: FloatFilter<"MatchHistory"> | number
+    matchTime?: StringFilter<"MatchHistory"> | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type MatchHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    originalMatchId?: SortOrder
+    gameName?: SortOrder
+    matchName?: SortOrder
+    amountPaid?: SortOrder
+    prizeWon?: SortOrder
+    killCount?: SortOrder
+    position?: SortOrderInput | SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    matchDate?: SortOrder
+    completedAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    entryFees?: SortOrder
+    totalSeats?: SortOrder
+    netPrizePool?: SortOrder
+    perKillPoint?: SortOrder
+    firstPrize?: SortOrder
+    secondPrize?: SortOrder
+    thirdPrize?: SortOrder
+    matchTime?: SortOrder
+    _count?: MatchHistoryCountOrderByAggregateInput
+    _avg?: MatchHistoryAvgOrderByAggregateInput
+    _max?: MatchHistoryMaxOrderByAggregateInput
+    _min?: MatchHistoryMinOrderByAggregateInput
+    _sum?: MatchHistorySumOrderByAggregateInput
+  }
+
+  export type MatchHistoryScalarWhereWithAggregatesInput = {
+    AND?: MatchHistoryScalarWhereWithAggregatesInput | MatchHistoryScalarWhereWithAggregatesInput[]
+    OR?: MatchHistoryScalarWhereWithAggregatesInput[]
+    NOT?: MatchHistoryScalarWhereWithAggregatesInput | MatchHistoryScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"MatchHistory"> | number
+    userId?: BigIntWithAggregatesFilter<"MatchHistory"> | bigint | number
+    originalMatchId?: IntWithAggregatesFilter<"MatchHistory"> | number
+    gameName?: StringWithAggregatesFilter<"MatchHistory"> | string
+    matchName?: StringWithAggregatesFilter<"MatchHistory"> | string
+    amountPaid?: FloatWithAggregatesFilter<"MatchHistory"> | number
+    prizeWon?: FloatWithAggregatesFilter<"MatchHistory"> | number
+    killCount?: IntWithAggregatesFilter<"MatchHistory"> | number
+    position?: IntNullableWithAggregatesFilter<"MatchHistory"> | number | null
+    type?: StringWithAggregatesFilter<"MatchHistory"> | string
+    status?: StringWithAggregatesFilter<"MatchHistory"> | string
+    matchDate?: DateTimeWithAggregatesFilter<"MatchHistory"> | Date | string
+    completedAt?: DateTimeNullableWithAggregatesFilter<"MatchHistory"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"MatchHistory"> | Date | string
+    entryFees?: FloatWithAggregatesFilter<"MatchHistory"> | number
+    totalSeats?: IntWithAggregatesFilter<"MatchHistory"> | number
+    netPrizePool?: FloatWithAggregatesFilter<"MatchHistory"> | number
+    perKillPoint?: FloatWithAggregatesFilter<"MatchHistory"> | number
+    firstPrize?: FloatWithAggregatesFilter<"MatchHistory"> | number
+    secondPrize?: FloatWithAggregatesFilter<"MatchHistory"> | number
+    thirdPrize?: FloatWithAggregatesFilter<"MatchHistory"> | number
+    matchTime?: StringWithAggregatesFilter<"MatchHistory"> | string
+  }
+
   export type UserCreateInput = {
+    id?: bigint | number
     email: string
     password: string
     balance?: number
@@ -6346,10 +8072,11 @@ export namespace Prisma {
     chatId?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
-    id?: number
+    id?: bigint | number
     email: string
     password: string
     balance?: number
@@ -6357,9 +8084,11 @@ export namespace Prisma {
     chatId?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
@@ -6367,10 +8096,11 @@ export namespace Prisma {
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
@@ -6378,10 +8108,11 @@ export namespace Prisma {
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
-    id?: number
+    id?: bigint | number
     email: string
     password: string
     balance?: number
@@ -6390,6 +8121,7 @@ export namespace Prisma {
   }
 
   export type UserUpdateManyMutationInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
@@ -6398,7 +8130,7 @@ export namespace Prisma {
   }
 
   export type UserUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
@@ -6422,6 +8154,8 @@ export namespace Prisma {
     totalSeats: number
     time: string
     date?: Date | string
+    status?: string
+    isDeleted?: boolean
     purchases?: PurchaseCreateNestedManyWithoutMatchInput
     matchEntries?: MatchEntryCreateNestedManyWithoutMatchInput
   }
@@ -6443,6 +8177,8 @@ export namespace Prisma {
     totalSeats: number
     time: string
     date?: Date | string
+    status?: string
+    isDeleted?: boolean
     purchases?: PurchaseUncheckedCreateNestedManyWithoutMatchInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutMatchInput
   }
@@ -6463,6 +8199,8 @@ export namespace Prisma {
     totalSeats?: IntFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     purchases?: PurchaseUpdateManyWithoutMatchNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutMatchNestedInput
   }
@@ -6484,6 +8222,8 @@ export namespace Prisma {
     totalSeats?: IntFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     purchases?: PurchaseUncheckedUpdateManyWithoutMatchNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutMatchNestedInput
   }
@@ -6505,6 +8245,8 @@ export namespace Prisma {
     totalSeats: number
     time: string
     date?: Date | string
+    status?: string
+    isDeleted?: boolean
   }
 
   export type MatchUpdateManyMutationInput = {
@@ -6523,6 +8265,8 @@ export namespace Prisma {
     totalSeats?: IntFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MatchUncheckedUpdateManyInput = {
@@ -6542,6 +8286,8 @@ export namespace Prisma {
     totalSeats?: IntFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type PurchaseCreateInput = {
@@ -6552,7 +8298,7 @@ export namespace Prisma {
 
   export type PurchaseUncheckedCreateInput = {
     id?: number
-    userId: number
+    userId: bigint | number
     matchId: number
     createdAt?: Date | string
   }
@@ -6565,14 +8311,14 @@ export namespace Prisma {
 
   export type PurchaseUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     matchId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseCreateManyInput = {
     id?: number
-    userId: number
+    userId: bigint | number
     matchId: number
     createdAt?: Date | string
   }
@@ -6583,7 +8329,7 @@ export namespace Prisma {
 
   export type PurchaseUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     matchId?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6597,7 +8343,7 @@ export namespace Prisma {
 
   export type MatchEntryUncheckedCreateInput = {
     id?: number
-    userId: number
+    userId: bigint | number
     matchId: number
     amountPaid: number
     createdAt?: Date | string
@@ -6612,7 +8358,7 @@ export namespace Prisma {
 
   export type MatchEntryUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     matchId?: IntFieldUpdateOperationsInput | number
     amountPaid?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6620,7 +8366,7 @@ export namespace Prisma {
 
   export type MatchEntryCreateManyInput = {
     id?: number
-    userId: number
+    userId: bigint | number
     matchId: number
     amountPaid: number
     createdAt?: Date | string
@@ -6633,21 +8379,192 @@ export namespace Prisma {
 
   export type MatchEntryUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     matchId?: IntFieldUpdateOperationsInput | number
     amountPaid?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type IntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+  export type MatchHistoryCreateInput = {
+    originalMatchId: number
+    gameName: string
+    matchName: string
+    amountPaid: number
+    prizeWon?: number
+    killCount?: number
+    position?: number | null
+    type: string
+    status?: string
+    matchDate: Date | string
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    entryFees: number
+    totalSeats: number
+    netPrizePool: number
+    perKillPoint: number
+    firstPrize: number
+    secondPrize: number
+    thirdPrize: number
+    matchTime: string
+    user: UserCreateNestedOneWithoutMatchHistoryInput
+  }
+
+  export type MatchHistoryUncheckedCreateInput = {
+    id?: number
+    userId: bigint | number
+    originalMatchId: number
+    gameName: string
+    matchName: string
+    amountPaid: number
+    prizeWon?: number
+    killCount?: number
+    position?: number | null
+    type: string
+    status?: string
+    matchDate: Date | string
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    entryFees: number
+    totalSeats: number
+    netPrizePool: number
+    perKillPoint: number
+    firstPrize: number
+    secondPrize: number
+    thirdPrize: number
+    matchTime: string
+  }
+
+  export type MatchHistoryUpdateInput = {
+    originalMatchId?: IntFieldUpdateOperationsInput | number
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
+    amountPaid?: FloatFieldUpdateOperationsInput | number
+    prizeWon?: FloatFieldUpdateOperationsInput | number
+    killCount?: IntFieldUpdateOperationsInput | number
+    position?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    matchDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entryFees?: FloatFieldUpdateOperationsInput | number
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
+    perKillPoint?: FloatFieldUpdateOperationsInput | number
+    firstPrize?: FloatFieldUpdateOperationsInput | number
+    secondPrize?: FloatFieldUpdateOperationsInput | number
+    thirdPrize?: FloatFieldUpdateOperationsInput | number
+    matchTime?: StringFieldUpdateOperationsInput | string
+    user?: UserUpdateOneRequiredWithoutMatchHistoryNestedInput
+  }
+
+  export type MatchHistoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    originalMatchId?: IntFieldUpdateOperationsInput | number
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
+    amountPaid?: FloatFieldUpdateOperationsInput | number
+    prizeWon?: FloatFieldUpdateOperationsInput | number
+    killCount?: IntFieldUpdateOperationsInput | number
+    position?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    matchDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entryFees?: FloatFieldUpdateOperationsInput | number
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
+    perKillPoint?: FloatFieldUpdateOperationsInput | number
+    firstPrize?: FloatFieldUpdateOperationsInput | number
+    secondPrize?: FloatFieldUpdateOperationsInput | number
+    thirdPrize?: FloatFieldUpdateOperationsInput | number
+    matchTime?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MatchHistoryCreateManyInput = {
+    id?: number
+    userId: bigint | number
+    originalMatchId: number
+    gameName: string
+    matchName: string
+    amountPaid: number
+    prizeWon?: number
+    killCount?: number
+    position?: number | null
+    type: string
+    status?: string
+    matchDate: Date | string
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    entryFees: number
+    totalSeats: number
+    netPrizePool: number
+    perKillPoint: number
+    firstPrize: number
+    secondPrize: number
+    thirdPrize: number
+    matchTime: string
+  }
+
+  export type MatchHistoryUpdateManyMutationInput = {
+    originalMatchId?: IntFieldUpdateOperationsInput | number
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
+    amountPaid?: FloatFieldUpdateOperationsInput | number
+    prizeWon?: FloatFieldUpdateOperationsInput | number
+    killCount?: IntFieldUpdateOperationsInput | number
+    position?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    matchDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entryFees?: FloatFieldUpdateOperationsInput | number
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
+    perKillPoint?: FloatFieldUpdateOperationsInput | number
+    firstPrize?: FloatFieldUpdateOperationsInput | number
+    secondPrize?: FloatFieldUpdateOperationsInput | number
+    thirdPrize?: FloatFieldUpdateOperationsInput | number
+    matchTime?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MatchHistoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
+    originalMatchId?: IntFieldUpdateOperationsInput | number
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
+    amountPaid?: FloatFieldUpdateOperationsInput | number
+    prizeWon?: FloatFieldUpdateOperationsInput | number
+    killCount?: IntFieldUpdateOperationsInput | number
+    position?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    matchDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entryFees?: FloatFieldUpdateOperationsInput | number
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
+    perKillPoint?: FloatFieldUpdateOperationsInput | number
+    firstPrize?: FloatFieldUpdateOperationsInput | number
+    secondPrize?: FloatFieldUpdateOperationsInput | number
+    thirdPrize?: FloatFieldUpdateOperationsInput | number
+    matchTime?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type BigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -6714,6 +8631,12 @@ export namespace Prisma {
     none?: MatchEntryWhereInput
   }
 
+  export type MatchHistoryListRelationFilter = {
+    every?: MatchHistoryWhereInput
+    some?: MatchHistoryWhereInput
+    none?: MatchHistoryWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -6724,6 +8647,10 @@ export namespace Prisma {
   }
 
   export type MatchEntryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MatchHistoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -6764,20 +8691,20 @@ export namespace Prisma {
     balance?: SortOrder
   }
 
-  export type IntWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+  export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
     _count?: NestedIntFilter<$PrismaModel>
     _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -6846,6 +8773,22 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type MatchCountOrderByAggregateInput = {
     id?: SortOrder
     imageFileId?: SortOrder
@@ -6863,6 +8806,8 @@ export namespace Prisma {
     totalSeats?: SortOrder
     time?: SortOrder
     date?: SortOrder
+    status?: SortOrder
+    isDeleted?: SortOrder
   }
 
   export type MatchAvgOrderByAggregateInput = {
@@ -6894,6 +8839,8 @@ export namespace Prisma {
     totalSeats?: SortOrder
     time?: SortOrder
     date?: SortOrder
+    status?: SortOrder
+    isDeleted?: SortOrder
   }
 
   export type MatchMinOrderByAggregateInput = {
@@ -6913,6 +8860,8 @@ export namespace Prisma {
     totalSeats?: SortOrder
     time?: SortOrder
     date?: SortOrder
+    status?: SortOrder
+    isDeleted?: SortOrder
   }
 
   export type MatchSumOrderByAggregateInput = {
@@ -6927,6 +8876,30 @@ export namespace Prisma {
     totalSeats?: SortOrder
   }
 
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
@@ -6938,7 +8911,7 @@ export namespace Prisma {
   }
 
   export type PurchaseUserIdMatchIdCompoundUniqueInput = {
-    userId: number
+    userId: bigint | number
     matchId: number
   }
 
@@ -6976,7 +8949,7 @@ export namespace Prisma {
   }
 
   export type MatchEntryUserIdMatchIdCompoundUniqueInput = {
-    userId: number
+    userId: bigint | number
     matchId: number
   }
 
@@ -7018,6 +8991,167 @@ export namespace Prisma {
     amountPaid?: SortOrder
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type MatchHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    originalMatchId?: SortOrder
+    gameName?: SortOrder
+    matchName?: SortOrder
+    amountPaid?: SortOrder
+    prizeWon?: SortOrder
+    killCount?: SortOrder
+    position?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    matchDate?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    entryFees?: SortOrder
+    totalSeats?: SortOrder
+    netPrizePool?: SortOrder
+    perKillPoint?: SortOrder
+    firstPrize?: SortOrder
+    secondPrize?: SortOrder
+    thirdPrize?: SortOrder
+    matchTime?: SortOrder
+  }
+
+  export type MatchHistoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    originalMatchId?: SortOrder
+    amountPaid?: SortOrder
+    prizeWon?: SortOrder
+    killCount?: SortOrder
+    position?: SortOrder
+    entryFees?: SortOrder
+    totalSeats?: SortOrder
+    netPrizePool?: SortOrder
+    perKillPoint?: SortOrder
+    firstPrize?: SortOrder
+    secondPrize?: SortOrder
+    thirdPrize?: SortOrder
+  }
+
+  export type MatchHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    originalMatchId?: SortOrder
+    gameName?: SortOrder
+    matchName?: SortOrder
+    amountPaid?: SortOrder
+    prizeWon?: SortOrder
+    killCount?: SortOrder
+    position?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    matchDate?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    entryFees?: SortOrder
+    totalSeats?: SortOrder
+    netPrizePool?: SortOrder
+    perKillPoint?: SortOrder
+    firstPrize?: SortOrder
+    secondPrize?: SortOrder
+    thirdPrize?: SortOrder
+    matchTime?: SortOrder
+  }
+
+  export type MatchHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    originalMatchId?: SortOrder
+    gameName?: SortOrder
+    matchName?: SortOrder
+    amountPaid?: SortOrder
+    prizeWon?: SortOrder
+    killCount?: SortOrder
+    position?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    matchDate?: SortOrder
+    completedAt?: SortOrder
+    createdAt?: SortOrder
+    entryFees?: SortOrder
+    totalSeats?: SortOrder
+    netPrizePool?: SortOrder
+    perKillPoint?: SortOrder
+    firstPrize?: SortOrder
+    secondPrize?: SortOrder
+    thirdPrize?: SortOrder
+    matchTime?: SortOrder
+  }
+
+  export type MatchHistorySumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    originalMatchId?: SortOrder
+    amountPaid?: SortOrder
+    prizeWon?: SortOrder
+    killCount?: SortOrder
+    position?: SortOrder
+    entryFees?: SortOrder
+    totalSeats?: SortOrder
+    netPrizePool?: SortOrder
+    perKillPoint?: SortOrder
+    firstPrize?: SortOrder
+    secondPrize?: SortOrder
+    thirdPrize?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type PurchaseCreateNestedManyWithoutUserInput = {
     create?: XOR<PurchaseCreateWithoutUserInput, PurchaseUncheckedCreateWithoutUserInput> | PurchaseCreateWithoutUserInput[] | PurchaseUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PurchaseCreateOrConnectWithoutUserInput | PurchaseCreateOrConnectWithoutUserInput[]
@@ -7032,6 +9166,13 @@ export namespace Prisma {
     connect?: MatchEntryWhereUniqueInput | MatchEntryWhereUniqueInput[]
   }
 
+  export type MatchHistoryCreateNestedManyWithoutUserInput = {
+    create?: XOR<MatchHistoryCreateWithoutUserInput, MatchHistoryUncheckedCreateWithoutUserInput> | MatchHistoryCreateWithoutUserInput[] | MatchHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MatchHistoryCreateOrConnectWithoutUserInput | MatchHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: MatchHistoryCreateManyUserInputEnvelope
+    connect?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+  }
+
   export type PurchaseUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<PurchaseCreateWithoutUserInput, PurchaseUncheckedCreateWithoutUserInput> | PurchaseCreateWithoutUserInput[] | PurchaseUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PurchaseCreateOrConnectWithoutUserInput | PurchaseCreateOrConnectWithoutUserInput[]
@@ -7044,6 +9185,21 @@ export namespace Prisma {
     connectOrCreate?: MatchEntryCreateOrConnectWithoutUserInput | MatchEntryCreateOrConnectWithoutUserInput[]
     createMany?: MatchEntryCreateManyUserInputEnvelope
     connect?: MatchEntryWhereUniqueInput | MatchEntryWhereUniqueInput[]
+  }
+
+  export type MatchHistoryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<MatchHistoryCreateWithoutUserInput, MatchHistoryUncheckedCreateWithoutUserInput> | MatchHistoryCreateWithoutUserInput[] | MatchHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MatchHistoryCreateOrConnectWithoutUserInput | MatchHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: MatchHistoryCreateManyUserInputEnvelope
+    connect?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+  }
+
+  export type BigIntFieldUpdateOperationsInput = {
+    set?: bigint | number
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -7094,12 +9250,18 @@ export namespace Prisma {
     deleteMany?: MatchEntryScalarWhereInput | MatchEntryScalarWhereInput[]
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type MatchHistoryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MatchHistoryCreateWithoutUserInput, MatchHistoryUncheckedCreateWithoutUserInput> | MatchHistoryCreateWithoutUserInput[] | MatchHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MatchHistoryCreateOrConnectWithoutUserInput | MatchHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: MatchHistoryUpsertWithWhereUniqueWithoutUserInput | MatchHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MatchHistoryCreateManyUserInputEnvelope
+    set?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+    disconnect?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+    delete?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+    connect?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+    update?: MatchHistoryUpdateWithWhereUniqueWithoutUserInput | MatchHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MatchHistoryUpdateManyWithWhereWithoutUserInput | MatchHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MatchHistoryScalarWhereInput | MatchHistoryScalarWhereInput[]
   }
 
   export type PurchaseUncheckedUpdateManyWithoutUserNestedInput = {
@@ -7130,6 +9292,20 @@ export namespace Prisma {
     deleteMany?: MatchEntryScalarWhereInput | MatchEntryScalarWhereInput[]
   }
 
+  export type MatchHistoryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MatchHistoryCreateWithoutUserInput, MatchHistoryUncheckedCreateWithoutUserInput> | MatchHistoryCreateWithoutUserInput[] | MatchHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MatchHistoryCreateOrConnectWithoutUserInput | MatchHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: MatchHistoryUpsertWithWhereUniqueWithoutUserInput | MatchHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MatchHistoryCreateManyUserInputEnvelope
+    set?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+    disconnect?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+    delete?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+    connect?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+    update?: MatchHistoryUpdateWithWhereUniqueWithoutUserInput | MatchHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MatchHistoryUpdateManyWithWhereWithoutUserInput | MatchHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MatchHistoryScalarWhereInput | MatchHistoryScalarWhereInput[]
+  }
+
   export type PurchaseCreateNestedManyWithoutMatchInput = {
     create?: XOR<PurchaseCreateWithoutMatchInput, PurchaseUncheckedCreateWithoutMatchInput> | PurchaseCreateWithoutMatchInput[] | PurchaseUncheckedCreateWithoutMatchInput[]
     connectOrCreate?: PurchaseCreateOrConnectWithoutMatchInput | PurchaseCreateOrConnectWithoutMatchInput[]
@@ -7156,6 +9332,18 @@ export namespace Prisma {
     connectOrCreate?: MatchEntryCreateOrConnectWithoutMatchInput | MatchEntryCreateOrConnectWithoutMatchInput[]
     createMany?: MatchEntryCreateManyMatchInputEnvelope
     connect?: MatchEntryWhereUniqueInput | MatchEntryWhereUniqueInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type PurchaseUpdateManyWithoutMatchNestedInput = {
@@ -7270,15 +9458,41 @@ export namespace Prisma {
     update?: XOR<XOR<MatchUpdateToOneWithWhereWithoutMatchEntriesInput, MatchUpdateWithoutMatchEntriesInput>, MatchUncheckedUpdateWithoutMatchEntriesInput>
   }
 
-  export type NestedIntFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel>
-    in?: number[] | ListIntFieldRefInput<$PrismaModel>
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntFilter<$PrismaModel> | number
+  export type UserCreateNestedOneWithoutMatchHistoryInput = {
+    create?: XOR<UserCreateWithoutMatchHistoryInput, UserUncheckedCreateWithoutMatchHistoryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMatchHistoryInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutMatchHistoryNestedInput = {
+    create?: XOR<UserCreateWithoutMatchHistoryInput, UserUncheckedCreateWithoutMatchHistoryInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMatchHistoryInput
+    upsert?: UserUpsertWithoutMatchHistoryInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMatchHistoryInput, UserUpdateWithoutMatchHistoryInput>, UserUncheckedUpdateWithoutMatchHistoryInput>
+  }
+
+  export type NestedBigIntFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntFilter<$PrismaModel> | bigint | number
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -7331,7 +9545,23 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+  export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntWithAggregatesFilter<$PrismaModel> | bigint | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedBigIntFilter<$PrismaModel>
+    _min?: NestedBigIntFilter<$PrismaModel>
+    _max?: NestedBigIntFilter<$PrismaModel>
+  }
+
+  export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
     notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -7339,12 +9569,7 @@ export namespace Prisma {
     lte?: number | IntFieldRefInput<$PrismaModel>
     gt?: number | IntFieldRefInput<$PrismaModel>
     gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
-    _count?: NestedIntFilter<$PrismaModel>
-    _avg?: NestedFloatFilter<$PrismaModel>
-    _sum?: NestedIntFilter<$PrismaModel>
-    _min?: NestedIntFilter<$PrismaModel>
-    _max?: NestedIntFilter<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -7422,6 +9647,87 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type PurchaseCreateWithoutUserInput = {
     createdAt?: Date | string
     match: MatchCreateNestedOneWithoutPurchasesInput
@@ -7466,6 +9772,63 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MatchHistoryCreateWithoutUserInput = {
+    originalMatchId: number
+    gameName: string
+    matchName: string
+    amountPaid: number
+    prizeWon?: number
+    killCount?: number
+    position?: number | null
+    type: string
+    status?: string
+    matchDate: Date | string
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    entryFees: number
+    totalSeats: number
+    netPrizePool: number
+    perKillPoint: number
+    firstPrize: number
+    secondPrize: number
+    thirdPrize: number
+    matchTime: string
+  }
+
+  export type MatchHistoryUncheckedCreateWithoutUserInput = {
+    id?: number
+    originalMatchId: number
+    gameName: string
+    matchName: string
+    amountPaid: number
+    prizeWon?: number
+    killCount?: number
+    position?: number | null
+    type: string
+    status?: string
+    matchDate: Date | string
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    entryFees: number
+    totalSeats: number
+    netPrizePool: number
+    perKillPoint: number
+    firstPrize: number
+    secondPrize: number
+    thirdPrize: number
+    matchTime: string
+  }
+
+  export type MatchHistoryCreateOrConnectWithoutUserInput = {
+    where: MatchHistoryWhereUniqueInput
+    create: XOR<MatchHistoryCreateWithoutUserInput, MatchHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type MatchHistoryCreateManyUserInputEnvelope = {
+    data: MatchHistoryCreateManyUserInput | MatchHistoryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PurchaseUpsertWithWhereUniqueWithoutUserInput = {
     where: PurchaseWhereUniqueInput
     update: XOR<PurchaseUpdateWithoutUserInput, PurchaseUncheckedUpdateWithoutUserInput>
@@ -7487,7 +9850,7 @@ export namespace Prisma {
     OR?: PurchaseScalarWhereInput[]
     NOT?: PurchaseScalarWhereInput | PurchaseScalarWhereInput[]
     id?: IntFilter<"Purchase"> | number
-    userId?: IntFilter<"Purchase"> | number
+    userId?: BigIntFilter<"Purchase"> | bigint | number
     matchId?: IntFilter<"Purchase"> | number
     createdAt?: DateTimeFilter<"Purchase"> | Date | string
   }
@@ -7513,10 +9876,54 @@ export namespace Prisma {
     OR?: MatchEntryScalarWhereInput[]
     NOT?: MatchEntryScalarWhereInput | MatchEntryScalarWhereInput[]
     id?: IntFilter<"MatchEntry"> | number
-    userId?: IntFilter<"MatchEntry"> | number
+    userId?: BigIntFilter<"MatchEntry"> | bigint | number
     matchId?: IntFilter<"MatchEntry"> | number
     amountPaid?: FloatFilter<"MatchEntry"> | number
     createdAt?: DateTimeFilter<"MatchEntry"> | Date | string
+  }
+
+  export type MatchHistoryUpsertWithWhereUniqueWithoutUserInput = {
+    where: MatchHistoryWhereUniqueInput
+    update: XOR<MatchHistoryUpdateWithoutUserInput, MatchHistoryUncheckedUpdateWithoutUserInput>
+    create: XOR<MatchHistoryCreateWithoutUserInput, MatchHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type MatchHistoryUpdateWithWhereUniqueWithoutUserInput = {
+    where: MatchHistoryWhereUniqueInput
+    data: XOR<MatchHistoryUpdateWithoutUserInput, MatchHistoryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type MatchHistoryUpdateManyWithWhereWithoutUserInput = {
+    where: MatchHistoryScalarWhereInput
+    data: XOR<MatchHistoryUpdateManyMutationInput, MatchHistoryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type MatchHistoryScalarWhereInput = {
+    AND?: MatchHistoryScalarWhereInput | MatchHistoryScalarWhereInput[]
+    OR?: MatchHistoryScalarWhereInput[]
+    NOT?: MatchHistoryScalarWhereInput | MatchHistoryScalarWhereInput[]
+    id?: IntFilter<"MatchHistory"> | number
+    userId?: BigIntFilter<"MatchHistory"> | bigint | number
+    originalMatchId?: IntFilter<"MatchHistory"> | number
+    gameName?: StringFilter<"MatchHistory"> | string
+    matchName?: StringFilter<"MatchHistory"> | string
+    amountPaid?: FloatFilter<"MatchHistory"> | number
+    prizeWon?: FloatFilter<"MatchHistory"> | number
+    killCount?: IntFilter<"MatchHistory"> | number
+    position?: IntNullableFilter<"MatchHistory"> | number | null
+    type?: StringFilter<"MatchHistory"> | string
+    status?: StringFilter<"MatchHistory"> | string
+    matchDate?: DateTimeFilter<"MatchHistory"> | Date | string
+    completedAt?: DateTimeNullableFilter<"MatchHistory"> | Date | string | null
+    createdAt?: DateTimeFilter<"MatchHistory"> | Date | string
+    entryFees?: FloatFilter<"MatchHistory"> | number
+    totalSeats?: IntFilter<"MatchHistory"> | number
+    netPrizePool?: FloatFilter<"MatchHistory"> | number
+    perKillPoint?: FloatFilter<"MatchHistory"> | number
+    firstPrize?: FloatFilter<"MatchHistory"> | number
+    secondPrize?: FloatFilter<"MatchHistory"> | number
+    thirdPrize?: FloatFilter<"MatchHistory"> | number
+    matchTime?: StringFilter<"MatchHistory"> | string
   }
 
   export type PurchaseCreateWithoutMatchInput = {
@@ -7526,7 +9933,7 @@ export namespace Prisma {
 
   export type PurchaseUncheckedCreateWithoutMatchInput = {
     id?: number
-    userId: number
+    userId: bigint | number
     createdAt?: Date | string
   }
 
@@ -7548,7 +9955,7 @@ export namespace Prisma {
 
   export type MatchEntryUncheckedCreateWithoutMatchInput = {
     id?: number
-    userId: number
+    userId: bigint | number
     amountPaid: number
     createdAt?: Date | string
   }
@@ -7596,22 +10003,25 @@ export namespace Prisma {
   }
 
   export type UserCreateWithoutPurchasesInput = {
+    id?: bigint | number
     email: string
     password: string
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutPurchasesInput = {
-    id?: number
+    id?: bigint | number
     email: string
     password: string
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutPurchasesInput = {
@@ -7635,6 +10045,8 @@ export namespace Prisma {
     totalSeats: number
     time: string
     date?: Date | string
+    status?: string
+    isDeleted?: boolean
     matchEntries?: MatchEntryCreateNestedManyWithoutMatchInput
   }
 
@@ -7655,6 +10067,8 @@ export namespace Prisma {
     totalSeats: number
     time: string
     date?: Date | string
+    status?: string
+    isDeleted?: boolean
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutMatchInput
   }
 
@@ -7675,22 +10089,25 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutPurchasesInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPurchasesInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MatchUpsertWithoutPurchasesInput = {
@@ -7720,6 +10137,8 @@ export namespace Prisma {
     totalSeats?: IntFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     matchEntries?: MatchEntryUpdateManyWithoutMatchNestedInput
   }
 
@@ -7740,26 +10159,31 @@ export namespace Prisma {
     totalSeats?: IntFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutMatchNestedInput
   }
 
   export type UserCreateWithoutMatchEntriesInput = {
+    id?: bigint | number
     email: string
     password: string
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutMatchEntriesInput = {
-    id?: number
+    id?: bigint | number
     email: string
     password: string
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutMatchEntriesInput = {
@@ -7783,6 +10207,8 @@ export namespace Prisma {
     totalSeats: number
     time: string
     date?: Date | string
+    status?: string
+    isDeleted?: boolean
     purchases?: PurchaseCreateNestedManyWithoutMatchInput
   }
 
@@ -7803,6 +10229,8 @@ export namespace Prisma {
     totalSeats: number
     time: string
     date?: Date | string
+    status?: string
+    isDeleted?: boolean
     purchases?: PurchaseUncheckedCreateNestedManyWithoutMatchInput
   }
 
@@ -7823,22 +10251,25 @@ export namespace Prisma {
   }
 
   export type UserUpdateWithoutMatchEntriesInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMatchEntriesInput = {
-    id?: IntFieldUpdateOperationsInput | number
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
     email?: StringFieldUpdateOperationsInput | string
     password?: StringFieldUpdateOperationsInput | string
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type MatchUpsertWithoutMatchEntriesInput = {
@@ -7868,6 +10299,8 @@ export namespace Prisma {
     totalSeats?: IntFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     purchases?: PurchaseUpdateManyWithoutMatchNestedInput
   }
 
@@ -7888,7 +10321,69 @@ export namespace Prisma {
     totalSeats?: IntFieldUpdateOperationsInput | number
     time?: StringFieldUpdateOperationsInput | string
     date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     purchases?: PurchaseUncheckedUpdateManyWithoutMatchNestedInput
+  }
+
+  export type UserCreateWithoutMatchHistoryInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
+    purchases?: PurchaseCreateNestedManyWithoutUserInput
+    matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutMatchHistoryInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
+    purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
+    matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutMatchHistoryInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMatchHistoryInput, UserUncheckedCreateWithoutMatchHistoryInput>
+  }
+
+  export type UserUpsertWithoutMatchHistoryInput = {
+    update: XOR<UserUpdateWithoutMatchHistoryInput, UserUncheckedUpdateWithoutMatchHistoryInput>
+    create: XOR<UserCreateWithoutMatchHistoryInput, UserUncheckedCreateWithoutMatchHistoryInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMatchHistoryInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMatchHistoryInput, UserUncheckedUpdateWithoutMatchHistoryInput>
+  }
+
+  export type UserUpdateWithoutMatchHistoryInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    purchases?: PurchaseUpdateManyWithoutUserNestedInput
+    matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMatchHistoryInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
+    matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type PurchaseCreateManyUserInput = {
@@ -7902,6 +10397,30 @@ export namespace Prisma {
     matchId: number
     amountPaid: number
     createdAt?: Date | string
+  }
+
+  export type MatchHistoryCreateManyUserInput = {
+    id?: number
+    originalMatchId: number
+    gameName: string
+    matchName: string
+    amountPaid: number
+    prizeWon?: number
+    killCount?: number
+    position?: number | null
+    type: string
+    status?: string
+    matchDate: Date | string
+    completedAt?: Date | string | null
+    createdAt?: Date | string
+    entryFees: number
+    totalSeats: number
+    netPrizePool: number
+    perKillPoint: number
+    firstPrize: number
+    secondPrize: number
+    thirdPrize: number
+    matchTime: string
   }
 
   export type PurchaseUpdateWithoutUserInput = {
@@ -7941,15 +10460,86 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MatchHistoryUpdateWithoutUserInput = {
+    originalMatchId?: IntFieldUpdateOperationsInput | number
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
+    amountPaid?: FloatFieldUpdateOperationsInput | number
+    prizeWon?: FloatFieldUpdateOperationsInput | number
+    killCount?: IntFieldUpdateOperationsInput | number
+    position?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    matchDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entryFees?: FloatFieldUpdateOperationsInput | number
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
+    perKillPoint?: FloatFieldUpdateOperationsInput | number
+    firstPrize?: FloatFieldUpdateOperationsInput | number
+    secondPrize?: FloatFieldUpdateOperationsInput | number
+    thirdPrize?: FloatFieldUpdateOperationsInput | number
+    matchTime?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MatchHistoryUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    originalMatchId?: IntFieldUpdateOperationsInput | number
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
+    amountPaid?: FloatFieldUpdateOperationsInput | number
+    prizeWon?: FloatFieldUpdateOperationsInput | number
+    killCount?: IntFieldUpdateOperationsInput | number
+    position?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    matchDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entryFees?: FloatFieldUpdateOperationsInput | number
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
+    perKillPoint?: FloatFieldUpdateOperationsInput | number
+    firstPrize?: FloatFieldUpdateOperationsInput | number
+    secondPrize?: FloatFieldUpdateOperationsInput | number
+    thirdPrize?: FloatFieldUpdateOperationsInput | number
+    matchTime?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MatchHistoryUncheckedUpdateManyWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    originalMatchId?: IntFieldUpdateOperationsInput | number
+    gameName?: StringFieldUpdateOperationsInput | string
+    matchName?: StringFieldUpdateOperationsInput | string
+    amountPaid?: FloatFieldUpdateOperationsInput | number
+    prizeWon?: FloatFieldUpdateOperationsInput | number
+    killCount?: IntFieldUpdateOperationsInput | number
+    position?: NullableIntFieldUpdateOperationsInput | number | null
+    type?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    matchDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    entryFees?: FloatFieldUpdateOperationsInput | number
+    totalSeats?: IntFieldUpdateOperationsInput | number
+    netPrizePool?: FloatFieldUpdateOperationsInput | number
+    perKillPoint?: FloatFieldUpdateOperationsInput | number
+    firstPrize?: FloatFieldUpdateOperationsInput | number
+    secondPrize?: FloatFieldUpdateOperationsInput | number
+    thirdPrize?: FloatFieldUpdateOperationsInput | number
+    matchTime?: StringFieldUpdateOperationsInput | string
+  }
+
   export type PurchaseCreateManyMatchInput = {
     id?: number
-    userId: number
+    userId: bigint | number
     createdAt?: Date | string
   }
 
   export type MatchEntryCreateManyMatchInput = {
     id?: number
-    userId: number
+    userId: bigint | number
     amountPaid: number
     createdAt?: Date | string
   }
@@ -7961,13 +10551,13 @@ export namespace Prisma {
 
   export type PurchaseUncheckedUpdateWithoutMatchInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PurchaseUncheckedUpdateManyWithoutMatchInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7979,14 +10569,14 @@ export namespace Prisma {
 
   export type MatchEntryUncheckedUpdateWithoutMatchInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     amountPaid?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MatchEntryUncheckedUpdateManyWithoutMatchInput = {
     id?: IntFieldUpdateOperationsInput | number
-    userId?: IntFieldUpdateOperationsInput | number
+    userId?: BigIntFieldUpdateOperationsInput | bigint | number
     amountPaid?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
