@@ -14,13 +14,18 @@ interface DynamicPrizeCalculation {
 
 export class MatchNotificationService {
   private bot: TelegramBot;
+  private cronJob: any = null; //
 
   constructor(bot: TelegramBot) {
     this.bot = bot;
   }
-
   startMatchNotificationCron() {
-    cron.schedule("* * * * *", async () => {
+    // Stop existing cron job if it exists
+    if (this.cronJob) {
+      this.cronJob.destroy();
+    }
+
+    this.cronJob = cron.schedule("* * * * *", async () => {
       try {
         this.getCurrentTimeFormatIST();
         const notificationTimeIST = this.getNotificationTimeIST();
@@ -35,7 +40,6 @@ export class MatchNotificationService {
       "Match notification cron job started - checking every minute for matches starting in 10 minutes"
     );
   }
-
   private escapeMarkdown(text: string): string {
     return text.replace(/[_*[\]()~`>#+\-=|{}.!]/g, "\\$&");
   }
@@ -228,6 +232,10 @@ export class MatchNotificationService {
   }
 
   stopMatchNotificationCron() {
-    console.log("Match notification cron job stopped");
+    if (this.cronJob) {
+      this.cronJob.destroy();
+      this.cronJob = null;
+      console.log("Match notification cron job stopped");
+    }
   }
 }
