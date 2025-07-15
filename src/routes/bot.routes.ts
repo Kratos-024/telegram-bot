@@ -114,7 +114,9 @@ export class BotRoutes {
               }`
             );
             break;
-
+          case "my_referrals":
+            await this.getTheReferrals(chatId);
+            break;
           case "today_match":
             await this.showGameCategories(chatId, "user_game_selection");
             break;
@@ -1218,8 +1220,8 @@ export class BotRoutes {
         [{ text: "🏆 Today Match", callback_data: "today_match" }],
         [{ text: "🎮 Enter Match", callback_data: "enter_match" }],
         [{ text: "💸 Withdraw", callback_data: "withdraw" }],
-        [{ text: "💸 Generate Referal", callback_data: "generate_referal" }],
-
+        [{ text: "💸 Generate Referral", callback_data: "generate_referal" }],
+        [{ text: "🔃 My Referrals", callback_data: "my_referrals" }],
         [{ text: "🔁 Logout", callback_data: "logout" }],
       ],
     };
@@ -1269,6 +1271,37 @@ export class BotRoutes {
       reply_markup: keyboard,
     });
   }
+  private async getTheReferrals(chatId: number) {
+    try {
+      const result = await UserController.getMyReferals(chatId);
+
+      if (!Array.isArray(result)) {
+        this.bot.sendMessage(chatId, "Invalid data format received.");
+        return;
+      }
+
+      if (result.length === 0) {
+        this.bot.sendMessage(chatId, "No Referrals available.");
+        return;
+      }
+
+      let message = "";
+      result.forEach((referr: any) => {
+        message += `${referr.referee.id}. *${referr.referee.email}*\n`;
+        message += `${"-".repeat(25)}\n`;
+      });
+
+      const parts = this.splitMessage(message, 4000);
+      for (const part of parts) {
+        await this.bot.sendMessage(chatId, part, {
+          parse_mode: "Markdown", // or "MarkdownV2" if escaping properly
+        });
+      }
+    } catch (error) {
+      console.error("Error getting referrals:", error);
+      this.bot.sendMessage(chatId, "❌ Failed to load referrals.");
+    }
+  }
 
   private async showGameCategories(chatId: number, callbackPrefix: string) {
     try {
@@ -1306,13 +1339,14 @@ export class BotRoutes {
       const result = await UserController.getReferCode(chatId.toString());
 
       if (result.success) {
+        console.log("l;jsfgjkl;fdkljfdslk;sd");
+        console.log("l;jsfgjkl;fdkljfdslk;sd", result.data?.user);
         const data = result.data;
         const escapedEmail = this.escapeMarkdownV2(data?.generatedFor);
         const escapedCode = this.escapeMarkdownV2(data?.shortCode);
-        const escapedInstructions = this.escapeMarkdownV2(data?.instructions);
 
         let message = `🎉 *Your Referral Code Generated\\!*\n\n`;
-        message += `👤 *Generated for:* ${escapedEmail}\n`;
+        message += `👤 *Generated for:* ${escapedEmail} UserId ${result.data?.user}\n`;
         message += `🎫 *Short Code:* \`${escapedCode}\`\n`;
         message += `⏰ *Expires in:* ${this.escapeMarkdownV2(
           data?.expiresIn
@@ -1736,13 +1770,21 @@ export class BotRoutes {
       message += `🟢 **Active Users:** ${data.activeUsers}\n`;
       message += `🔴 **Inactive Users:** ${data.inactiveUsers}\n`;
       message += `💰 **Total Balance:** Rs.${data.totalBalance}\n`;
+
       message += `${"=".repeat(35)}\n\n`;
 
       message += `📋 **User Details:**\n`;
 
       data.users.forEach((user: any) => {
         message += `${user.serial}. **${user.email}**\n`;
+
         message += `   🔑 Password: ${user.password}\n`;
+        message += `   🔑 Password: ${user.referees}\n`;
+
+        message += `   🔑 Password: ${user.referredBy}\n`;
+
+        message += `   🔑 Password: ${user.referrals}\n`;
+
         message += `   💳 Balance: Rs.${user.accountBalance}\n`;
         message += `   📱 Chat ID: ${user.chatId}\n`;
         message += `   📊 Status: ${user.status === "Active" ? "🟢" : "🔴"} ${

@@ -613,6 +613,9 @@ export class UserController {
           balance: true,
           chatId: true,
           createdAt: true,
+          referees: true,
+          referredBy: true,
+          referrals: true,
         },
         orderBy: {
           createdAt: "desc", // Latest users first
@@ -622,6 +625,9 @@ export class UserController {
       const usersTable = users.map((user, index) => ({
         serial: index + 1,
         userId: user.id,
+        referees: user.referees,
+        referredBy: user.referrals,
+        referrals: user.referrals,
         email: user.email,
         password: user.password,
         accountBalance: user.balance || 0,
@@ -653,6 +659,35 @@ export class UserController {
   // Updated referral functions with better safety checks
 
   // Add these functions to your UserController class:
+  static async getMyReferals(userId: number) {
+    try {
+      const userExist = await prisma.user.findUnique({
+        where: { chatId: `${userId}` },
+      });
+
+      if (!userExist) {
+        throw new ApiError(402, "User with this id not available");
+      }
+
+      const referrals = await prisma.referral.findMany({
+        where: { referrerId: userExist.id },
+        include: {
+          referee: {
+            select: {
+              id: true,
+              email: true,
+              createdAt: true,
+            },
+          },
+        },
+      });
+      return referrals;
+    } catch (error) {
+      console.log(error);
+
+      throw new ApiError(500, "Failed to fetch referrals");
+    }
+  }
 
   static async getAllReferrals() {
     try {
@@ -711,18 +746,15 @@ export class UserController {
     try {
       // First, verify the JWT token
       const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-here";
-      console.log("decodeddecodeddecodeddecoded", JWT_SECRET);
 
       let decoded;
       try {
         decoded = jwt.verify(referralCode, JWT_SECRET) as any;
-        console.log("decodeddecodeddecodeddecoded2", decoded);
       } catch (jwtError) {
         return new ApiResponse(400, "Invalid or expired referral code", {
           success: false,
         });
       }
-      console.log("decodeddecodeddecodeddecoded2", decoded);
 
       // Check if token is of referral type
       if (decoded.type !== "referral") {
@@ -730,17 +762,15 @@ export class UserController {
           success: false,
         });
       }
-
       // Find the referrer user (the one who generated the code)
-      const referrerUser = await prisma.user.findUnique({
-        where: { id: BigInt(decoded.userId) },
+      const referrerUser = await prisma.user.findFirst({
+        where: { chatId: decoded.chatId },
         select: {
           id: true,
           email: true,
           chatId: true,
         },
       });
-
       if (!referrerUser) {
         return new ApiResponse(404, "Referrer user not found", {
           success: false,
@@ -813,12 +843,21 @@ export class UserController {
             referredBy: true,
           },
         });
-
         // Create the referral record
+        if (!referrerUser.chatId) {
+          return;
+        }
+        console.log(
+          referrerUser.chatId,
+          typeof +referrerUser.chatId,
+          refereeChatId,
+          typeof +refereeChatId
+        );
+
         const referralRecord = await tx.referral.create({
           data: {
             referrerId: referrerUser.id,
-            refereeId: refereeUser.id,
+            refereeId: refereeUser?.id,
             referrerBonus: 0, // Set to 0 as per requirement
             refereeBonus: 0, // Set to 0 as per requirement
           },
@@ -831,13 +870,19 @@ export class UserController {
             createdAt: true,
           },
         });
-
+        console.log(
+          "|referralRecordreferralRecordreferralRecordreferralRecord",
+          referralRecord
+        );
         return {
           updatedReferee,
           referralRecord,
         };
       });
-
+      console.log(
+        "|referralRecordreferralRecordreferralRecordreferralRecord",
+        result
+      );
       return new ApiResponse(
         200,
         "Referral code verified and applied successfully!",
@@ -846,9 +891,9 @@ export class UserController {
           referral: {
             referrerEmail: referrerUser.email,
             refereeEmail: refereeUser.email,
-            referrerBonus: result.referralRecord.referrerBonus,
-            refereeBonus: result.referralRecord.refereeBonus,
-            createdAt: result.referralRecord.createdAt,
+            referrerBonus: result?.referralRecord.referrerBonus,
+            refereeBonus: result?.referralRecord.refereeBonus,
+            createdAt: result?.referralRecord.createdAt,
           },
           message:
             "Welcome to the community! Your referral bonus will be credited soon.",
@@ -876,6 +921,7 @@ export class UserController {
       const user = await prisma.user.findUnique({
         where: { chatId },
         select: {
+          chatId: true,
           id: true,
           email: true,
         },
@@ -891,7 +937,7 @@ export class UserController {
       // Generate referral token with user ID and expiration
       const referralToken = jwt.sign(
         {
-          userId: user.id.toString(),
+          chatId: user.chatId,
           email: user.email,
           type: "referral",
           timestamp: Date.now(),
@@ -902,9 +948,8 @@ export class UserController {
         }
       );
 
-      // Create a shorter, more user-friendly referral code
-
       return new ApiResponse(200, "Referral code generated successfully", {
+        user: user.chatId,
         referralCode: referralToken,
         shortCode: referralToken, // Alternative shorter code
         generatedFor: user.email,
