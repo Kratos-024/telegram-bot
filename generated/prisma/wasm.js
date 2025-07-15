@@ -126,7 +126,8 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   balance: 'balance',
   createdAt: 'createdAt',
-  chatId: 'chatId'
+  chatId: 'chatId',
+  referredBy: 'referredBy'
 };
 
 exports.Prisma.MatchScalarFieldEnum = {
@@ -190,6 +191,15 @@ exports.Prisma.MatchHistoryScalarFieldEnum = {
   matchTime: 'matchTime'
 };
 
+exports.Prisma.ReferralScalarFieldEnum = {
+  id: 'id',
+  referrerId: 'referrerId',
+  refereeId: 'refereeId',
+  createdAt: 'createdAt',
+  referrerBonus: 'referrerBonus',
+  refereeBonus: 'refereeBonus'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -211,7 +221,8 @@ exports.Prisma.ModelName = {
   Match: 'Match',
   Purchase: 'Purchase',
   MatchEntry: 'MatchEntry',
-  MatchHistory: 'MatchHistory'
+  MatchHistory: 'MatchHistory',
+  Referral: 'Referral'
 };
 
 /**

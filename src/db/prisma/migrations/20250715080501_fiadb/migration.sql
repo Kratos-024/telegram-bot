@@ -6,6 +6,7 @@ CREATE TABLE "User" (
     "balance" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "chatId" TEXT,
+    "referredBy" BIGINT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -83,6 +84,18 @@ CREATE TABLE "MatchHistory" (
     CONSTRAINT "MatchHistory_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "Referral" (
+    "id" SERIAL NOT NULL,
+    "referrerId" BIGINT NOT NULL,
+    "refereeId" BIGINT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "referrerBonus" DOUBLE PRECISION DEFAULT 0,
+    "refereeBonus" DOUBLE PRECISION DEFAULT 0,
+
+    CONSTRAINT "Referral_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -104,6 +117,21 @@ CREATE INDEX "MatchHistory_originalMatchId_idx" ON "MatchHistory"("originalMatch
 -- CreateIndex
 CREATE INDEX "MatchHistory_matchDate_idx" ON "MatchHistory"("matchDate");
 
+-- CreateIndex
+CREATE INDEX "Referral_referrerId_idx" ON "Referral"("referrerId");
+
+-- CreateIndex
+CREATE INDEX "Referral_refereeId_idx" ON "Referral"("refereeId");
+
+-- CreateIndex
+CREATE INDEX "Referral_createdAt_idx" ON "Referral"("createdAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Referral_referrerId_refereeId_key" ON "Referral"("referrerId", "refereeId");
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_referredBy_fkey" FOREIGN KEY ("referredBy") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
 -- AddForeignKey
 ALTER TABLE "Purchase" ADD CONSTRAINT "Purchase_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -118,3 +146,9 @@ ALTER TABLE "MatchEntry" ADD CONSTRAINT "MatchEntry_matchId_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "MatchHistory" ADD CONSTRAINT "MatchHistory_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Referral" ADD CONSTRAINT "Referral_referrerId_fkey" FOREIGN KEY ("referrerId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Referral" ADD CONSTRAINT "Referral_refereeId_fkey" FOREIGN KEY ("refereeId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

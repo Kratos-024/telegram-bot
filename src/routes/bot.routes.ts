@@ -118,6 +118,19 @@ export class BotRoutes {
           case "today_match":
             await this.showGameCategories(chatId, "user_game_selection");
             break;
+          case "generate_referal":
+            await this.generateReferralCode(chatId);
+            break;
+          // For the case where user wants to verify referral code manually
+          // case "verify_generate_referal":
+          //   const session = userSessions.get(chatId) || {
+          //     state: "verify_generate_referal",
+          //     data: {},
+          //   };
+          //   userSessions.set(chatId, session);
+
+          //   this.bot.sendMessage(chatId, "🎫 Please enter your referral code:");
+          //   break;
 
           case "enter_match":
             userSessions.set(chatId, {
@@ -222,11 +235,12 @@ export class BotRoutes {
 
       try {
         switch (session.state) {
-          case "awaiting_email":
-            session.data.email = text;
-            session.state = "awaiting_password";
-            this.bot.sendMessage(chatId, "Please enter your password:");
-            break;
+          // case "awaiting_email":
+          //   session.data.email = text;
+          //   session.state = "awaiting_password";
+          //   this.bot.sendMessage(chatId, "Please enter your password:");
+          //   break;
+          //
           case "awaiting_match_id_for_participants":
             const matchId = parseInt(msg.text!, 10);
             if (isNaN(matchId)) {
@@ -241,32 +255,139 @@ export class BotRoutes {
             userSessions.delete(chatId); // Optional: clear session
             break;
 
-          case "awaiting_password":
-            try {
-              await UserController.createAccount(
-                this.bot,
-                chatId,
-                session.data.email,
-                text!
-              );
-              userSessions.delete(chatId);
+          // case "awaiting_password":
+          //   try {
+          //     await UserController.createAccount(
+          //       this.bot,
+          //       chatId,
+          //       session.data.email,
+          //       text!
+          //     );
+          //     userSessions.delete(chatId);
 
-              // Add terms and conditions message
+          //     // Add terms and conditions message
+          //     const termsMessage = `✅ Account created successfully!\n\n📋 **TERMS & CONDITIONS**\n\nBy joining and participating in our skill-based tournaments, you confirm that you are 18 years of age or older. All payments, entries, and actions made through our platform are done voluntarily and with your full consent. We are not liable for any unauthorized transactions made without your explicit consent. By using our service, you agree to follow all tournament rules and guidelines. Failure to do so may result in disqualification or suspension of your account. These terms may be updated at any time, so please review them regularly.`;
+
+          //     this.bot.sendMessage(chatId, termsMessage, {
+          //       parse_mode: "Markdown",
+          //     });
+          //     this.showMainDashboard(chatId);
+          //   } catch (error: any) {
+          //     this.bot.sendMessage(
+          //       chatId,
+          //       error.message || "Failed to create account"
+          //     );
+          //     userSessions.delete(chatId);
+          //   }
+          //   break;
+          case "awaiting_email":
+            session.data.email = text;
+            session.state = "awaiting_password";
+            this.bot.sendMessage(chatId, "Please enter your password:");
+            break;
+
+          case "awaiting_password":
+            session.data.password = text;
+
+            // Create account first before asking for referral code
+
+            // After account creation, ask for referral code
+            await UserController.createAccount(
+              this.bot,
+              chatId,
+              session.data.email,
+              session.data.password
+            );
+
+            session.state = "awaiting_referral_code";
+
+            const referralPrompt =
+              `🎁 *Optional: Do you have a referral code?*\n\n` +
+              `• Enter your referral code to get bonus points\n` +
+              `• Or type "skip" to continue to dashboard\n` +
+              `• Note: You can only use a referral code once`;
+
+            this.bot.sendMessage(chatId, referralPrompt, {
+              parse_mode: "Markdown",
+            });
+            break;
+
+          case "awaiting_referral_code":
+            const referralInput = text?.trim().toLowerCase();
+
+            if (
+              !referralInput ||
+              referralInput === "skip" ||
+              referralInput === ""
+            ) {
+              // // User skipped referral code, go to dashboard
+              // const skipMessage = `🎊 Welcome to the platform! Your account has been created successfully!`;
+
+              // await this.bot.sendMessage(chatId, skipMessage, {
+              //   parse_mode: "Markdown",
+              // });
+
               const termsMessage = `✅ Account created successfully!\n\n📋 **TERMS & CONDITIONS**\n\nBy joining and participating in our skill-based tournaments, you confirm that you are 18 years of age or older. All payments, entries, and actions made through our platform are done voluntarily and with your full consent. We are not liable for any unauthorized transactions made without your explicit consent. By using our service, you agree to follow all tournament rules and guidelines. Failure to do so may result in disqualification or suspension of your account. These terms may be updated at any time, so please review them regularly.`;
 
-              this.bot.sendMessage(chatId, termsMessage, {
+              await this.bot.sendMessage(chatId, termsMessage, {
                 parse_mode: "Markdown",
               });
               this.showMainDashboard(chatId);
-            } catch (error: any) {
-              this.bot.sendMessage(
-                chatId,
-                error.message || "Failed to create account"
-              );
-              userSessions.delete(chatId);
+
+              // Clear session state
+              session.state = "idle";
+            } else {
+              // User entered a referral code, verify it
+              try {
+                const referralResult = await this.verifyReferralCode(
+                  chatId,
+                  text!
+                );
+
+                if (referralResult?.result) {
+                  // Referral code is valid and applied
+                  const successMessage = `✅  Successfully created the account and added the referral code!\n\n📋 **TERMS & CONDITIONS**\n\nBy joining and participating in our skill-based tournaments, you confirm that you are 18 years of age or older. All payments, entries, and actions made through our platform are done voluntarily and with your full consent. We are not liable for any unauthorized transactions made without your explicit consent. By using our service, you agree to follow all tournament rules and guidelines. Failure to do so may result in disqualification or suspension of your account. These terms may be updated at any time, so please review them regularly.`;
+
+                  await this.bot.sendMessage(chatId, successMessage, {
+                    parse_mode: "Markdown",
+                  });
+                  this.showMainDashboard(chatId);
+
+                  // Clear session state
+                  session.state = "idle";
+                } else {
+                  // Invalid referral code or other error
+                  const errorMessage =
+                    `❌ *Referral Code Error*\n\n` +
+                    `${
+                      referralResult?.message || "Invalid referral code"
+                    }\n\n` +
+                    `• Please enter a valid referral code\n` +
+                    `• Or type "skip" to continue to dashboard`;
+
+                  await this.bot.sendMessage(chatId, errorMessage, {
+                    parse_mode: "Markdown",
+                  });
+                  // Keep the user in the same state to try again
+                  return;
+                }
+              } catch (error) {
+                console.error("Referral verification error:", error);
+
+                const errorMessage =
+                  `⚠️ *Error verifying referral code*\n\n` +
+                  `There was an error processing your referral code.\n\n` +
+                  `• Please try entering your referral code again\n` +
+                  `• Or type "skip" to continue to dashboard`;
+
+                await this.bot.sendMessage(chatId, errorMessage, {
+                  parse_mode: "Markdown",
+                });
+                // Keep the user in the same state to try again
+                return;
+              }
             }
             break;
-
           case "awaiting_login_email":
             session.data.email = text;
             session.state = "awaiting_login_password";
@@ -1097,6 +1218,8 @@ export class BotRoutes {
         [{ text: "🏆 Today Match", callback_data: "today_match" }],
         [{ text: "🎮 Enter Match", callback_data: "enter_match" }],
         [{ text: "💸 Withdraw", callback_data: "withdraw" }],
+        [{ text: "💸 Generate Referal", callback_data: "generate_referal" }],
+
         [{ text: "🔁 Logout", callback_data: "logout" }],
       ],
     };
@@ -1172,10 +1295,131 @@ export class BotRoutes {
     }
   }
 
-  private escapeMarkdownV2(text: string): string {
-    return text.replace(/[_*[\]()~`>#+-=|{}.!\\]/g, "\\$&");
+  private escapeMarkdownV2(text: string | undefined): string {
+    if (!text) return text as any; // or return '' if you prefer
+    return text.replace(/[_*[\]()~`>#+=|{}.!\\]/g, "\\$&");
   }
 
+  // Generate referral code for user
+  private async generateReferralCode(chatId: number) {
+    try {
+      const result = await UserController.getReferCode(chatId.toString());
+
+      if (result.success) {
+        const data = result.data;
+        const escapedEmail = this.escapeMarkdownV2(data?.generatedFor);
+        const escapedCode = this.escapeMarkdownV2(data?.shortCode);
+        const escapedInstructions = this.escapeMarkdownV2(data?.instructions);
+
+        let message = `🎉 *Your Referral Code Generated\\!*\n\n`;
+        message += `👤 *Generated for:* ${escapedEmail}\n`;
+        message += `🎫 *Short Code:* \`${escapedCode}\`\n`;
+        message += `⏰ *Expires in:* ${this.escapeMarkdownV2(
+          data?.expiresIn
+        )}\n\n`;
+        message += `💡 *Tip:* Share this code with friends to earn rewards\\!`;
+
+        await this.bot.sendMessage(chatId, message, {
+          parse_mode: "MarkdownV2",
+        });
+      } else {
+        await this.bot.sendMessage(
+          chatId,
+          "❌ Failed to generate referral code."
+        );
+      }
+    } catch (error) {
+      console.error("Generate referral code error:", error);
+      await this.bot.sendMessage(
+        chatId,
+        "❌ Failed to generate referral code."
+      );
+    }
+  }
+  // Verify referral code
+  private async verifyReferralCode(chatId: number, referralCode: string) {
+    try {
+      const result = await UserController.verifyReferCode(
+        chatId.toString(),
+        referralCode
+      );
+      console.log("decodeddecodeddecodeddecoded1", result);
+
+      if (result.data?.success) {
+        const data = result.data;
+
+        let message = `✅ *Referral Code Verified Successfully\\!* 🎉\n\n`;
+
+        await this.bot.sendMessage(chatId, message, {
+          parse_mode: "MarkdownV2",
+        });
+
+        return { message, result: true };
+      } else {
+        await this.bot.sendMessage(chatId, `❌ ${result.message}`);
+        return { message: result.message, result: false };
+      }
+    } catch (error) {
+      console.error("Verify referral code error:", error);
+      await this.bot.sendMessage(chatId, "❌ Failed to verify referral code.");
+      return { message: "Failed to verify referral code.", result: false };
+    }
+  }
+  // Get user's referral statistics
+  private async getReferralStats(chatId: number) {
+    try {
+      // You'll need to implement this in your ReferralController
+      // const result = await ReferralController.getReferralStats(chatId.toString());
+
+      // For now, sending a placeholder message
+      let message = `📊 *Your Referral Statistics*\n\n`;
+      message += `👥 *Total Referrals:* 0\n`;
+      message += `💰 *Total Earned:* 0 points\n`;
+      message += `🎯 *Current Streak:* 0 days\n\n`;
+      message += `💡 *Keep sharing your code to earn more\\!*`;
+
+      await this.bot.sendMessage(chatId, message, {
+        parse_mode: "MarkdownV2",
+      });
+    } catch (error) {
+      console.error("Get referral stats error:", error);
+      await this.bot.sendMessage(
+        chatId,
+        "❌ Failed to load referral statistics."
+      );
+    }
+  }
+
+  // public async handleReferralCommand(
+  //   chatId: number,
+  //   command: string,
+  //   args?: string[]
+  // ) {
+  //   switch (command) {
+  //     case "generate_referral":
+  //     case "get_referral_code":
+  //       await this.generateReferralCode(chatId);
+  //       break;
+
+  //     case "verify_referral":
+  //       if (args && args.length > 0) {
+  //         await this.verifyReferralCode(chatId, args[0]);
+  //       } else {
+  //         await this.bot.sendMessage(
+  //           chatId,
+  //           "❌ Please provide a referral code to verify."
+  //         );
+  //       }
+  //       break;
+
+  //     case "referral_stats":
+  //       await this.getReferralStats(chatId);
+  //       break;
+
+  //     default:
+  //       await this.bot.sendMessage(chatId, "❌ Unknown referral command.");
+  //   }
+  // }
   private async showGameMatches(chatId: number, gameName: string) {
     try {
       const result = await MatchController.getTodayMatchesByGame(gameName);
@@ -1355,6 +1599,18 @@ export class BotRoutes {
       this.bot.sendMessage(chatId, message, { parse_mode: "Markdown" });
     } catch (error) {
       this.bot.sendMessage(chatId, "Failed to load account details.");
+    }
+  }
+  // Helper method to create account and show dashboard
+  private async createAccountAndShowDashboard(chatId: number, session: any) {
+    try {
+      // Add terms and conditions message
+    } catch (error: any) {
+      await this.bot.sendMessage(
+        chatId,
+        error.message || "Failed to create account"
+      );
+      userSessions.delete(chatId);
     }
   }
 

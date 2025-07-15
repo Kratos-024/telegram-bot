@@ -1,3 +1,109 @@
+// generator client {
+//   provider = "prisma-client-js"
+//   binaryTargets = ["native", "debian-openssl-3.0.x"]
+//   output = "../../../generated/prisma"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = "postgresql://postgres.cqhgzsmhwxraqgneltle:L89XwlafDkSapl2M@aws-0-us-east-2.pooler.supabase.com:6543/postgres"
+// }
+
+// model User {
+//   id        BigInt    @id @default(autoincrement())
+//   email     String    @unique
+//   password  String
+//   balance   Float     @default(0)
+//   createdAt DateTime  @default(now())
+//   chatId    String?   @unique
+
+//   purchases Purchase[]
+//   matchEntries MatchEntry[]
+//   matchHistory MatchHistory[]
+// }
+
+// model Match {
+//   id                 Int       @id @default(autoincrement())
+//   imageFileId        String?
+//   gameId             String?
+//   matchPassword      String?
+//   gameName           String
+//   matchName          String
+//   netPrizePool       Float    @default(0)         // Changed from Int to Float
+//   price              Float                         // Entry fees
+//   perKillPoint       Float     @default(0)         // Per kill reward
+//   firstPrize         Float     @default(0)
+//   secondPrize        Float     @default(0)
+//   thirdPrize         Float     @default(0)
+//   entryFees          Float                         // Entry fees for joining
+//   totalSeats         Int      
+//   time               String
+//   date               DateTime  @default(now())
+//   status             String    @default("upcoming") // upcoming, ongoing, completed, cancelled
+//   isDeleted          Boolean   @default(false)      // Soft delete flag
+
+//   purchases Purchase[]
+//   matchEntries MatchEntry[]
+// }
+
+// model Purchase {
+//   id        Int      @id @default(autoincrement())
+//   userId    BigInt
+//   matchId   Int
+//   createdAt DateTime @default(now())  
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   match     Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+//   @@unique([userId, matchId])
+// }
+
+// model MatchEntry {
+//   id        Int      @id @default(autoincrement())
+//   userId    BigInt
+//   matchId   Int
+//   amountPaid Float
+//   createdAt DateTime @default(now())
+  
+//   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   match     Match    @relation(fields: [matchId], references: [id], onDelete: Cascade)
+
+//   @@unique([userId, matchId])
+// }
+
+// model MatchHistory {
+//   id                 Int       @id @default(autoincrement())
+//   userId             BigInt
+//   originalMatchId    Int       // Reference to original match
+//   gameName           String
+//   matchName          String
+//   amountPaid         Float
+//   prizeWon           Float     @default(0)
+//   killCount          Int       @default(0)
+//   position           Int?      // Final position in match (1st, 2nd, etc.)
+//   type               String    // "Purchase" or "Entry"
+//   status             String    @default("participated") // "participated", "won", "lost", "cancelled"
+//   matchDate          DateTime
+//   completedAt        DateTime?
+//   createdAt          DateTime  @default(now())
+  
+//   // Additional match details preserved
+//   entryFees          Float
+//   totalSeats         Int
+//   netPrizePool       Float
+//   perKillPoint       Float
+//   firstPrize         Float
+//   secondPrize        Float
+//   thirdPrize         Float
+//   matchTime          String
+  
+//   user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+//   @@index([userId])
+//   @@index([originalMatchId])
+//   @@index([matchDate])
+// }
+
+
 generator client {
   provider = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
@@ -6,7 +112,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres.cqhgzsmhwxraqgneltle:L89XwlafDkSapl2M@aws-0-us-east-2.pooler.supabase.com:6543/postgres"
+  
+  url      = "postgresql://postgres.pupqulqbjkppngrmhwfm:cS70GBoSVVoKTt3j@aws-0-us-east-2.pooler.supabase.com:5432/postgres"
 }
 
 model User {
@@ -16,10 +123,22 @@ model User {
   balance   Float     @default(0)
   createdAt DateTime  @default(now())
   chatId    String?   @unique
+  
+  // Referral system fields - ALL OPTIONAL
+  referredBy     BigInt?   // ID of user who referred this user (optional)
 
+  // Relations
   purchases Purchase[]
   matchEntries MatchEntry[]
   matchHistory MatchHistory[]
+  
+  // Referral relations - both optional
+  referrals      Referral[] @relation("UserReferrals")      // People this user referred
+  referredUsers  Referral[] @relation("UserReferredBy")     // This user was referred by someone
+  
+  // Optional relation to referrer
+  referrer       User?      @relation("UserReferrerRelation", fields: [referredBy], references: [id], onDelete: SetNull)
+  referees       User[]     @relation("UserReferrerRelation") // People referred by this user
 }
 
 model Match {
@@ -101,4 +220,28 @@ model MatchHistory {
   @@index([userId])
   @@index([originalMatchId])
   @@index([matchDate])
+}
+
+// NEW: Referral system model
+model Referral {
+  id          Int      @id @default(autoincrement())
+  referrerId  BigInt   // User who referred (the one who shared the code)
+  refereeId   BigInt   // User who was referred (the one who used the code)
+  createdAt   DateTime @default(now())
+  
+  // Bonus tracking (optional)
+  referrerBonus Float?  @default(0)  // Bonus given to referrer
+  refereeBonus  Float?  @default(0)  // Bonus given to referee
+  
+  // Relations
+  referrer    User     @relation("UserReferrals", fields: [referrerId], references: [id], onDelete: Cascade)
+  referee     User     @relation("UserReferredBy", fields: [refereeId], references: [id], onDelete: Cascade)
+  
+  // Ensure one user can't refer the same person twice
+  @@unique([referrerId, refereeId])
+  
+  // Indexes for better performance
+  @@index([referrerId])
+  @@index([refereeId])
+  @@index([createdAt])
 }

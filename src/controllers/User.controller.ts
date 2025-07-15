@@ -1,338 +1,6 @@
-// // src/controllers/User.controller.ts
+import jwt from "jsonwebtoken";
+import crypto from "crypto";
 
-// import TelegramBot from "node-telegram-bot-api";
-// import { ApiError } from "../utils/ApiError";
-// import { ApiResponse } from "../utils/ApiResponse";
-// import prisma from "../db";
-
-// export class UserController {
-//   static async createAccount(
-//     bot: TelegramBot,
-//     chatId: number,
-//     email: string,
-//     password: string
-//   ) {
-//     try {
-//       const existingUser = await prisma.user.findUnique({
-//         where: { email },
-//       });
-
-//       if (existingUser) {
-//         console.log("User already exists with this email");
-//         throw new ApiError(400, "User already exists with this email");
-//       }
-
-//       // Check if there's an existing user with this chatId
-//       const existingChatId = await prisma.user.findUnique({
-//         where: { chatId: chatId.toString() },
-//       });
-
-//       if (existingChatId) {
-//         // Instead of throwing an error, delete the existing user record
-//         // This handles the case where user logged out but wants to create a new account
-//         await prisma.user.delete({
-//           where: { chatId: chatId.toString() },
-//         });
-//         console.log(`Deleted existing user record for chatId: ${chatId}`);
-//       }
-
-//       const user = await prisma.user.create({
-//         data: {
-//           email,
-//           password,
-//           chatId: chatId.toString(),
-//           balance: 0, // Initialize with 0 balance
-//         },
-//       });
-
-//       return new ApiResponse(201, "Account created successfully", user);
-//     } catch (error: any) {
-//       console.error("Create account error:", error.message);
-//       if (error instanceof ApiError) {
-//         throw error;
-//       }
-//       throw new ApiError(500, "Failed to create account");
-//     }
-//   }
-
-//   static async login(
-//     bot: TelegramBot,
-//     chatId: number,
-//     email: string,
-//     password: string
-//   ) {
-//     try {
-//       const user = await prisma.user.findUnique({
-//         where: { email },
-//       });
-
-//       if (!user || user.password !== password) {
-//         throw new ApiError(401, "Invalid email or password");
-//       }
-
-//       // Check if another user is using this chatId
-//       const existingChatUser = await prisma.user.findUnique({
-//         where: { chatId: chatId.toString() },
-//       });
-
-//       if (existingChatUser && existingChatUser.id !== user.id) {
-//         // Delete the existing chat user record to allow login
-//         await prisma.user.delete({
-//           where: { chatId: chatId.toString() },
-//         });
-//         console.log(`Deleted existing chat user for login: ${chatId}`);
-//       }
-
-//       // Update user's chatId to current chatId
-//       await prisma.user.update({
-//         where: { id: user.id },
-//         data: { chatId: chatId.toString() },
-//       });
-
-//       return new ApiResponse(200, "Login successful", user);
-//     } catch (error: any) {
-//       console.error("Login error:", error);
-//       if (error instanceof ApiError) {
-//         throw error;
-//       }
-//       throw new ApiError(500, "Login failed");
-//     }
-//   }
-
-//   static async logout(chatId: string) {
-//     try {
-//       const user = await prisma.user.findUnique({
-//         where: { chatId },
-//       });
-
-//       if (user) {
-//         await prisma.user.update({
-//           where: { chatId },
-//           data: { chatId: "" },
-//         });
-//         console.log(`User logged out successfully: ${chatId}`);
-//       }
-
-//       return new ApiResponse(200, "Logged out successfully", null);
-//     } catch (error: any) {
-//       console.error("Logout error:", error);
-//       throw new ApiError(500, "Logout failed");
-//     }
-//   }
-
-//   // FIXED: Updated to properly handle Prisma relations and removed non-existent fields
-//   static async getMyAccount(chatId: string) {
-//     try {
-//       const user = await prisma.user.findUnique({
-//         where: { chatId },
-//         include: {
-//           purchases: {
-//             include: {
-//               match: true,
-//             },
-//             // Since Purchase model doesn't have createdAt, we'll order by id instead
-//             orderBy: {
-//               id: "desc",
-//             },
-//           },
-//         },
-//       });
-
-//       if (!user) {
-//         throw new ApiError(404, "User not found");
-//       }
-
-//       const matchHistory = user.purchases.map((purchase, index) => ({
-//         serial: index + 1,
-//         time: purchase.match.time,
-//         gameName: purchase.match.gameName,
-//         matchName: purchase.match.matchName,
-//         buy: purchase.match.price,
-//       }));
-
-//       return new ApiResponse(200, "Account details", {
-//         email: user.email,
-//         balance: user.balance || 0,
-//         matchHistory,
-//       });
-//     } catch (error: any) {
-//       console.error("Get my account error:", error);
-//       if (error instanceof ApiError) {
-//         throw error;
-//       }
-//       throw new ApiError(500, "Failed to get account details");
-//     }
-//   }
-
-//   // Helper method to check if user is logged in
-//   static async isUserLoggedIn(chatId: string): Promise<boolean> {
-//     try {
-//       const user = await prisma.user.findUnique({
-//         where: { chatId },
-//       });
-//       return !!user;
-//     } catch (error) {
-//       return false;
-//     }
-//   }
-
-//   // Get user by chatId
-//   static async getUserByChatId(chatId: string) {
-//     try {
-//       const user = await prisma.user.findUnique({
-//         where: { chatId },
-//         select: {
-//           id: true,
-//           email: true,
-//           balance: true,
-//           chatId: true,
-//         },
-//       });
-
-//       if (!user) {
-//         throw new ApiError(404, "User not found");
-//       }
-
-//       return new ApiResponse(200, "User found", user);
-//     } catch (error: any) {
-//       console.error("Get user by chatId error:", error);
-//       if (error instanceof ApiError) {
-//         throw error;
-//       }
-//       throw new ApiError(500, "Failed to get user");
-//     }
-//   }
-
-//   // Update user balance (helper method)
-//   static async updateBalance(
-//     chatId: string,
-//     amount: number,
-//     operation: "add" | "subtract" | "set"
-//   ) {
-//     try {
-//       const user = await prisma.user.findUnique({
-//         where: { chatId },
-//       });
-
-//       if (!user) {
-//         throw new ApiError(404, "User not found");
-//       }
-
-//       let newBalance: number;
-//       switch (operation) {
-//         case "add":
-//           newBalance = (user.balance || 0) + amount;
-//           break;
-//         case "subtract":
-//           newBalance = (user.balance || 0) - amount;
-//           break;
-//         case "set":
-//           newBalance = amount;
-//           break;
-//         default:
-//           throw new ApiError(400, "Invalid operation");
-//       }
-
-//       // Ensure balance doesn't go negative
-//       if (newBalance < 0) {
-//         throw new ApiError(400, "Insufficient balance");
-//       }
-
-//       const updatedUser = await prisma.user.update({
-//         where: { chatId },
-//         data: { balance: newBalance },
-//         select: {
-//           id: true,
-//           email: true,
-//           balance: true,
-//         },
-//       });
-
-//       return new ApiResponse(200, "Balance updated successfully", updatedUser);
-//     } catch (error: any) {
-//       console.error("Update balance error:", error);
-//       if (error instanceof ApiError) {
-//         throw error;
-//       }
-//       throw new ApiError(500, "Failed to update balance");
-//     }
-//   }
-
-//   // NEW: Purchase a match
-//   static async purchaseMatch(chatId: string, matchId: number) {
-//     try {
-//       const user = await prisma.user.findUnique({
-//         where: { chatId },
-//       });
-
-//       if (!user) {
-//         throw new ApiError(404, "User not found");
-//       }
-
-//       const match = await prisma.match.findUnique({
-//         where: { id: matchId },
-//       });
-
-//       if (!match) {
-//         throw new ApiError(404, "Match not found");
-//       }
-
-//       // Check if user has sufficient balance
-//       if (user.balance < match.price) {
-//         throw new ApiError(400, "Insufficient balance");
-//       }
-
-//       // Check if user already purchased this match
-//       const existingPurchase = await prisma.purchase.findUnique({
-//         where: {
-//           userId_matchId: {
-//             userId: user.id,
-//             matchId: matchId,
-//           },
-//         },
-//       });
-
-//       if (existingPurchase) {
-//         throw new ApiError(400, "You have already purchased this match");
-//       }
-
-//       // Start transaction to ensure data consistency
-//       const result = await prisma.$transaction(async (tx) => {
-//         // Deduct balance
-//         await tx.user.update({
-//           where: { id: user.id },
-//           data: { balance: user.balance - match.price },
-//         });
-
-//         // Create purchase record
-//         const purchase = await tx.purchase.create({
-//           data: {
-//             userId: user.id,
-//             matchId: matchId,
-//           },
-//         });
-
-//         return purchase;
-//       });
-
-//       return new ApiResponse(200, "Match purchased successfully", {
-//         match: {
-//           name: match.matchName,
-//           gameName: match.gameName,
-//           price: match.price,
-//           time: match.time,
-//         },
-//         remainingBalance: user.balance - match.price,
-//       });
-//     } catch (error: any) {
-//       console.error("Purchase match error:", error);
-//       if (error instanceof ApiError) {
-//         throw error;
-//       }
-//       throw new ApiError(500, "Failed to purchase match");
-//     }
-//   }
-// }
 // src/controllers/User.controller.ts
 import TelegramBot from "node-telegram-bot-api";
 import { ApiError } from "../utils/ApiError";
@@ -386,70 +54,6 @@ export class UserController {
     }
   }
 
-  // static async login(
-  //   bot: TelegramBot,
-  //   chatId: number,
-  //   email: string,
-  //   password: string
-  // ) {
-  //   try {
-  //     const user = await prisma.user.findUnique({
-  //       where: { email },
-  //     });
-
-  //     if (!user || user.password !== password) {
-  //       throw new ApiError(401, "Invalid email or password");
-  //     }
-
-  //     // Check if another user is using this chatId
-  //     const existingChatUser = await prisma.user.findUnique({
-  //       where: { chatId: chatId.toString() },
-  //     });
-
-  //     if (existingChatUser && existingChatUser.id !== user.id) {
-  //       // Delete the existing chat user record to allow login
-  //       await prisma.user.delete({
-  //         where: { chatId: chatId.toString() },
-  //       });
-  //       console.log(`Deleted existing chat user for login: ${chatId}`);
-  //     }
-
-  //     // Update user's chatId to current chatId
-  //     await prisma.user.update({
-  //       where: { id: user.id },
-  //       data: { chatId: chatId.toString() },
-  //     });
-
-  //     return new ApiResponse(200, "Login successful", user);
-  //   } catch (error: any) {
-  //     console.error("Login error:", error);
-  //     if (error instanceof ApiError) {
-  //       throw error;
-  //     }
-  //     throw new ApiError(500, "Login failed");
-  //   }
-  // }
-
-  // static async logout(chatId: string) {
-  //   try {
-  //     const user = await prisma.user.findUnique({
-  //       where: { chatId },
-  //     });
-
-  //     if (user) {
-  //       await prisma.user.update({
-  //         where: { chatId },
-  //         data: { chatId: "" },
-  //       });
-  //       console.log(`User logged out successfully: ${chatId}`);
-  //     }
-
-  //     return new ApiResponse(200, "Logged out successfully", null);
-  //   } catch (error: any) {
-  //     console.error("Logout error:", error);
-  //     throw new ApiError(500, "Logout failed");
-  //   }
-  // }
   static async login(
     bot: TelegramBot,
     chatId: number,
@@ -512,78 +116,6 @@ export class UserController {
       throw new ApiError(500, "Logout failed");
     }
   }
-  // static async getMyAccount(chatId: string) {
-  //   try {
-  //     const user = await prisma.user.findUnique({
-  //       where: { chatId },
-  //       include: {
-  //         purchases: {
-  //           include: {
-  //             match: true,
-  //           },
-  //           orderBy: {
-  //             id: "desc",
-  //           },
-  //         },
-  //         matchEntries: {
-  //           include: {
-  //             match: true,
-  //           },
-  //           orderBy: {
-  //             id: "desc",
-  //           },
-  //         },
-  //       },
-  //     });
-
-  //     if (!user) {
-  //       throw new ApiError(404, "User not found");
-  //     }
-
-  //     // Combine both purchases and match entries for history
-  //     const allHistory = [
-  //       ...user.purchases.map((purchase, index) => ({
-  //         serial: index + 1,
-  //         time: purchase.match.time,
-  //         gameName: purchase.match.gameName,
-  //         matchName: purchase.match.matchName,
-  //         type: "Purchase",
-  //         amount: purchase.match.price,
-  //         createdAt: purchase.createdAt,
-  //       })),
-  //       ...user.matchEntries.map((entry) => ({
-  //         serial: 0, // Will be updated after sorting
-  //         time: entry.match.time,
-  //         gameName: entry.match.gameName,
-  //         matchName: entry.match.matchName,
-  //         type: "Entry",
-  //         amount: entry.amountPaid,
-  //         createdAt: entry.createdAt,
-  //       })),
-  //     ];
-
-  //     // Sort by creation time and update serial numbers
-  //     allHistory.sort(
-  //       (a, b) =>
-  //         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-  //     );
-  //     allHistory.forEach((item, index) => {
-  //       item.serial = index + 1;
-  //     });
-
-  //     return new ApiResponse(200, "Account details", {
-  //       email: user.email,
-  //       balance: user.balance || 0,
-  //       matchHistory: allHistory,
-  //     });
-  //   } catch (error: any) {
-  //     console.error("Get my account error:", error);
-  //     if (error instanceof ApiError) {
-  //       throw error;
-  //     }
-  //     throw new ApiError(500, "Failed to get account details");
-  //   }
-  // }
 
   // Helper method to check if user is logged in
   static async getMyAccount(chatId: string) {
@@ -1116,6 +648,276 @@ export class UserController {
         throw error;
       }
       throw new ApiError(500, "Failed to get users table");
+    }
+  }
+  // Updated referral functions with better safety checks
+
+  // Add these functions to your UserController class:
+
+  static async getAllReferrals() {
+    try {
+      const referrals = await prisma.referral.findMany({
+        include: {
+          referrer: {
+            select: {
+              email: true,
+              chatId: true,
+            },
+          },
+          referee: {
+            select: {
+              email: true,
+              chatId: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      const referralStats = {
+        totalReferrals: referrals.length,
+        totalBonusGiven: referrals.reduce(
+          (sum, ref) =>
+            sum + (ref.referrerBonus || 0) + (ref.refereeBonus || 0),
+          0
+        ),
+        referrals: referrals.map((ref, index) => ({
+          serial: index + 1,
+          referrerEmail: ref.referrer.email,
+          refereeEmail: ref.referee.email,
+          referredAt: ref.createdAt,
+          referrerBonus: ref.referrerBonus || 0,
+          refereeBonus: ref.refereeBonus || 0,
+        })),
+      };
+
+      return new ApiResponse(
+        200,
+        "All referrals retrieved successfully",
+        referralStats
+      );
+    } catch (error: any) {
+      console.error("Get all referrals error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to get all referrals");
+    }
+  }
+
+  static async verifyReferCode(refereeChatId: string, referralCode: string) {
+    try {
+      // First, verify the JWT token
+      const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-here";
+      console.log("decodeddecodeddecodeddecoded", JWT_SECRET);
+
+      let decoded;
+      try {
+        decoded = jwt.verify(referralCode, JWT_SECRET) as any;
+        console.log("decodeddecodeddecodeddecoded2", decoded);
+      } catch (jwtError) {
+        return new ApiResponse(400, "Invalid or expired referral code", {
+          success: false,
+        });
+      }
+      console.log("decodeddecodeddecodeddecoded2", decoded);
+
+      // Check if token is of referral type
+      if (decoded.type !== "referral") {
+        return new ApiResponse(400, "Invalid referral code type", {
+          success: false,
+        });
+      }
+
+      // Find the referrer user (the one who generated the code)
+      const referrerUser = await prisma.user.findUnique({
+        where: { id: BigInt(decoded.userId) },
+        select: {
+          id: true,
+          email: true,
+          chatId: true,
+        },
+      });
+
+      if (!referrerUser) {
+        return new ApiResponse(404, "Referrer user not found", {
+          success: false,
+        });
+      }
+
+      // Check if referee (the one using the code) exists
+      const refereeUser = await prisma.user.findUnique({
+        where: { chatId: refereeChatId },
+        select: {
+          id: true,
+          email: true,
+          referredBy: true,
+        },
+      });
+
+      if (!refereeUser) {
+        return new ApiResponse(
+          404,
+          "Please create your account first before using referral code",
+          {
+            success: false,
+          }
+        );
+      }
+
+      // Check if referee is already referred by someone
+      if (refereeUser.referredBy !== null) {
+        return new ApiResponse(400, "You have already used a referral code", {
+          success: false,
+        });
+      }
+
+      // Check if user is trying to refer themselves
+      if (referrerUser.id === refereeUser.id) {
+        return new ApiResponse(400, "You cannot refer yourself", {
+          success: false,
+        });
+      }
+
+      // Check if this referral relationship already exists
+      const existingReferral = await prisma.referral.findUnique({
+        where: {
+          referrerId_refereeId: {
+            referrerId: referrerUser.id,
+            refereeId: refereeUser.id,
+          },
+        },
+      });
+
+      if (existingReferral) {
+        return new ApiResponse(
+          400,
+          "This referral relationship already exists",
+          {
+            success: false,
+          }
+        );
+      }
+
+      // Create the referral relationship in a transaction
+      const result = await prisma.$transaction(async (tx) => {
+        // Update the referee's referredBy field
+        const updatedReferee = await tx.user.update({
+          where: { id: refereeUser.id },
+          data: { referredBy: referrerUser.id },
+          select: {
+            id: true,
+            email: true,
+            referredBy: true,
+          },
+        });
+
+        // Create the referral record
+        const referralRecord = await tx.referral.create({
+          data: {
+            referrerId: referrerUser.id,
+            refereeId: refereeUser.id,
+            referrerBonus: 0, // Set to 0 as per requirement
+            refereeBonus: 0, // Set to 0 as per requirement
+          },
+          select: {
+            id: true,
+            referrerId: true,
+            refereeId: true,
+            referrerBonus: true,
+            refereeBonus: true,
+            createdAt: true,
+          },
+        });
+
+        return {
+          updatedReferee,
+          referralRecord,
+        };
+      });
+
+      return new ApiResponse(
+        200,
+        "Referral code verified and applied successfully!",
+        {
+          success: true,
+          referral: {
+            referrerEmail: referrerUser.email,
+            refereeEmail: refereeUser.email,
+            referrerBonus: result.referralRecord.referrerBonus,
+            refereeBonus: result.referralRecord.refereeBonus,
+            createdAt: result.referralRecord.createdAt,
+          },
+          message:
+            "Welcome to the community! Your referral bonus will be credited soon.",
+        }
+      );
+    } catch (error: any) {
+      console.error("Verify referral code error:", error);
+
+      if (error instanceof ApiError) {
+        throw error;
+      }
+
+      // Handle Prisma unique constraint violations
+      if (error.code === "P2002") {
+        return new ApiResponse(400, "Referral relationship already exists", {
+          success: false,
+        });
+      }
+
+      throw new ApiError(500, "Failed to verify referral code");
+    }
+  }
+  static async getReferCode(chatId: string) {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { chatId },
+        select: {
+          id: true,
+          email: true,
+        },
+      });
+
+      if (!user) {
+        throw new ApiError(404, "User not found");
+      }
+
+      // Create a secret key for JWT (you should store this in environment variables)
+      const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-here";
+
+      // Generate referral token with user ID and expiration
+      const referralToken = jwt.sign(
+        {
+          userId: user.id.toString(),
+          email: user.email,
+          type: "referral",
+          timestamp: Date.now(),
+        },
+        JWT_SECRET,
+        {
+          expiresIn: "30d", // Token expires in 30 days
+        }
+      );
+
+      // Create a shorter, more user-friendly referral code
+
+      return new ApiResponse(200, "Referral code generated successfully", {
+        referralCode: referralToken,
+        shortCode: referralToken, // Alternative shorter code
+        generatedFor: user.email,
+        expiresIn: "30 days",
+        instructions:
+          "Share this code with friends. They can use it during registration or anytime to get benefits!",
+      });
+    } catch (error: any) {
+      console.error("Generate referral code error:", error);
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(500, "Failed to generate referral code");
     }
   }
 

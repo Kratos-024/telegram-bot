@@ -38,6 +38,11 @@ export type MatchEntry = $Result.DefaultSelection<Prisma.$MatchEntryPayload>
  * 
  */
 export type MatchHistory = $Result.DefaultSelection<Prisma.$MatchHistoryPayload>
+/**
+ * Model Referral
+ * 
+ */
+export type Referral = $Result.DefaultSelection<Prisma.$ReferralPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -213,6 +218,16 @@ export class PrismaClient<
     * ```
     */
   get matchHistory(): Prisma.MatchHistoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.referral`: Exposes CRUD operations for the **Referral** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Referrals
+    * const referrals = await prisma.referral.findMany()
+    * ```
+    */
+  get referral(): Prisma.ReferralDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -657,7 +672,8 @@ export namespace Prisma {
     Match: 'Match',
     Purchase: 'Purchase',
     MatchEntry: 'MatchEntry',
-    MatchHistory: 'MatchHistory'
+    MatchHistory: 'MatchHistory',
+    Referral: 'Referral'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -676,7 +692,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "match" | "purchase" | "matchEntry" | "matchHistory"
+      modelProps: "user" | "match" | "purchase" | "matchEntry" | "matchHistory" | "referral"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1050,6 +1066,80 @@ export namespace Prisma {
           }
         }
       }
+      Referral: {
+        payload: Prisma.$ReferralPayload<ExtArgs>
+        fields: Prisma.ReferralFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ReferralFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ReferralFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          findFirst: {
+            args: Prisma.ReferralFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ReferralFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          findMany: {
+            args: Prisma.ReferralFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>[]
+          }
+          create: {
+            args: Prisma.ReferralCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          createMany: {
+            args: Prisma.ReferralCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ReferralCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>[]
+          }
+          delete: {
+            args: Prisma.ReferralDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          update: {
+            args: Prisma.ReferralUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          deleteMany: {
+            args: Prisma.ReferralDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ReferralUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ReferralUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>[]
+          }
+          upsert: {
+            args: Prisma.ReferralUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ReferralPayload>
+          }
+          aggregate: {
+            args: Prisma.ReferralAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateReferral>
+          }
+          groupBy: {
+            args: Prisma.ReferralGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ReferralGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ReferralCountArgs<ExtArgs>
+            result: $Utils.Optional<ReferralCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1139,6 +1229,7 @@ export namespace Prisma {
     purchase?: PurchaseOmit
     matchEntry?: MatchEntryOmit
     matchHistory?: MatchHistoryOmit
+    referral?: ReferralOmit
   }
 
   /* Types for Logging */
@@ -1236,12 +1327,18 @@ export namespace Prisma {
     purchases: number
     matchEntries: number
     matchHistory: number
+    referrals: number
+    referredUsers: number
+    referees: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | UserCountOutputTypeCountPurchasesArgs
     matchEntries?: boolean | UserCountOutputTypeCountMatchEntriesArgs
     matchHistory?: boolean | UserCountOutputTypeCountMatchHistoryArgs
+    referrals?: boolean | UserCountOutputTypeCountReferralsArgs
+    referredUsers?: boolean | UserCountOutputTypeCountReferredUsersArgs
+    referees?: boolean | UserCountOutputTypeCountRefereesArgs
   }
 
   // Custom InputTypes
@@ -1274,6 +1371,27 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountMatchHistoryArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MatchHistoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReferralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReferralWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountReferredUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReferralWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountRefereesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
   }
 
 
@@ -1336,11 +1454,13 @@ export namespace Prisma {
   export type UserAvgAggregateOutputType = {
     id: number | null
     balance: number | null
+    referredBy: number | null
   }
 
   export type UserSumAggregateOutputType = {
     id: bigint | null
     balance: number | null
+    referredBy: bigint | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -1350,6 +1470,7 @@ export namespace Prisma {
     balance: number | null
     createdAt: Date | null
     chatId: string | null
+    referredBy: bigint | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1359,6 +1480,7 @@ export namespace Prisma {
     balance: number | null
     createdAt: Date | null
     chatId: string | null
+    referredBy: bigint | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1368,6 +1490,7 @@ export namespace Prisma {
     balance: number
     createdAt: number
     chatId: number
+    referredBy: number
     _all: number
   }
 
@@ -1375,11 +1498,13 @@ export namespace Prisma {
   export type UserAvgAggregateInputType = {
     id?: true
     balance?: true
+    referredBy?: true
   }
 
   export type UserSumAggregateInputType = {
     id?: true
     balance?: true
+    referredBy?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -1389,6 +1514,7 @@ export namespace Prisma {
     balance?: true
     createdAt?: true
     chatId?: true
+    referredBy?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1398,6 +1524,7 @@ export namespace Prisma {
     balance?: true
     createdAt?: true
     chatId?: true
+    referredBy?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1407,6 +1534,7 @@ export namespace Prisma {
     balance?: true
     createdAt?: true
     chatId?: true
+    referredBy?: true
     _all?: true
   }
 
@@ -1503,6 +1631,7 @@ export namespace Prisma {
     balance: number
     createdAt: Date
     chatId: string | null
+    referredBy: bigint | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -1531,9 +1660,14 @@ export namespace Prisma {
     balance?: boolean
     createdAt?: boolean
     chatId?: boolean
+    referredBy?: boolean
     purchases?: boolean | User$purchasesArgs<ExtArgs>
     matchEntries?: boolean | User$matchEntriesArgs<ExtArgs>
     matchHistory?: boolean | User$matchHistoryArgs<ExtArgs>
+    referrals?: boolean | User$referralsArgs<ExtArgs>
+    referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
+    referrer?: boolean | User$referrerArgs<ExtArgs>
+    referees?: boolean | User$refereesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1544,6 +1678,8 @@ export namespace Prisma {
     balance?: boolean
     createdAt?: boolean
     chatId?: boolean
+    referredBy?: boolean
+    referrer?: boolean | User$referrerArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -1553,6 +1689,8 @@ export namespace Prisma {
     balance?: boolean
     createdAt?: boolean
     chatId?: boolean
+    referredBy?: boolean
+    referrer?: boolean | User$referrerArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -1562,17 +1700,26 @@ export namespace Prisma {
     balance?: boolean
     createdAt?: boolean
     chatId?: boolean
+    referredBy?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "balance" | "createdAt" | "chatId", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "balance" | "createdAt" | "chatId" | "referredBy", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | User$purchasesArgs<ExtArgs>
     matchEntries?: boolean | User$matchEntriesArgs<ExtArgs>
     matchHistory?: boolean | User$matchHistoryArgs<ExtArgs>
+    referrals?: boolean | User$referralsArgs<ExtArgs>
+    referredUsers?: boolean | User$referredUsersArgs<ExtArgs>
+    referrer?: boolean | User$referrerArgs<ExtArgs>
+    referees?: boolean | User$refereesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referrer?: boolean | User$referrerArgs<ExtArgs>
+  }
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referrer?: boolean | User$referrerArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -1580,6 +1727,10 @@ export namespace Prisma {
       purchases: Prisma.$PurchasePayload<ExtArgs>[]
       matchEntries: Prisma.$MatchEntryPayload<ExtArgs>[]
       matchHistory: Prisma.$MatchHistoryPayload<ExtArgs>[]
+      referrals: Prisma.$ReferralPayload<ExtArgs>[]
+      referredUsers: Prisma.$ReferralPayload<ExtArgs>[]
+      referrer: Prisma.$UserPayload<ExtArgs> | null
+      referees: Prisma.$UserPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: bigint
@@ -1588,6 +1739,7 @@ export namespace Prisma {
       balance: number
       createdAt: Date
       chatId: string | null
+      referredBy: bigint | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -1985,6 +2137,10 @@ export namespace Prisma {
     purchases<T extends User$purchasesArgs<ExtArgs> = {}>(args?: Subset<T, User$purchasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     matchEntries<T extends User$matchEntriesArgs<ExtArgs> = {}>(args?: Subset<T, User$matchEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     matchHistory<T extends User$matchHistoryArgs<ExtArgs> = {}>(args?: Subset<T, User$matchHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MatchHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    referrals<T extends User$referralsArgs<ExtArgs> = {}>(args?: Subset<T, User$referralsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    referredUsers<T extends User$referredUsersArgs<ExtArgs> = {}>(args?: Subset<T, User$referredUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    referrer<T extends User$referrerArgs<ExtArgs> = {}>(args?: Subset<T, User$referrerArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    referees<T extends User$refereesArgs<ExtArgs> = {}>(args?: Subset<T, User$refereesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2020,6 +2176,7 @@ export namespace Prisma {
     readonly balance: FieldRef<"User", 'Float'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly chatId: FieldRef<"User", 'String'>
+    readonly referredBy: FieldRef<"User", 'BigInt'>
   }
     
 
@@ -2269,6 +2426,10 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2339,6 +2500,10 @@ export namespace Prisma {
      * Limit how many Users to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2477,6 +2642,97 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MatchHistoryScalarFieldEnum | MatchHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * User.referrals
+   */
+  export type User$referralsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    where?: ReferralWhereInput
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    cursor?: ReferralWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
+  }
+
+  /**
+   * User.referredUsers
+   */
+  export type User$referredUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    where?: ReferralWhereInput
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    cursor?: ReferralWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
+  }
+
+  /**
+   * User.referrer
+   */
+  export type User$referrerArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
+   * User.referees
+   */
+  export type User$refereesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
   /**
@@ -7404,6 +7660,1135 @@ export namespace Prisma {
 
 
   /**
+   * Model Referral
+   */
+
+  export type AggregateReferral = {
+    _count: ReferralCountAggregateOutputType | null
+    _avg: ReferralAvgAggregateOutputType | null
+    _sum: ReferralSumAggregateOutputType | null
+    _min: ReferralMinAggregateOutputType | null
+    _max: ReferralMaxAggregateOutputType | null
+  }
+
+  export type ReferralAvgAggregateOutputType = {
+    id: number | null
+    referrerId: number | null
+    refereeId: number | null
+    referrerBonus: number | null
+    refereeBonus: number | null
+  }
+
+  export type ReferralSumAggregateOutputType = {
+    id: number | null
+    referrerId: bigint | null
+    refereeId: bigint | null
+    referrerBonus: number | null
+    refereeBonus: number | null
+  }
+
+  export type ReferralMinAggregateOutputType = {
+    id: number | null
+    referrerId: bigint | null
+    refereeId: bigint | null
+    createdAt: Date | null
+    referrerBonus: number | null
+    refereeBonus: number | null
+  }
+
+  export type ReferralMaxAggregateOutputType = {
+    id: number | null
+    referrerId: bigint | null
+    refereeId: bigint | null
+    createdAt: Date | null
+    referrerBonus: number | null
+    refereeBonus: number | null
+  }
+
+  export type ReferralCountAggregateOutputType = {
+    id: number
+    referrerId: number
+    refereeId: number
+    createdAt: number
+    referrerBonus: number
+    refereeBonus: number
+    _all: number
+  }
+
+
+  export type ReferralAvgAggregateInputType = {
+    id?: true
+    referrerId?: true
+    refereeId?: true
+    referrerBonus?: true
+    refereeBonus?: true
+  }
+
+  export type ReferralSumAggregateInputType = {
+    id?: true
+    referrerId?: true
+    refereeId?: true
+    referrerBonus?: true
+    refereeBonus?: true
+  }
+
+  export type ReferralMinAggregateInputType = {
+    id?: true
+    referrerId?: true
+    refereeId?: true
+    createdAt?: true
+    referrerBonus?: true
+    refereeBonus?: true
+  }
+
+  export type ReferralMaxAggregateInputType = {
+    id?: true
+    referrerId?: true
+    refereeId?: true
+    createdAt?: true
+    referrerBonus?: true
+    refereeBonus?: true
+  }
+
+  export type ReferralCountAggregateInputType = {
+    id?: true
+    referrerId?: true
+    refereeId?: true
+    createdAt?: true
+    referrerBonus?: true
+    refereeBonus?: true
+    _all?: true
+  }
+
+  export type ReferralAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Referral to aggregate.
+     */
+    where?: ReferralWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Referrals to fetch.
+     */
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ReferralWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Referrals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Referrals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Referrals
+    **/
+    _count?: true | ReferralCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ReferralAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ReferralSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ReferralMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ReferralMaxAggregateInputType
+  }
+
+  export type GetReferralAggregateType<T extends ReferralAggregateArgs> = {
+        [P in keyof T & keyof AggregateReferral]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateReferral[P]>
+      : GetScalarType<T[P], AggregateReferral[P]>
+  }
+
+
+
+
+  export type ReferralGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ReferralWhereInput
+    orderBy?: ReferralOrderByWithAggregationInput | ReferralOrderByWithAggregationInput[]
+    by: ReferralScalarFieldEnum[] | ReferralScalarFieldEnum
+    having?: ReferralScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ReferralCountAggregateInputType | true
+    _avg?: ReferralAvgAggregateInputType
+    _sum?: ReferralSumAggregateInputType
+    _min?: ReferralMinAggregateInputType
+    _max?: ReferralMaxAggregateInputType
+  }
+
+  export type ReferralGroupByOutputType = {
+    id: number
+    referrerId: bigint
+    refereeId: bigint
+    createdAt: Date
+    referrerBonus: number | null
+    refereeBonus: number | null
+    _count: ReferralCountAggregateOutputType | null
+    _avg: ReferralAvgAggregateOutputType | null
+    _sum: ReferralSumAggregateOutputType | null
+    _min: ReferralMinAggregateOutputType | null
+    _max: ReferralMaxAggregateOutputType | null
+  }
+
+  type GetReferralGroupByPayload<T extends ReferralGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ReferralGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ReferralGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ReferralGroupByOutputType[P]>
+            : GetScalarType<T[P], ReferralGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ReferralSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    referrerId?: boolean
+    refereeId?: boolean
+    createdAt?: boolean
+    referrerBonus?: boolean
+    refereeBonus?: boolean
+    referrer?: boolean | UserDefaultArgs<ExtArgs>
+    referee?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referral"]>
+
+  export type ReferralSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    referrerId?: boolean
+    refereeId?: boolean
+    createdAt?: boolean
+    referrerBonus?: boolean
+    refereeBonus?: boolean
+    referrer?: boolean | UserDefaultArgs<ExtArgs>
+    referee?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referral"]>
+
+  export type ReferralSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    referrerId?: boolean
+    refereeId?: boolean
+    createdAt?: boolean
+    referrerBonus?: boolean
+    refereeBonus?: boolean
+    referrer?: boolean | UserDefaultArgs<ExtArgs>
+    referee?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["referral"]>
+
+  export type ReferralSelectScalar = {
+    id?: boolean
+    referrerId?: boolean
+    refereeId?: boolean
+    createdAt?: boolean
+    referrerBonus?: boolean
+    refereeBonus?: boolean
+  }
+
+  export type ReferralOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "referrerId" | "refereeId" | "createdAt" | "referrerBonus" | "refereeBonus", ExtArgs["result"]["referral"]>
+  export type ReferralInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referrer?: boolean | UserDefaultArgs<ExtArgs>
+    referee?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReferralIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referrer?: boolean | UserDefaultArgs<ExtArgs>
+    referee?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type ReferralIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    referrer?: boolean | UserDefaultArgs<ExtArgs>
+    referee?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $ReferralPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Referral"
+    objects: {
+      referrer: Prisma.$UserPayload<ExtArgs>
+      referee: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      referrerId: bigint
+      refereeId: bigint
+      createdAt: Date
+      referrerBonus: number | null
+      refereeBonus: number | null
+    }, ExtArgs["result"]["referral"]>
+    composites: {}
+  }
+
+  type ReferralGetPayload<S extends boolean | null | undefined | ReferralDefaultArgs> = $Result.GetResult<Prisma.$ReferralPayload, S>
+
+  type ReferralCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ReferralFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ReferralCountAggregateInputType | true
+    }
+
+  export interface ReferralDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Referral'], meta: { name: 'Referral' } }
+    /**
+     * Find zero or one Referral that matches the filter.
+     * @param {ReferralFindUniqueArgs} args - Arguments to find a Referral
+     * @example
+     * // Get one Referral
+     * const referral = await prisma.referral.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ReferralFindUniqueArgs>(args: SelectSubset<T, ReferralFindUniqueArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Referral that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ReferralFindUniqueOrThrowArgs} args - Arguments to find a Referral
+     * @example
+     * // Get one Referral
+     * const referral = await prisma.referral.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ReferralFindUniqueOrThrowArgs>(args: SelectSubset<T, ReferralFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Referral that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralFindFirstArgs} args - Arguments to find a Referral
+     * @example
+     * // Get one Referral
+     * const referral = await prisma.referral.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ReferralFindFirstArgs>(args?: SelectSubset<T, ReferralFindFirstArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Referral that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralFindFirstOrThrowArgs} args - Arguments to find a Referral
+     * @example
+     * // Get one Referral
+     * const referral = await prisma.referral.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ReferralFindFirstOrThrowArgs>(args?: SelectSubset<T, ReferralFindFirstOrThrowArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Referrals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Referrals
+     * const referrals = await prisma.referral.findMany()
+     * 
+     * // Get first 10 Referrals
+     * const referrals = await prisma.referral.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const referralWithIdOnly = await prisma.referral.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ReferralFindManyArgs>(args?: SelectSubset<T, ReferralFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Referral.
+     * @param {ReferralCreateArgs} args - Arguments to create a Referral.
+     * @example
+     * // Create one Referral
+     * const Referral = await prisma.referral.create({
+     *   data: {
+     *     // ... data to create a Referral
+     *   }
+     * })
+     * 
+     */
+    create<T extends ReferralCreateArgs>(args: SelectSubset<T, ReferralCreateArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Referrals.
+     * @param {ReferralCreateManyArgs} args - Arguments to create many Referrals.
+     * @example
+     * // Create many Referrals
+     * const referral = await prisma.referral.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ReferralCreateManyArgs>(args?: SelectSubset<T, ReferralCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Referrals and returns the data saved in the database.
+     * @param {ReferralCreateManyAndReturnArgs} args - Arguments to create many Referrals.
+     * @example
+     * // Create many Referrals
+     * const referral = await prisma.referral.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Referrals and only return the `id`
+     * const referralWithIdOnly = await prisma.referral.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ReferralCreateManyAndReturnArgs>(args?: SelectSubset<T, ReferralCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Referral.
+     * @param {ReferralDeleteArgs} args - Arguments to delete one Referral.
+     * @example
+     * // Delete one Referral
+     * const Referral = await prisma.referral.delete({
+     *   where: {
+     *     // ... filter to delete one Referral
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ReferralDeleteArgs>(args: SelectSubset<T, ReferralDeleteArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Referral.
+     * @param {ReferralUpdateArgs} args - Arguments to update one Referral.
+     * @example
+     * // Update one Referral
+     * const referral = await prisma.referral.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ReferralUpdateArgs>(args: SelectSubset<T, ReferralUpdateArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Referrals.
+     * @param {ReferralDeleteManyArgs} args - Arguments to filter Referrals to delete.
+     * @example
+     * // Delete a few Referrals
+     * const { count } = await prisma.referral.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ReferralDeleteManyArgs>(args?: SelectSubset<T, ReferralDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Referrals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Referrals
+     * const referral = await prisma.referral.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ReferralUpdateManyArgs>(args: SelectSubset<T, ReferralUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Referrals and returns the data updated in the database.
+     * @param {ReferralUpdateManyAndReturnArgs} args - Arguments to update many Referrals.
+     * @example
+     * // Update many Referrals
+     * const referral = await prisma.referral.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Referrals and only return the `id`
+     * const referralWithIdOnly = await prisma.referral.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ReferralUpdateManyAndReturnArgs>(args: SelectSubset<T, ReferralUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Referral.
+     * @param {ReferralUpsertArgs} args - Arguments to update or create a Referral.
+     * @example
+     * // Update or create a Referral
+     * const referral = await prisma.referral.upsert({
+     *   create: {
+     *     // ... data to create a Referral
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Referral we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ReferralUpsertArgs>(args: SelectSubset<T, ReferralUpsertArgs<ExtArgs>>): Prisma__ReferralClient<$Result.GetResult<Prisma.$ReferralPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Referrals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralCountArgs} args - Arguments to filter Referrals to count.
+     * @example
+     * // Count the number of Referrals
+     * const count = await prisma.referral.count({
+     *   where: {
+     *     // ... the filter for the Referrals we want to count
+     *   }
+     * })
+    **/
+    count<T extends ReferralCountArgs>(
+      args?: Subset<T, ReferralCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ReferralCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Referral.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ReferralAggregateArgs>(args: Subset<T, ReferralAggregateArgs>): Prisma.PrismaPromise<GetReferralAggregateType<T>>
+
+    /**
+     * Group by Referral.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ReferralGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ReferralGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ReferralGroupByArgs['orderBy'] }
+        : { orderBy?: ReferralGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ReferralGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetReferralGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Referral model
+   */
+  readonly fields: ReferralFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Referral.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ReferralClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    referrer<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    referee<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Referral model
+   */
+  interface ReferralFieldRefs {
+    readonly id: FieldRef<"Referral", 'Int'>
+    readonly referrerId: FieldRef<"Referral", 'BigInt'>
+    readonly refereeId: FieldRef<"Referral", 'BigInt'>
+    readonly createdAt: FieldRef<"Referral", 'DateTime'>
+    readonly referrerBonus: FieldRef<"Referral", 'Float'>
+    readonly refereeBonus: FieldRef<"Referral", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Referral findUnique
+   */
+  export type ReferralFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter, which Referral to fetch.
+     */
+    where: ReferralWhereUniqueInput
+  }
+
+  /**
+   * Referral findUniqueOrThrow
+   */
+  export type ReferralFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter, which Referral to fetch.
+     */
+    where: ReferralWhereUniqueInput
+  }
+
+  /**
+   * Referral findFirst
+   */
+  export type ReferralFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter, which Referral to fetch.
+     */
+    where?: ReferralWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Referrals to fetch.
+     */
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Referrals.
+     */
+    cursor?: ReferralWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Referrals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Referrals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Referrals.
+     */
+    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
+  }
+
+  /**
+   * Referral findFirstOrThrow
+   */
+  export type ReferralFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter, which Referral to fetch.
+     */
+    where?: ReferralWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Referrals to fetch.
+     */
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Referrals.
+     */
+    cursor?: ReferralWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Referrals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Referrals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Referrals.
+     */
+    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
+  }
+
+  /**
+   * Referral findMany
+   */
+  export type ReferralFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter, which Referrals to fetch.
+     */
+    where?: ReferralWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Referrals to fetch.
+     */
+    orderBy?: ReferralOrderByWithRelationInput | ReferralOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Referrals.
+     */
+    cursor?: ReferralWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Referrals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Referrals.
+     */
+    skip?: number
+    distinct?: ReferralScalarFieldEnum | ReferralScalarFieldEnum[]
+  }
+
+  /**
+   * Referral create
+   */
+  export type ReferralCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Referral.
+     */
+    data: XOR<ReferralCreateInput, ReferralUncheckedCreateInput>
+  }
+
+  /**
+   * Referral createMany
+   */
+  export type ReferralCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Referrals.
+     */
+    data: ReferralCreateManyInput | ReferralCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Referral createManyAndReturn
+   */
+  export type ReferralCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * The data used to create many Referrals.
+     */
+    data: ReferralCreateManyInput | ReferralCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Referral update
+   */
+  export type ReferralUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Referral.
+     */
+    data: XOR<ReferralUpdateInput, ReferralUncheckedUpdateInput>
+    /**
+     * Choose, which Referral to update.
+     */
+    where: ReferralWhereUniqueInput
+  }
+
+  /**
+   * Referral updateMany
+   */
+  export type ReferralUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Referrals.
+     */
+    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyInput>
+    /**
+     * Filter which Referrals to update
+     */
+    where?: ReferralWhereInput
+    /**
+     * Limit how many Referrals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Referral updateManyAndReturn
+   */
+  export type ReferralUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * The data used to update Referrals.
+     */
+    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyInput>
+    /**
+     * Filter which Referrals to update
+     */
+    where?: ReferralWhereInput
+    /**
+     * Limit how many Referrals to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Referral upsert
+   */
+  export type ReferralUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Referral to update in case it exists.
+     */
+    where: ReferralWhereUniqueInput
+    /**
+     * In case the Referral found by the `where` argument doesn't exist, create a new Referral with this data.
+     */
+    create: XOR<ReferralCreateInput, ReferralUncheckedCreateInput>
+    /**
+     * In case the Referral was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ReferralUpdateInput, ReferralUncheckedUpdateInput>
+  }
+
+  /**
+   * Referral delete
+   */
+  export type ReferralDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+    /**
+     * Filter which Referral to delete.
+     */
+    where: ReferralWhereUniqueInput
+  }
+
+  /**
+   * Referral deleteMany
+   */
+  export type ReferralDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Referrals to delete
+     */
+    where?: ReferralWhereInput
+    /**
+     * Limit how many Referrals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Referral without action
+   */
+  export type ReferralDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Referral
+     */
+    select?: ReferralSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Referral
+     */
+    omit?: ReferralOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ReferralInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -7423,7 +8808,8 @@ export namespace Prisma {
     password: 'password',
     balance: 'balance',
     createdAt: 'createdAt',
-    chatId: 'chatId'
+    chatId: 'chatId',
+    referredBy: 'referredBy'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -7500,6 +8886,18 @@ export namespace Prisma {
   };
 
   export type MatchHistoryScalarFieldEnum = (typeof MatchHistoryScalarFieldEnum)[keyof typeof MatchHistoryScalarFieldEnum]
+
+
+  export const ReferralScalarFieldEnum: {
+    id: 'id',
+    referrerId: 'referrerId',
+    refereeId: 'refereeId',
+    createdAt: 'createdAt',
+    referrerBonus: 'referrerBonus',
+    refereeBonus: 'refereeBonus'
+  };
+
+  export type ReferralScalarFieldEnum = (typeof ReferralScalarFieldEnum)[keyof typeof ReferralScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -7621,9 +9019,14 @@ export namespace Prisma {
     balance?: FloatFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     chatId?: StringNullableFilter<"User"> | string | null
+    referredBy?: BigIntNullableFilter<"User"> | bigint | number | null
     purchases?: PurchaseListRelationFilter
     matchEntries?: MatchEntryListRelationFilter
     matchHistory?: MatchHistoryListRelationFilter
+    referrals?: ReferralListRelationFilter
+    referredUsers?: ReferralListRelationFilter
+    referrer?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    referees?: UserListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -7633,9 +9036,14 @@ export namespace Prisma {
     balance?: SortOrder
     createdAt?: SortOrder
     chatId?: SortOrderInput | SortOrder
+    referredBy?: SortOrderInput | SortOrder
     purchases?: PurchaseOrderByRelationAggregateInput
     matchEntries?: MatchEntryOrderByRelationAggregateInput
     matchHistory?: MatchHistoryOrderByRelationAggregateInput
+    referrals?: ReferralOrderByRelationAggregateInput
+    referredUsers?: ReferralOrderByRelationAggregateInput
+    referrer?: UserOrderByWithRelationInput
+    referees?: UserOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -7648,9 +9056,14 @@ export namespace Prisma {
     password?: StringFilter<"User"> | string
     balance?: FloatFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
+    referredBy?: BigIntNullableFilter<"User"> | bigint | number | null
     purchases?: PurchaseListRelationFilter
     matchEntries?: MatchEntryListRelationFilter
     matchHistory?: MatchHistoryListRelationFilter
+    referrals?: ReferralListRelationFilter
+    referredUsers?: ReferralListRelationFilter
+    referrer?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    referees?: UserListRelationFilter
   }, "id" | "email" | "chatId">
 
   export type UserOrderByWithAggregationInput = {
@@ -7660,6 +9073,7 @@ export namespace Prisma {
     balance?: SortOrder
     createdAt?: SortOrder
     chatId?: SortOrderInput | SortOrder
+    referredBy?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -7677,6 +9091,7 @@ export namespace Prisma {
     balance?: FloatWithAggregatesFilter<"User"> | number
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     chatId?: StringNullableWithAggregatesFilter<"User"> | string | null
+    referredBy?: BigIntNullableWithAggregatesFilter<"User"> | bigint | number | null
   }
 
   export type MatchWhereInput = {
@@ -8063,6 +9478,72 @@ export namespace Prisma {
     matchTime?: StringWithAggregatesFilter<"MatchHistory"> | string
   }
 
+  export type ReferralWhereInput = {
+    AND?: ReferralWhereInput | ReferralWhereInput[]
+    OR?: ReferralWhereInput[]
+    NOT?: ReferralWhereInput | ReferralWhereInput[]
+    id?: IntFilter<"Referral"> | number
+    referrerId?: BigIntFilter<"Referral"> | bigint | number
+    refereeId?: BigIntFilter<"Referral"> | bigint | number
+    createdAt?: DateTimeFilter<"Referral"> | Date | string
+    referrerBonus?: FloatNullableFilter<"Referral"> | number | null
+    refereeBonus?: FloatNullableFilter<"Referral"> | number | null
+    referrer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    referee?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type ReferralOrderByWithRelationInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    createdAt?: SortOrder
+    referrerBonus?: SortOrderInput | SortOrder
+    refereeBonus?: SortOrderInput | SortOrder
+    referrer?: UserOrderByWithRelationInput
+    referee?: UserOrderByWithRelationInput
+  }
+
+  export type ReferralWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    referrerId_refereeId?: ReferralReferrerIdRefereeIdCompoundUniqueInput
+    AND?: ReferralWhereInput | ReferralWhereInput[]
+    OR?: ReferralWhereInput[]
+    NOT?: ReferralWhereInput | ReferralWhereInput[]
+    referrerId?: BigIntFilter<"Referral"> | bigint | number
+    refereeId?: BigIntFilter<"Referral"> | bigint | number
+    createdAt?: DateTimeFilter<"Referral"> | Date | string
+    referrerBonus?: FloatNullableFilter<"Referral"> | number | null
+    refereeBonus?: FloatNullableFilter<"Referral"> | number | null
+    referrer?: XOR<UserScalarRelationFilter, UserWhereInput>
+    referee?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "referrerId_refereeId">
+
+  export type ReferralOrderByWithAggregationInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    createdAt?: SortOrder
+    referrerBonus?: SortOrderInput | SortOrder
+    refereeBonus?: SortOrderInput | SortOrder
+    _count?: ReferralCountOrderByAggregateInput
+    _avg?: ReferralAvgOrderByAggregateInput
+    _max?: ReferralMaxOrderByAggregateInput
+    _min?: ReferralMinOrderByAggregateInput
+    _sum?: ReferralSumOrderByAggregateInput
+  }
+
+  export type ReferralScalarWhereWithAggregatesInput = {
+    AND?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
+    OR?: ReferralScalarWhereWithAggregatesInput[]
+    NOT?: ReferralScalarWhereWithAggregatesInput | ReferralScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Referral"> | number
+    referrerId?: BigIntWithAggregatesFilter<"Referral"> | bigint | number
+    refereeId?: BigIntWithAggregatesFilter<"Referral"> | bigint | number
+    createdAt?: DateTimeWithAggregatesFilter<"Referral"> | Date | string
+    referrerBonus?: FloatNullableWithAggregatesFilter<"Referral"> | number | null
+    refereeBonus?: FloatNullableWithAggregatesFilter<"Referral"> | number | null
+  }
+
   export type UserCreateInput = {
     id?: bigint | number
     email: string
@@ -8073,6 +9554,10 @@ export namespace Prisma {
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralCreateNestedManyWithoutRefereeInput
+    referrer?: UserCreateNestedOneWithoutRefereesInput
+    referees?: UserCreateNestedManyWithoutReferrerInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -8082,9 +9567,13 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referredBy?: bigint | number | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutRefereeInput
+    referees?: UserUncheckedCreateNestedManyWithoutReferrerInput
   }
 
   export type UserUpdateInput = {
@@ -8097,6 +9586,10 @@ export namespace Prisma {
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUpdateManyWithoutRefereeNestedInput
+    referrer?: UserUpdateOneWithoutRefereesNestedInput
+    referees?: UserUpdateManyWithoutReferrerNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -8106,9 +9599,13 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutRefereeNestedInput
+    referees?: UserUncheckedUpdateManyWithoutReferrerNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -8118,6 +9615,7 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referredBy?: bigint | number | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -8136,6 +9634,7 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
   }
 
   export type MatchCreateInput = {
@@ -8556,6 +10055,64 @@ export namespace Prisma {
     matchTime?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ReferralCreateInput = {
+    createdAt?: Date | string
+    referrerBonus?: number | null
+    refereeBonus?: number | null
+    referrer: UserCreateNestedOneWithoutReferralsInput
+    referee: UserCreateNestedOneWithoutReferredUsersInput
+  }
+
+  export type ReferralUncheckedCreateInput = {
+    id?: number
+    referrerId: bigint | number
+    refereeId: bigint | number
+    createdAt?: Date | string
+    referrerBonus?: number | null
+    refereeBonus?: number | null
+  }
+
+  export type ReferralUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrerBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    refereeBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    referrer?: UserUpdateOneRequiredWithoutReferralsNestedInput
+    referee?: UserUpdateOneRequiredWithoutReferredUsersNestedInput
+  }
+
+  export type ReferralUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    referrerId?: BigIntFieldUpdateOperationsInput | bigint | number
+    refereeId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrerBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    refereeBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type ReferralCreateManyInput = {
+    id?: number
+    referrerId: bigint | number
+    refereeId: bigint | number
+    createdAt?: Date | string
+    referrerBonus?: number | null
+    refereeBonus?: number | null
+  }
+
+  export type ReferralUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrerBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    refereeBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type ReferralUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    referrerId?: BigIntFieldUpdateOperationsInput | bigint | number
+    refereeId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrerBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    refereeBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
   export type BigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -8619,6 +10176,17 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
+  export type BigIntNullableFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
+  }
+
   export type PurchaseListRelationFilter = {
     every?: PurchaseWhereInput
     some?: PurchaseWhereInput
@@ -8635,6 +10203,23 @@ export namespace Prisma {
     every?: MatchHistoryWhereInput
     some?: MatchHistoryWhereInput
     none?: MatchHistoryWhereInput
+  }
+
+  export type ReferralListRelationFilter = {
+    every?: ReferralWhereInput
+    some?: ReferralWhereInput
+    none?: ReferralWhereInput
+  }
+
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
   }
 
   export type SortOrderInput = {
@@ -8654,6 +10239,14 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type ReferralOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type UserCountOrderByAggregateInput = {
     id?: SortOrder
     email?: SortOrder
@@ -8661,11 +10254,13 @@ export namespace Prisma {
     balance?: SortOrder
     createdAt?: SortOrder
     chatId?: SortOrder
+    referredBy?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
     id?: SortOrder
     balance?: SortOrder
+    referredBy?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -8675,6 +10270,7 @@ export namespace Prisma {
     balance?: SortOrder
     createdAt?: SortOrder
     chatId?: SortOrder
+    referredBy?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -8684,11 +10280,13 @@ export namespace Prisma {
     balance?: SortOrder
     createdAt?: SortOrder
     chatId?: SortOrder
+    referredBy?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
     id?: SortOrder
     balance?: SortOrder
+    referredBy?: SortOrder
   }
 
   export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -8771,6 +10369,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
+  }
+
+  export type BigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedBigIntNullableFilter<$PrismaModel>
+    _min?: NestedBigIntNullableFilter<$PrismaModel>
+    _max?: NestedBigIntNullableFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -9152,6 +10766,81 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type ReferralReferrerIdRefereeIdCompoundUniqueInput = {
+    referrerId: bigint | number
+    refereeId: bigint | number
+  }
+
+  export type ReferralCountOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    createdAt?: SortOrder
+    referrerBonus?: SortOrder
+    refereeBonus?: SortOrder
+  }
+
+  export type ReferralAvgOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    referrerBonus?: SortOrder
+    refereeBonus?: SortOrder
+  }
+
+  export type ReferralMaxOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    createdAt?: SortOrder
+    referrerBonus?: SortOrder
+    refereeBonus?: SortOrder
+  }
+
+  export type ReferralMinOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    createdAt?: SortOrder
+    referrerBonus?: SortOrder
+    refereeBonus?: SortOrder
+  }
+
+  export type ReferralSumOrderByAggregateInput = {
+    id?: SortOrder
+    referrerId?: SortOrder
+    refereeId?: SortOrder
+    referrerBonus?: SortOrder
+    refereeBonus?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
   export type PurchaseCreateNestedManyWithoutUserInput = {
     create?: XOR<PurchaseCreateWithoutUserInput, PurchaseUncheckedCreateWithoutUserInput> | PurchaseCreateWithoutUserInput[] | PurchaseUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PurchaseCreateOrConnectWithoutUserInput | PurchaseCreateOrConnectWithoutUserInput[]
@@ -9173,6 +10862,33 @@ export namespace Prisma {
     connect?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
   }
 
+  export type ReferralCreateNestedManyWithoutReferrerInput = {
+    create?: XOR<ReferralCreateWithoutReferrerInput, ReferralUncheckedCreateWithoutReferrerInput> | ReferralCreateWithoutReferrerInput[] | ReferralUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutReferrerInput | ReferralCreateOrConnectWithoutReferrerInput[]
+    createMany?: ReferralCreateManyReferrerInputEnvelope
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+  }
+
+  export type ReferralCreateNestedManyWithoutRefereeInput = {
+    create?: XOR<ReferralCreateWithoutRefereeInput, ReferralUncheckedCreateWithoutRefereeInput> | ReferralCreateWithoutRefereeInput[] | ReferralUncheckedCreateWithoutRefereeInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutRefereeInput | ReferralCreateOrConnectWithoutRefereeInput[]
+    createMany?: ReferralCreateManyRefereeInputEnvelope
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+  }
+
+  export type UserCreateNestedOneWithoutRefereesInput = {
+    create?: XOR<UserCreateWithoutRefereesInput, UserUncheckedCreateWithoutRefereesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRefereesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedManyWithoutReferrerInput = {
+    create?: XOR<UserCreateWithoutReferrerInput, UserUncheckedCreateWithoutReferrerInput> | UserCreateWithoutReferrerInput[] | UserUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferrerInput | UserCreateOrConnectWithoutReferrerInput[]
+    createMany?: UserCreateManyReferrerInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
   export type PurchaseUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<PurchaseCreateWithoutUserInput, PurchaseUncheckedCreateWithoutUserInput> | PurchaseCreateWithoutUserInput[] | PurchaseUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PurchaseCreateOrConnectWithoutUserInput | PurchaseCreateOrConnectWithoutUserInput[]
@@ -9192,6 +10908,27 @@ export namespace Prisma {
     connectOrCreate?: MatchHistoryCreateOrConnectWithoutUserInput | MatchHistoryCreateOrConnectWithoutUserInput[]
     createMany?: MatchHistoryCreateManyUserInputEnvelope
     connect?: MatchHistoryWhereUniqueInput | MatchHistoryWhereUniqueInput[]
+  }
+
+  export type ReferralUncheckedCreateNestedManyWithoutReferrerInput = {
+    create?: XOR<ReferralCreateWithoutReferrerInput, ReferralUncheckedCreateWithoutReferrerInput> | ReferralCreateWithoutReferrerInput[] | ReferralUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutReferrerInput | ReferralCreateOrConnectWithoutReferrerInput[]
+    createMany?: ReferralCreateManyReferrerInputEnvelope
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+  }
+
+  export type ReferralUncheckedCreateNestedManyWithoutRefereeInput = {
+    create?: XOR<ReferralCreateWithoutRefereeInput, ReferralUncheckedCreateWithoutRefereeInput> | ReferralCreateWithoutRefereeInput[] | ReferralUncheckedCreateWithoutRefereeInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutRefereeInput | ReferralCreateOrConnectWithoutRefereeInput[]
+    createMany?: ReferralCreateManyRefereeInputEnvelope
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutReferrerInput = {
+    create?: XOR<UserCreateWithoutReferrerInput, UserUncheckedCreateWithoutReferrerInput> | UserCreateWithoutReferrerInput[] | UserUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferrerInput | UserCreateOrConnectWithoutReferrerInput[]
+    createMany?: UserCreateManyReferrerInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
   export type BigIntFieldUpdateOperationsInput = {
@@ -9264,6 +11001,66 @@ export namespace Prisma {
     deleteMany?: MatchHistoryScalarWhereInput | MatchHistoryScalarWhereInput[]
   }
 
+  export type ReferralUpdateManyWithoutReferrerNestedInput = {
+    create?: XOR<ReferralCreateWithoutReferrerInput, ReferralUncheckedCreateWithoutReferrerInput> | ReferralCreateWithoutReferrerInput[] | ReferralUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutReferrerInput | ReferralCreateOrConnectWithoutReferrerInput[]
+    upsert?: ReferralUpsertWithWhereUniqueWithoutReferrerInput | ReferralUpsertWithWhereUniqueWithoutReferrerInput[]
+    createMany?: ReferralCreateManyReferrerInputEnvelope
+    set?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    disconnect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    delete?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    update?: ReferralUpdateWithWhereUniqueWithoutReferrerInput | ReferralUpdateWithWhereUniqueWithoutReferrerInput[]
+    updateMany?: ReferralUpdateManyWithWhereWithoutReferrerInput | ReferralUpdateManyWithWhereWithoutReferrerInput[]
+    deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+  }
+
+  export type ReferralUpdateManyWithoutRefereeNestedInput = {
+    create?: XOR<ReferralCreateWithoutRefereeInput, ReferralUncheckedCreateWithoutRefereeInput> | ReferralCreateWithoutRefereeInput[] | ReferralUncheckedCreateWithoutRefereeInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutRefereeInput | ReferralCreateOrConnectWithoutRefereeInput[]
+    upsert?: ReferralUpsertWithWhereUniqueWithoutRefereeInput | ReferralUpsertWithWhereUniqueWithoutRefereeInput[]
+    createMany?: ReferralCreateManyRefereeInputEnvelope
+    set?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    disconnect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    delete?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    update?: ReferralUpdateWithWhereUniqueWithoutRefereeInput | ReferralUpdateWithWhereUniqueWithoutRefereeInput[]
+    updateMany?: ReferralUpdateManyWithWhereWithoutRefereeInput | ReferralUpdateManyWithWhereWithoutRefereeInput[]
+    deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+  }
+
+  export type UserUpdateOneWithoutRefereesNestedInput = {
+    create?: XOR<UserCreateWithoutRefereesInput, UserUncheckedCreateWithoutRefereesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutRefereesInput
+    upsert?: UserUpsertWithoutRefereesInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRefereesInput, UserUpdateWithoutRefereesInput>, UserUncheckedUpdateWithoutRefereesInput>
+  }
+
+  export type UserUpdateManyWithoutReferrerNestedInput = {
+    create?: XOR<UserCreateWithoutReferrerInput, UserUncheckedCreateWithoutReferrerInput> | UserCreateWithoutReferrerInput[] | UserUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferrerInput | UserCreateOrConnectWithoutReferrerInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutReferrerInput | UserUpsertWithWhereUniqueWithoutReferrerInput[]
+    createMany?: UserCreateManyReferrerInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutReferrerInput | UserUpdateWithWhereUniqueWithoutReferrerInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutReferrerInput | UserUpdateManyWithWhereWithoutReferrerInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
+  export type NullableBigIntFieldUpdateOperationsInput = {
+    set?: bigint | number | null
+    increment?: bigint | number
+    decrement?: bigint | number
+    multiply?: bigint | number
+    divide?: bigint | number
+  }
+
   export type PurchaseUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<PurchaseCreateWithoutUserInput, PurchaseUncheckedCreateWithoutUserInput> | PurchaseCreateWithoutUserInput[] | PurchaseUncheckedCreateWithoutUserInput[]
     connectOrCreate?: PurchaseCreateOrConnectWithoutUserInput | PurchaseCreateOrConnectWithoutUserInput[]
@@ -9304,6 +11101,48 @@ export namespace Prisma {
     update?: MatchHistoryUpdateWithWhereUniqueWithoutUserInput | MatchHistoryUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: MatchHistoryUpdateManyWithWhereWithoutUserInput | MatchHistoryUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: MatchHistoryScalarWhereInput | MatchHistoryScalarWhereInput[]
+  }
+
+  export type ReferralUncheckedUpdateManyWithoutReferrerNestedInput = {
+    create?: XOR<ReferralCreateWithoutReferrerInput, ReferralUncheckedCreateWithoutReferrerInput> | ReferralCreateWithoutReferrerInput[] | ReferralUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutReferrerInput | ReferralCreateOrConnectWithoutReferrerInput[]
+    upsert?: ReferralUpsertWithWhereUniqueWithoutReferrerInput | ReferralUpsertWithWhereUniqueWithoutReferrerInput[]
+    createMany?: ReferralCreateManyReferrerInputEnvelope
+    set?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    disconnect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    delete?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    update?: ReferralUpdateWithWhereUniqueWithoutReferrerInput | ReferralUpdateWithWhereUniqueWithoutReferrerInput[]
+    updateMany?: ReferralUpdateManyWithWhereWithoutReferrerInput | ReferralUpdateManyWithWhereWithoutReferrerInput[]
+    deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+  }
+
+  export type ReferralUncheckedUpdateManyWithoutRefereeNestedInput = {
+    create?: XOR<ReferralCreateWithoutRefereeInput, ReferralUncheckedCreateWithoutRefereeInput> | ReferralCreateWithoutRefereeInput[] | ReferralUncheckedCreateWithoutRefereeInput[]
+    connectOrCreate?: ReferralCreateOrConnectWithoutRefereeInput | ReferralCreateOrConnectWithoutRefereeInput[]
+    upsert?: ReferralUpsertWithWhereUniqueWithoutRefereeInput | ReferralUpsertWithWhereUniqueWithoutRefereeInput[]
+    createMany?: ReferralCreateManyRefereeInputEnvelope
+    set?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    disconnect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    delete?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    connect?: ReferralWhereUniqueInput | ReferralWhereUniqueInput[]
+    update?: ReferralUpdateWithWhereUniqueWithoutRefereeInput | ReferralUpdateWithWhereUniqueWithoutRefereeInput[]
+    updateMany?: ReferralUpdateManyWithWhereWithoutRefereeInput | ReferralUpdateManyWithWhereWithoutRefereeInput[]
+    deleteMany?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutReferrerNestedInput = {
+    create?: XOR<UserCreateWithoutReferrerInput, UserUncheckedCreateWithoutReferrerInput> | UserCreateWithoutReferrerInput[] | UserUncheckedCreateWithoutReferrerInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutReferrerInput | UserCreateOrConnectWithoutReferrerInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutReferrerInput | UserUpsertWithWhereUniqueWithoutReferrerInput[]
+    createMany?: UserCreateManyReferrerInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutReferrerInput | UserUpdateWithWhereUniqueWithoutReferrerInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutReferrerInput | UserUpdateManyWithWhereWithoutReferrerInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type PurchaseCreateNestedManyWithoutMatchInput = {
@@ -9484,6 +11323,42 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMatchHistoryInput, UserUpdateWithoutMatchHistoryInput>, UserUncheckedUpdateWithoutMatchHistoryInput>
   }
 
+  export type UserCreateNestedOneWithoutReferralsInput = {
+    create?: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferralsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutReferredUsersInput = {
+    create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type UserUpdateOneRequiredWithoutReferralsNestedInput = {
+    create?: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferralsInput
+    upsert?: UserUpsertWithoutReferralsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReferralsInput, UserUpdateWithoutReferralsInput>, UserUncheckedUpdateWithoutReferralsInput>
+  }
+
+  export type UserUpdateOneRequiredWithoutReferredUsersNestedInput = {
+    create?: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutReferredUsersInput
+    upsert?: UserUpsertWithoutReferredUsersInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutReferredUsersInput, UserUpdateWithoutReferredUsersInput>, UserUncheckedUpdateWithoutReferredUsersInput>
+  }
+
   export type NestedBigIntFilter<$PrismaModel = never> = {
     equals?: bigint | number | BigIntFieldRefInput<$PrismaModel>
     in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel>
@@ -9543,6 +11418,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedBigIntNullableFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableFilter<$PrismaModel> | bigint | number | null
   }
 
   export type NestedBigIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -9647,6 +11533,33 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
+  export type NestedBigIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: bigint | number | BigIntFieldRefInput<$PrismaModel> | null
+    in?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    notIn?: bigint[] | number[] | ListBigIntFieldRefInput<$PrismaModel> | null
+    lt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    lte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gt?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    gte?: bigint | number | BigIntFieldRefInput<$PrismaModel>
+    not?: NestedBigIntNullableWithAggregatesFilter<$PrismaModel> | bigint | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedBigIntNullableFilter<$PrismaModel>
+    _min?: NestedBigIntNullableFilter<$PrismaModel>
+    _max?: NestedBigIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedBoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
@@ -9703,17 +11616,6 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -9726,6 +11628,22 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedDateTimeNullableFilter<$PrismaModel>
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type PurchaseCreateWithoutUserInput = {
@@ -9829,6 +11747,131 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ReferralCreateWithoutReferrerInput = {
+    createdAt?: Date | string
+    referrerBonus?: number | null
+    refereeBonus?: number | null
+    referee: UserCreateNestedOneWithoutReferredUsersInput
+  }
+
+  export type ReferralUncheckedCreateWithoutReferrerInput = {
+    id?: number
+    refereeId: bigint | number
+    createdAt?: Date | string
+    referrerBonus?: number | null
+    refereeBonus?: number | null
+  }
+
+  export type ReferralCreateOrConnectWithoutReferrerInput = {
+    where: ReferralWhereUniqueInput
+    create: XOR<ReferralCreateWithoutReferrerInput, ReferralUncheckedCreateWithoutReferrerInput>
+  }
+
+  export type ReferralCreateManyReferrerInputEnvelope = {
+    data: ReferralCreateManyReferrerInput | ReferralCreateManyReferrerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ReferralCreateWithoutRefereeInput = {
+    createdAt?: Date | string
+    referrerBonus?: number | null
+    refereeBonus?: number | null
+    referrer: UserCreateNestedOneWithoutReferralsInput
+  }
+
+  export type ReferralUncheckedCreateWithoutRefereeInput = {
+    id?: number
+    referrerId: bigint | number
+    createdAt?: Date | string
+    referrerBonus?: number | null
+    refereeBonus?: number | null
+  }
+
+  export type ReferralCreateOrConnectWithoutRefereeInput = {
+    where: ReferralWhereUniqueInput
+    create: XOR<ReferralCreateWithoutRefereeInput, ReferralUncheckedCreateWithoutRefereeInput>
+  }
+
+  export type ReferralCreateManyRefereeInputEnvelope = {
+    data: ReferralCreateManyRefereeInput | ReferralCreateManyRefereeInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type UserCreateWithoutRefereesInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
+    purchases?: PurchaseCreateNestedManyWithoutUserInput
+    matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralCreateNestedManyWithoutRefereeInput
+    referrer?: UserCreateNestedOneWithoutRefereesInput
+  }
+
+  export type UserUncheckedCreateWithoutRefereesInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
+    referredBy?: bigint | number | null
+    purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
+    matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutRefereeInput
+  }
+
+  export type UserCreateOrConnectWithoutRefereesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutRefereesInput, UserUncheckedCreateWithoutRefereesInput>
+  }
+
+  export type UserCreateWithoutReferrerInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
+    purchases?: PurchaseCreateNestedManyWithoutUserInput
+    matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralCreateNestedManyWithoutRefereeInput
+    referees?: UserCreateNestedManyWithoutReferrerInput
+  }
+
+  export type UserUncheckedCreateWithoutReferrerInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
+    purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
+    matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutRefereeInput
+    referees?: UserUncheckedCreateNestedManyWithoutReferrerInput
+  }
+
+  export type UserCreateOrConnectWithoutReferrerInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferrerInput, UserUncheckedCreateWithoutReferrerInput>
+  }
+
+  export type UserCreateManyReferrerInputEnvelope = {
+    data: UserCreateManyReferrerInput | UserCreateManyReferrerInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PurchaseUpsertWithWhereUniqueWithoutUserInput = {
     where: PurchaseWhereUniqueInput
     update: XOR<PurchaseUpdateWithoutUserInput, PurchaseUncheckedUpdateWithoutUserInput>
@@ -9926,6 +11969,120 @@ export namespace Prisma {
     matchTime?: StringFilter<"MatchHistory"> | string
   }
 
+  export type ReferralUpsertWithWhereUniqueWithoutReferrerInput = {
+    where: ReferralWhereUniqueInput
+    update: XOR<ReferralUpdateWithoutReferrerInput, ReferralUncheckedUpdateWithoutReferrerInput>
+    create: XOR<ReferralCreateWithoutReferrerInput, ReferralUncheckedCreateWithoutReferrerInput>
+  }
+
+  export type ReferralUpdateWithWhereUniqueWithoutReferrerInput = {
+    where: ReferralWhereUniqueInput
+    data: XOR<ReferralUpdateWithoutReferrerInput, ReferralUncheckedUpdateWithoutReferrerInput>
+  }
+
+  export type ReferralUpdateManyWithWhereWithoutReferrerInput = {
+    where: ReferralScalarWhereInput
+    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyWithoutReferrerInput>
+  }
+
+  export type ReferralScalarWhereInput = {
+    AND?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+    OR?: ReferralScalarWhereInput[]
+    NOT?: ReferralScalarWhereInput | ReferralScalarWhereInput[]
+    id?: IntFilter<"Referral"> | number
+    referrerId?: BigIntFilter<"Referral"> | bigint | number
+    refereeId?: BigIntFilter<"Referral"> | bigint | number
+    createdAt?: DateTimeFilter<"Referral"> | Date | string
+    referrerBonus?: FloatNullableFilter<"Referral"> | number | null
+    refereeBonus?: FloatNullableFilter<"Referral"> | number | null
+  }
+
+  export type ReferralUpsertWithWhereUniqueWithoutRefereeInput = {
+    where: ReferralWhereUniqueInput
+    update: XOR<ReferralUpdateWithoutRefereeInput, ReferralUncheckedUpdateWithoutRefereeInput>
+    create: XOR<ReferralCreateWithoutRefereeInput, ReferralUncheckedCreateWithoutRefereeInput>
+  }
+
+  export type ReferralUpdateWithWhereUniqueWithoutRefereeInput = {
+    where: ReferralWhereUniqueInput
+    data: XOR<ReferralUpdateWithoutRefereeInput, ReferralUncheckedUpdateWithoutRefereeInput>
+  }
+
+  export type ReferralUpdateManyWithWhereWithoutRefereeInput = {
+    where: ReferralScalarWhereInput
+    data: XOR<ReferralUpdateManyMutationInput, ReferralUncheckedUpdateManyWithoutRefereeInput>
+  }
+
+  export type UserUpsertWithoutRefereesInput = {
+    update: XOR<UserUpdateWithoutRefereesInput, UserUncheckedUpdateWithoutRefereesInput>
+    create: XOR<UserCreateWithoutRefereesInput, UserUncheckedCreateWithoutRefereesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutRefereesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutRefereesInput, UserUncheckedUpdateWithoutRefereesInput>
+  }
+
+  export type UserUpdateWithoutRefereesInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    purchases?: PurchaseUpdateManyWithoutUserNestedInput
+    matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUpdateManyWithoutRefereeNestedInput
+    referrer?: UserUpdateOneWithoutRefereesNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutRefereesInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
+    matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutRefereeNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutReferrerInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutReferrerInput, UserUncheckedUpdateWithoutReferrerInput>
+    create: XOR<UserCreateWithoutReferrerInput, UserUncheckedCreateWithoutReferrerInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutReferrerInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutReferrerInput, UserUncheckedUpdateWithoutReferrerInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutReferrerInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutReferrerInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: BigIntFilter<"User"> | bigint | number
+    email?: StringFilter<"User"> | string
+    password?: StringFilter<"User"> | string
+    balance?: FloatFilter<"User"> | number
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    chatId?: StringNullableFilter<"User"> | string | null
+    referredBy?: BigIntNullableFilter<"User"> | bigint | number | null
+  }
+
   export type PurchaseCreateWithoutMatchInput = {
     createdAt?: Date | string
     user: UserCreateNestedOneWithoutPurchasesInput
@@ -10011,6 +12168,10 @@ export namespace Prisma {
     chatId?: string | null
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralCreateNestedManyWithoutRefereeInput
+    referrer?: UserCreateNestedOneWithoutRefereesInput
+    referees?: UserCreateNestedManyWithoutReferrerInput
   }
 
   export type UserUncheckedCreateWithoutPurchasesInput = {
@@ -10020,8 +12181,12 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referredBy?: bigint | number | null
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutRefereeInput
+    referees?: UserUncheckedCreateNestedManyWithoutReferrerInput
   }
 
   export type UserCreateOrConnectWithoutPurchasesInput = {
@@ -10097,6 +12262,10 @@ export namespace Prisma {
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUpdateManyWithoutRefereeNestedInput
+    referrer?: UserUpdateOneWithoutRefereesNestedInput
+    referees?: UserUpdateManyWithoutReferrerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutPurchasesInput = {
@@ -10106,8 +12275,12 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutRefereeNestedInput
+    referees?: UserUncheckedUpdateManyWithoutReferrerNestedInput
   }
 
   export type MatchUpsertWithoutPurchasesInput = {
@@ -10173,6 +12346,10 @@ export namespace Prisma {
     chatId?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralCreateNestedManyWithoutRefereeInput
+    referrer?: UserCreateNestedOneWithoutRefereesInput
+    referees?: UserCreateNestedManyWithoutReferrerInput
   }
 
   export type UserUncheckedCreateWithoutMatchEntriesInput = {
@@ -10182,8 +12359,12 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referredBy?: bigint | number | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutRefereeInput
+    referees?: UserUncheckedCreateNestedManyWithoutReferrerInput
   }
 
   export type UserCreateOrConnectWithoutMatchEntriesInput = {
@@ -10259,6 +12440,10 @@ export namespace Prisma {
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUpdateManyWithoutRefereeNestedInput
+    referrer?: UserUpdateOneWithoutRefereesNestedInput
+    referees?: UserUpdateManyWithoutReferrerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMatchEntriesInput = {
@@ -10268,8 +12453,12 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutRefereeNestedInput
+    referees?: UserUncheckedUpdateManyWithoutReferrerNestedInput
   }
 
   export type MatchUpsertWithoutMatchEntriesInput = {
@@ -10335,6 +12524,10 @@ export namespace Prisma {
     chatId?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralCreateNestedManyWithoutRefereeInput
+    referrer?: UserCreateNestedOneWithoutRefereesInput
+    referees?: UserCreateNestedManyWithoutReferrerInput
   }
 
   export type UserUncheckedCreateWithoutMatchHistoryInput = {
@@ -10344,8 +12537,12 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referredBy?: bigint | number | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutReferrerInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutRefereeInput
+    referees?: UserUncheckedCreateNestedManyWithoutReferrerInput
   }
 
   export type UserCreateOrConnectWithoutMatchHistoryInput = {
@@ -10373,6 +12570,10 @@ export namespace Prisma {
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUpdateManyWithoutRefereeNestedInput
+    referrer?: UserUpdateOneWithoutRefereesNestedInput
+    referees?: UserUpdateManyWithoutReferrerNestedInput
   }
 
   export type UserUncheckedUpdateWithoutMatchHistoryInput = {
@@ -10382,8 +12583,164 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutRefereeNestedInput
+    referees?: UserUncheckedUpdateManyWithoutReferrerNestedInput
+  }
+
+  export type UserCreateWithoutReferralsInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
+    purchases?: PurchaseCreateNestedManyWithoutUserInput
+    matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
+    referredUsers?: ReferralCreateNestedManyWithoutRefereeInput
+    referrer?: UserCreateNestedOneWithoutRefereesInput
+    referees?: UserCreateNestedManyWithoutReferrerInput
+  }
+
+  export type UserUncheckedCreateWithoutReferralsInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
+    referredBy?: bigint | number | null
+    purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
+    matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
+    referredUsers?: ReferralUncheckedCreateNestedManyWithoutRefereeInput
+    referees?: UserUncheckedCreateNestedManyWithoutReferrerInput
+  }
+
+  export type UserCreateOrConnectWithoutReferralsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+  }
+
+  export type UserCreateWithoutReferredUsersInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
+    purchases?: PurchaseCreateNestedManyWithoutUserInput
+    matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
+    referrals?: ReferralCreateNestedManyWithoutReferrerInput
+    referrer?: UserCreateNestedOneWithoutRefereesInput
+    referees?: UserCreateNestedManyWithoutReferrerInput
+  }
+
+  export type UserUncheckedCreateWithoutReferredUsersInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
+    referredBy?: bigint | number | null
+    purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
+    matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
+    matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
+    referrals?: ReferralUncheckedCreateNestedManyWithoutReferrerInput
+    referees?: UserUncheckedCreateNestedManyWithoutReferrerInput
+  }
+
+  export type UserCreateOrConnectWithoutReferredUsersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+  }
+
+  export type UserUpsertWithoutReferralsInput = {
+    update: XOR<UserUpdateWithoutReferralsInput, UserUncheckedUpdateWithoutReferralsInput>
+    create: XOR<UserCreateWithoutReferralsInput, UserUncheckedCreateWithoutReferralsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReferralsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReferralsInput, UserUncheckedUpdateWithoutReferralsInput>
+  }
+
+  export type UserUpdateWithoutReferralsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    purchases?: PurchaseUpdateManyWithoutUserNestedInput
+    matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
+    referredUsers?: ReferralUpdateManyWithoutRefereeNestedInput
+    referrer?: UserUpdateOneWithoutRefereesNestedInput
+    referees?: UserUpdateManyWithoutReferrerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferralsInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
+    matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutRefereeNestedInput
+    referees?: UserUncheckedUpdateManyWithoutReferrerNestedInput
+  }
+
+  export type UserUpsertWithoutReferredUsersInput = {
+    update: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
+    create: XOR<UserCreateWithoutReferredUsersInput, UserUncheckedCreateWithoutReferredUsersInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutReferredUsersInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutReferredUsersInput, UserUncheckedUpdateWithoutReferredUsersInput>
+  }
+
+  export type UserUpdateWithoutReferredUsersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    purchases?: PurchaseUpdateManyWithoutUserNestedInput
+    matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutReferrerNestedInput
+    referrer?: UserUpdateOneWithoutRefereesNestedInput
+    referees?: UserUpdateManyWithoutReferrerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferredUsersInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
+    matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+    referees?: UserUncheckedUpdateManyWithoutReferrerNestedInput
   }
 
   export type PurchaseCreateManyUserInput = {
@@ -10421,6 +12778,31 @@ export namespace Prisma {
     secondPrize: number
     thirdPrize: number
     matchTime: string
+  }
+
+  export type ReferralCreateManyReferrerInput = {
+    id?: number
+    refereeId: bigint | number
+    createdAt?: Date | string
+    referrerBonus?: number | null
+    refereeBonus?: number | null
+  }
+
+  export type ReferralCreateManyRefereeInput = {
+    id?: number
+    referrerId: bigint | number
+    createdAt?: Date | string
+    referrerBonus?: number | null
+    refereeBonus?: number | null
+  }
+
+  export type UserCreateManyReferrerInput = {
+    id?: bigint | number
+    email: string
+    password: string
+    balance?: number
+    createdAt?: Date | string
+    chatId?: string | null
   }
 
   export type PurchaseUpdateWithoutUserInput = {
@@ -10529,6 +12911,91 @@ export namespace Prisma {
     secondPrize?: FloatFieldUpdateOperationsInput | number
     thirdPrize?: FloatFieldUpdateOperationsInput | number
     matchTime?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ReferralUpdateWithoutReferrerInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrerBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    refereeBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    referee?: UserUpdateOneRequiredWithoutReferredUsersNestedInput
+  }
+
+  export type ReferralUncheckedUpdateWithoutReferrerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    refereeId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrerBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    refereeBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type ReferralUncheckedUpdateManyWithoutReferrerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    refereeId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrerBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    refereeBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type ReferralUpdateWithoutRefereeInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrerBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    refereeBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    referrer?: UserUpdateOneRequiredWithoutReferralsNestedInput
+  }
+
+  export type ReferralUncheckedUpdateWithoutRefereeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    referrerId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrerBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    refereeBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type ReferralUncheckedUpdateManyWithoutRefereeInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    referrerId?: BigIntFieldUpdateOperationsInput | bigint | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    referrerBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+    refereeBonus?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type UserUpdateWithoutReferrerInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    purchases?: PurchaseUpdateManyWithoutUserNestedInput
+    matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUpdateManyWithoutRefereeNestedInput
+    referees?: UserUpdateManyWithoutReferrerNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutReferrerInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
+    matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
+    matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
+    referrals?: ReferralUncheckedUpdateManyWithoutReferrerNestedInput
+    referredUsers?: ReferralUncheckedUpdateManyWithoutRefereeNestedInput
+    referees?: UserUncheckedUpdateManyWithoutReferrerNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutReferrerInput = {
+    id?: BigIntFieldUpdateOperationsInput | bigint | number
+    email?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    balance?: FloatFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    chatId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PurchaseCreateManyMatchInput = {
