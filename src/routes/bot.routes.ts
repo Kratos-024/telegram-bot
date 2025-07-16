@@ -1348,9 +1348,7 @@ export class BotRoutes {
         let message = `🎉 *Your Referral Code Generated\\!*\n\n`;
         message += `👤 *Generated for:* ${escapedEmail} UserId ${result.data?.user}\n`;
         message += `🎫 *Short Code:* \`${escapedCode}\`\n`;
-        message += `⏰ *Expires in:* ${this.escapeMarkdownV2(
-          data?.expiresIn
-        )}\n\n`;
+
         message += `💡 *Tip:* Share this code with friends to earn rewards\\!`;
 
         await this.bot.sendMessage(chatId, message, {

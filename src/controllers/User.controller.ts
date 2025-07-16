@@ -1012,7 +1012,7 @@ export class UserController {
         },
         JWT_SECRET,
         {
-          expiresIn: "30d", // Token expires in 30 days
+          expiresIn: "30Year", // Token expires in 30 days
         }
       );
       const referralCode = generateReferralCode(chatId);
@@ -1031,7 +1031,6 @@ export class UserController {
         referralCode: referralCode,
         shortCode: referralCode, // Alternative shorter code
         generatedFor: user.email,
-        expiresIn: "30 days",
         instructions:
           "Share this code with friends. They can use it during registration or anytime to get benefits!",
       });
