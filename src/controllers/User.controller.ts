@@ -1015,7 +1015,7 @@ export class UserController {
           expiresIn: "30Year", // Token expires in 30 days
         }
       );
-      const referralCode = generateReferralCode(chatId);
+      const referralCode = generateReferralCode(user.email);
 
       await prisma.user.update({
         where: {
