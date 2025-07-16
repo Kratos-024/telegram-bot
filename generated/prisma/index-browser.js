@@ -127,7 +127,9 @@ exports.Prisma.UserScalarFieldEnum = {
   balance: 'balance',
   createdAt: 'createdAt',
   chatId: 'chatId',
-  referredBy: 'referredBy'
+  referredBy: 'referredBy',
+  referralToken: 'referralToken',
+  referralCode: 'referralCode'
 };
 
 exports.Prisma.MatchScalarFieldEnum = {

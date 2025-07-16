@@ -1274,7 +1274,7 @@ export class BotRoutes {
   private async getTheReferrals(chatId: number) {
     try {
       const result = await UserController.getMyReferals(chatId);
-
+      console.log("resultresultresultresult", result);
       if (!Array.isArray(result)) {
         this.bot.sendMessage(chatId, "Invalid data format received.");
         return;
@@ -1287,7 +1287,7 @@ export class BotRoutes {
 
       let message = "";
       result.forEach((referr: any) => {
-        message += `${referr.referee.id}. *${referr.referee.email}*\n`;
+        message += `${referr.id}. *${referr.email}*\n`;
         message += `${"-".repeat(25)}\n`;
       });
 
@@ -1635,18 +1635,6 @@ export class BotRoutes {
       this.bot.sendMessage(chatId, "Failed to load account details.");
     }
   }
-  // Helper method to create account and show dashboard
-  private async createAccountAndShowDashboard(chatId: number, session: any) {
-    try {
-      // Add terms and conditions message
-    } catch (error: any) {
-      await this.bot.sendMessage(
-        chatId,
-        error.message || "Failed to create account"
-      );
-      userSessions.delete(chatId);
-    }
-  }
 
   private async showWithdraw(chatId: number) {
     try {
@@ -1770,6 +1758,7 @@ export class BotRoutes {
       message += `🟢 **Active Users:** ${data.activeUsers}\n`;
       message += `🔴 **Inactive Users:** ${data.inactiveUsers}\n`;
       message += `💰 **Total Balance:** Rs.${data.totalBalance}\n`;
+      message += `🔗 **Total Referrals:** ${data.totalReferrals || 0}\n`;
 
       message += `${"=".repeat(35)}\n\n`;
 
@@ -1777,16 +1766,26 @@ export class BotRoutes {
 
       data.users.forEach((user: any) => {
         message += `${user.serial}. **${user.email}**\n`;
-
         message += `   🔑 Password: ${user.password}\n`;
-        message += `   🔑 Password: ${user.referees}\n`;
-
-        message += `   🔑 Password: ${user.referredBy}\n`;
-
-        message += `   🔑 Password: ${user.referrals}\n`;
-
         message += `   💳 Balance: Rs.${user.accountBalance}\n`;
         message += `   📱 Chat ID: ${user.chatId}\n`;
+
+        // Referral information
+        if (user.referredBy) {
+          message += `   👤 Referred By: ${user.referredBy}\n`;
+        } else {
+          message += `   👤 Referred By: None\n`;
+        }
+
+        if (user.referees && user.referees.length > 0) {
+          message += `   🔗 Referrals (${user.totalReferrals}):\n`;
+          user.referees.forEach((referee: any, index: number) => {
+            message += `      ${index + 1}. ${referee.email}\n`;
+          });
+        } else {
+          message += `   🔗 Referrals: None\n`;
+        }
+
         message += `   📊 Status: ${user.status === "Active" ? "🟢" : "🔴"} ${
           user.status
         }\n`;

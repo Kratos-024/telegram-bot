@@ -7,6 +7,8 @@ CREATE TABLE "User" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "chatId" TEXT,
     "referredBy" BIGINT,
+    "referralToken" TEXT,
+    "referralCode" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

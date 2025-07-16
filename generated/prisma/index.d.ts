@@ -1471,6 +1471,8 @@ export namespace Prisma {
     createdAt: Date | null
     chatId: string | null
     referredBy: bigint | null
+    referralToken: string | null
+    referralCode: string | null
   }
 
   export type UserMaxAggregateOutputType = {
@@ -1481,6 +1483,8 @@ export namespace Prisma {
     createdAt: Date | null
     chatId: string | null
     referredBy: bigint | null
+    referralToken: string | null
+    referralCode: string | null
   }
 
   export type UserCountAggregateOutputType = {
@@ -1491,6 +1495,8 @@ export namespace Prisma {
     createdAt: number
     chatId: number
     referredBy: number
+    referralToken: number
+    referralCode: number
     _all: number
   }
 
@@ -1515,6 +1521,8 @@ export namespace Prisma {
     createdAt?: true
     chatId?: true
     referredBy?: true
+    referralToken?: true
+    referralCode?: true
   }
 
   export type UserMaxAggregateInputType = {
@@ -1525,6 +1533,8 @@ export namespace Prisma {
     createdAt?: true
     chatId?: true
     referredBy?: true
+    referralToken?: true
+    referralCode?: true
   }
 
   export type UserCountAggregateInputType = {
@@ -1535,6 +1545,8 @@ export namespace Prisma {
     createdAt?: true
     chatId?: true
     referredBy?: true
+    referralToken?: true
+    referralCode?: true
     _all?: true
   }
 
@@ -1632,6 +1644,8 @@ export namespace Prisma {
     createdAt: Date
     chatId: string | null
     referredBy: bigint | null
+    referralToken: string | null
+    referralCode: string | null
     _count: UserCountAggregateOutputType | null
     _avg: UserAvgAggregateOutputType | null
     _sum: UserSumAggregateOutputType | null
@@ -1661,6 +1675,8 @@ export namespace Prisma {
     createdAt?: boolean
     chatId?: boolean
     referredBy?: boolean
+    referralToken?: boolean
+    referralCode?: boolean
     purchases?: boolean | User$purchasesArgs<ExtArgs>
     matchEntries?: boolean | User$matchEntriesArgs<ExtArgs>
     matchHistory?: boolean | User$matchHistoryArgs<ExtArgs>
@@ -1679,6 +1695,8 @@ export namespace Prisma {
     createdAt?: boolean
     chatId?: boolean
     referredBy?: boolean
+    referralToken?: boolean
+    referralCode?: boolean
     referrer?: boolean | User$referrerArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1690,6 +1708,8 @@ export namespace Prisma {
     createdAt?: boolean
     chatId?: boolean
     referredBy?: boolean
+    referralToken?: boolean
+    referralCode?: boolean
     referrer?: boolean | User$referrerArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1701,9 +1721,11 @@ export namespace Prisma {
     createdAt?: boolean
     chatId?: boolean
     referredBy?: boolean
+    referralToken?: boolean
+    referralCode?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "balance" | "createdAt" | "chatId" | "referredBy", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "password" | "balance" | "createdAt" | "chatId" | "referredBy" | "referralToken" | "referralCode", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     purchases?: boolean | User$purchasesArgs<ExtArgs>
     matchEntries?: boolean | User$matchEntriesArgs<ExtArgs>
@@ -1740,6 +1762,8 @@ export namespace Prisma {
       createdAt: Date
       chatId: string | null
       referredBy: bigint | null
+      referralToken: string | null
+      referralCode: string | null
     }, ExtArgs["result"]["user"]>
     composites: {}
   }
@@ -2177,6 +2201,8 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly chatId: FieldRef<"User", 'String'>
     readonly referredBy: FieldRef<"User", 'BigInt'>
+    readonly referralToken: FieldRef<"User", 'String'>
+    readonly referralCode: FieldRef<"User", 'String'>
   }
     
 
@@ -8809,7 +8835,9 @@ export namespace Prisma {
     balance: 'balance',
     createdAt: 'createdAt',
     chatId: 'chatId',
-    referredBy: 'referredBy'
+    referredBy: 'referredBy',
+    referralToken: 'referralToken',
+    referralCode: 'referralCode'
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -9020,6 +9048,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     chatId?: StringNullableFilter<"User"> | string | null
     referredBy?: BigIntNullableFilter<"User"> | bigint | number | null
+    referralToken?: StringNullableFilter<"User"> | string | null
+    referralCode?: StringNullableFilter<"User"> | string | null
     purchases?: PurchaseListRelationFilter
     matchEntries?: MatchEntryListRelationFilter
     matchHistory?: MatchHistoryListRelationFilter
@@ -9037,6 +9067,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     chatId?: SortOrderInput | SortOrder
     referredBy?: SortOrderInput | SortOrder
+    referralToken?: SortOrderInput | SortOrder
+    referralCode?: SortOrderInput | SortOrder
     purchases?: PurchaseOrderByRelationAggregateInput
     matchEntries?: MatchEntryOrderByRelationAggregateInput
     matchHistory?: MatchHistoryOrderByRelationAggregateInput
@@ -9057,6 +9089,8 @@ export namespace Prisma {
     balance?: FloatFilter<"User"> | number
     createdAt?: DateTimeFilter<"User"> | Date | string
     referredBy?: BigIntNullableFilter<"User"> | bigint | number | null
+    referralToken?: StringNullableFilter<"User"> | string | null
+    referralCode?: StringNullableFilter<"User"> | string | null
     purchases?: PurchaseListRelationFilter
     matchEntries?: MatchEntryListRelationFilter
     matchHistory?: MatchHistoryListRelationFilter
@@ -9074,6 +9108,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     chatId?: SortOrderInput | SortOrder
     referredBy?: SortOrderInput | SortOrder
+    referralToken?: SortOrderInput | SortOrder
+    referralCode?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
     _avg?: UserAvgOrderByAggregateInput
     _max?: UserMaxOrderByAggregateInput
@@ -9092,6 +9128,8 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     chatId?: StringNullableWithAggregatesFilter<"User"> | string | null
     referredBy?: BigIntNullableWithAggregatesFilter<"User"> | bigint | number | null
+    referralToken?: StringNullableWithAggregatesFilter<"User"> | string | null
+    referralCode?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
 
   export type MatchWhereInput = {
@@ -9551,6 +9589,8 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
@@ -9568,6 +9608,8 @@ export namespace Prisma {
     createdAt?: Date | string
     chatId?: string | null
     referredBy?: bigint | number | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
@@ -9583,6 +9625,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
@@ -9600,6 +9644,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
@@ -9616,6 +9662,8 @@ export namespace Prisma {
     createdAt?: Date | string
     chatId?: string | null
     referredBy?: bigint | number | null
+    referralToken?: string | null
+    referralCode?: string | null
   }
 
   export type UserUpdateManyMutationInput = {
@@ -9625,6 +9673,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type UserUncheckedUpdateManyInput = {
@@ -9635,6 +9685,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MatchCreateInput = {
@@ -10255,6 +10307,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     chatId?: SortOrder
     referredBy?: SortOrder
+    referralToken?: SortOrder
+    referralCode?: SortOrder
   }
 
   export type UserAvgOrderByAggregateInput = {
@@ -10271,6 +10325,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     chatId?: SortOrder
     referredBy?: SortOrder
+    referralToken?: SortOrder
+    referralCode?: SortOrder
   }
 
   export type UserMinOrderByAggregateInput = {
@@ -10281,6 +10337,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     chatId?: SortOrder
     referredBy?: SortOrder
+    referralToken?: SortOrder
+    referralCode?: SortOrder
   }
 
   export type UserSumOrderByAggregateInput = {
@@ -11804,6 +11862,8 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
@@ -11820,6 +11880,8 @@ export namespace Prisma {
     createdAt?: Date | string
     chatId?: string | null
     referredBy?: bigint | number | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
@@ -11839,6 +11901,8 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
@@ -11854,6 +11918,8 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
@@ -12031,6 +12097,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
@@ -12047,6 +12115,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
@@ -12081,6 +12151,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     chatId?: StringNullableFilter<"User"> | string | null
     referredBy?: BigIntNullableFilter<"User"> | bigint | number | null
+    referralToken?: StringNullableFilter<"User"> | string | null
+    referralCode?: StringNullableFilter<"User"> | string | null
   }
 
   export type PurchaseCreateWithoutMatchInput = {
@@ -12166,6 +12238,8 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referralToken?: string | null
+    referralCode?: string | null
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
     referrals?: ReferralCreateNestedManyWithoutReferrerInput
@@ -12182,6 +12256,8 @@ export namespace Prisma {
     createdAt?: Date | string
     chatId?: string | null
     referredBy?: bigint | number | null
+    referralToken?: string | null
+    referralCode?: string | null
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutReferrerInput
@@ -12260,6 +12336,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
     referrals?: ReferralUpdateManyWithoutReferrerNestedInput
@@ -12276,6 +12354,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutReferrerNestedInput
@@ -12344,6 +12424,8 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
     referrals?: ReferralCreateNestedManyWithoutReferrerInput
@@ -12360,6 +12442,8 @@ export namespace Prisma {
     createdAt?: Date | string
     chatId?: string | null
     referredBy?: bigint | number | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutReferrerInput
@@ -12438,6 +12522,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
     referrals?: ReferralUpdateManyWithoutReferrerNestedInput
@@ -12454,6 +12540,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutReferrerNestedInput
@@ -12522,6 +12610,8 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
     referrals?: ReferralCreateNestedManyWithoutReferrerInput
@@ -12538,6 +12628,8 @@ export namespace Prisma {
     createdAt?: Date | string
     chatId?: string | null
     referredBy?: bigint | number | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
     referrals?: ReferralUncheckedCreateNestedManyWithoutReferrerInput
@@ -12568,6 +12660,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
     referrals?: ReferralUpdateManyWithoutReferrerNestedInput
@@ -12584,6 +12678,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
     referrals?: ReferralUncheckedUpdateManyWithoutReferrerNestedInput
@@ -12598,6 +12694,8 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
@@ -12614,6 +12712,8 @@ export namespace Prisma {
     createdAt?: Date | string
     chatId?: string | null
     referredBy?: bigint | number | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
@@ -12633,6 +12733,8 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryCreateNestedManyWithoutUserInput
@@ -12649,6 +12751,8 @@ export namespace Prisma {
     createdAt?: Date | string
     chatId?: string | null
     referredBy?: bigint | number | null
+    referralToken?: string | null
+    referralCode?: string | null
     purchases?: PurchaseUncheckedCreateNestedManyWithoutUserInput
     matchEntries?: MatchEntryUncheckedCreateNestedManyWithoutUserInput
     matchHistory?: MatchHistoryUncheckedCreateNestedManyWithoutUserInput
@@ -12679,6 +12783,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
@@ -12695,6 +12801,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
@@ -12720,6 +12828,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
@@ -12736,6 +12846,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
     referredBy?: NullableBigIntFieldUpdateOperationsInput | bigint | number | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
@@ -12803,6 +12915,8 @@ export namespace Prisma {
     balance?: number
     createdAt?: Date | string
     chatId?: string | null
+    referralToken?: string | null
+    referralCode?: string | null
   }
 
   export type PurchaseUpdateWithoutUserInput = {
@@ -12966,6 +13080,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUpdateManyWithoutUserNestedInput
@@ -12981,6 +13097,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
     purchases?: PurchaseUncheckedUpdateManyWithoutUserNestedInput
     matchEntries?: MatchEntryUncheckedUpdateManyWithoutUserNestedInput
     matchHistory?: MatchHistoryUncheckedUpdateManyWithoutUserNestedInput
@@ -12996,6 +13114,8 @@ export namespace Prisma {
     balance?: FloatFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     chatId?: NullableStringFieldUpdateOperationsInput | string | null
+    referralToken?: NullableStringFieldUpdateOperationsInput | string | null
+    referralCode?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type PurchaseCreateManyMatchInput = {

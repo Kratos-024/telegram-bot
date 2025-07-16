@@ -126,6 +126,8 @@ model User {
   
   // Referral system fields - ALL OPTIONAL
   referredBy     BigInt?   // ID of user who referred this user (optional)
+  referralToken  String?
+  referralCode   String?
 
   // Relations
   purchases Purchase[]
